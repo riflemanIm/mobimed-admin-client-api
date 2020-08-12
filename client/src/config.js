@@ -19,7 +19,7 @@ export default {
   remote: "https://sing-generator-node.herokuapp.com",
   isBackend: true,
   auth: {
-    //email: "admin",
-    //password: "Ar40tqVA",
+    email: "admin",
+    password: "Ar40tqVA",
   },
 };

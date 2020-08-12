@@ -1,12 +1,16 @@
-FROM node:13.12.0-alpine as build
+FROM node:12-alpine
 
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-COPY yarn.lock ./
+
+COPY ./api/package.json ./
+COPY ./api/yarn.lock ./
 RUN yarn install
-COPY . ./
+COPY ./api/ ./
+RUN yarn build
+
 
 EXPOSE 8080
 
-CMD ["yarn", "build", "server"]
+CMD ["yarn", "server"]

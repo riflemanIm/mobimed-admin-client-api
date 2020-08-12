@@ -1,21 +1,15 @@
 version: "3"
 services:
+  client:
+    build:
+      dockerfile: ./client/Dockerfile
+      context: .
+    ports:
+      - "1337:80"
+
   api:
     build:
-      dockerfile: Dockerfile
-      context: ./api
-    volumes:
-      - ./api/node_modules
-      - ./api/distr
-    environment:
-      - MYSQL_HOST=localhost
-      - MYSQL_DATABASE=heyo
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=rockcity
-  app:
-    build:
-      dockerfile: Dockerfile
-      context: ./client
-    volumes:
-      - ./client/node_modules
-      - ./client/build
+      dockerfile: ./api/Dockerfile
+      context: .
+    ports:
+      - "8080:8080"
