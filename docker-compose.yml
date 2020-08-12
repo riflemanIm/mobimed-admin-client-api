@@ -1,0 +1,21 @@
+version: "3"
+services:
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: ./api
+    volumes:
+      - ./api/node_modules
+      - ./api/distr
+    environment:
+      - MYSQL_HOST=localhost
+      - MYSQL_DATABASE=heyo
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=rockcity
+  app:
+    build:
+      dockerfile: Dockerfile
+      context: ./client
+    volumes:
+      - ./client/node_modules
+      - ./client/build

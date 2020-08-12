@@ -1,0 +1,139 @@
+import React, { useEffect } from "react";
+import { Grid, Box, TextField } from "@material-ui/core";
+import { useParams } from "react-router";
+
+import { useHistory } from "react-router-dom";
+import useStyles from "./styles";
+
+import Widget from "../../components/Widget/Widget";
+import { toast } from "react-toastify";
+
+import Notification from "../../components/Notification/Notification";
+import { usePromoDispatch, usePromoState } from "../../context/PromoContext";
+
+import { actions } from "../../context/PromoContext";
+
+import useForm from "../../hooks/useForm";
+import validate from "./validation";
+import { Button } from "../../components/Wrappers/Wrappers";
+
+const EditPromo = () => {
+  const classes = useStyles();
+  const history = useHistory();
+  const { id } = useParams();
+
+  const managementDispatch = usePromoDispatch();
+  const { currentPromo } = usePromoState();
+
+  function sendNotification(errorMessage) {
+    const componentProps = {
+      type: "feedback",
+      message: errorMessage != null ? errorMessage : "Промо отредактированн!",
+      variant: "contained",
+      color: errorMessage != null ? "warning" : "success",
+    };
+    const options = {
+      type: errorMessage != null ? "defence" : "info",
+      position: toast.POSITION.TOP_RIGHT,
+      progressClassName: classes.progress,
+      className: classes.notification,
+      timeOut: 1000,
+    };
+    return toast(
+      <Notification
+        {...componentProps}
+        className={classes.notificationComponent}
+      />,
+      options
+    );
+  }
+
+  useEffect(() => {
+    if (id) {
+      console.log("id", id);
+      actions.doFind(id)(managementDispatch);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    setValues({
+      ...currentPromo,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPromo, id]);
+
+  const saveData = () => {
+    actions.doUpdate(id, values, history)(managementDispatch, sendNotification);
+  };
+
+  const { values, errors, handleChange, handleSubmit, setValues } = useForm(
+    saveData,
+    validate
+  );
+
+  return (
+    <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <Widget>
+          <Grid item justify={"center"} container>
+            <Box display={"flex"} flexDirection={"column"} width={600}>
+              <TextField
+                variant="outlined"
+                value={values?.title || ""}
+                name="title"
+                onChange={handleChange}
+                style={{ marginBottom: 35 }}
+                placeholder="Промо"
+                type="text"
+                fullWidth
+                required
+                error={errors?.title != null}
+                helperText={errors?.title != null && errors?.title}
+              />
+              <TextField
+                variant="outlined"
+                value={values?.sort || ""}
+                name="sort"
+                onChange={handleChange}
+                style={{ marginBottom: 35 }}
+                placeholder="Сортировка"
+                type="text"
+                fullWidth
+                required
+                error={errors?.sort != null}
+                helperText={errors?.sort != null && errors?.sort}
+              />
+            </Box>
+            <Grid item justify={"center"} container>
+              <Box
+                display={"flex"}
+                justifyContent={"space-between"}
+                width={600}
+              >
+                <>
+                  <Button
+                    variant={"outlined"}
+                    color={"primary"}
+                    onClick={() => history.push("/app/promo/list")}
+                  >
+                    Отмена
+                  </Button>
+                  <Button
+                    variant={"contained"}
+                    color={"success"}
+                    onClick={handleSubmit}
+                  >
+                    Сохранить
+                  </Button>
+                </>
+              </Box>
+            </Grid>
+          </Grid>
+        </Widget>
+      </Grid>
+    </Grid>
+  );
+};
+
+export default EditPromo;
