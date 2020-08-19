@@ -1,5 +1,6 @@
 //const db = require("../config/dbConfig.js");
 import db from "../config/dbConfig.js";
+import { isoToDateTime } from "../helpers/helpers";
 
 // GET ALL PROMOS
 const find = () => {
@@ -18,9 +19,16 @@ const addPromo = (promo) => {
 
 // UPDATE PROMO
 const updatePromo = (id, post) => {
+  console.log("updatePromo", id, post);
+  delete post.medicalnet_actions_id;
+
   return db("medicalnet_actions")
     .where("medicalnet_actions_id", id)
-    .update(post);
+    .update({
+      ...post,
+      date_to: isoToDateTime(post.date_to),
+      date_from: isoToDateTime(post.date_from),
+    });
 };
 
 // REMOVE PROMO

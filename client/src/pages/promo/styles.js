@@ -90,13 +90,12 @@ export default makeStyles((theme) => ({
     color: "rgba(0, 0, 0, 0.23)",
   },
   imgWrap: {
-    height: 100,
     overflow: "hidden",
     borderRadius: 8,
     boxShadow: "0 0 10px 0px #ccc",
     marginRight: 20,
     marginBottom: 20,
-    maxWidth: 125,
+    maxWidth: "100%",
     position: "relative",
   },
   galleryWrap: {

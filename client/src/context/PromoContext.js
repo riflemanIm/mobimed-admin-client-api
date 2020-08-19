@@ -276,7 +276,7 @@ const actions = {
     }
   },
 
-  doUpdate: (id, values, history) => async (dispatch, notify) => {
+  doUpdate: (id, values, notify) => async (dispatch, history) => {
     dispatch({
       type: "PROMOS_FORM_UPDATE_STARTED",
     });
@@ -293,13 +293,13 @@ const actions = {
         history.push("/app/promo/list");
       })
       .catch((error) => {
-        console.log("error", error);
-        notify(error.response.data?.err);
+        console.log("error", error.message);
+        //notify(error?.response?.data?.err);
 
-        dispatch({
-          type: "PROMOS_FORM_UPDATE_ERROR",
-          payload: error.response.data?.err,
-        });
+        // dispatch({
+        //   type: "PROMOS_FORM_UPDATE_ERROR",
+        //   payload: error.response.data?.err,
+        // });
       });
   },
 

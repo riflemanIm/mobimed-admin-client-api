@@ -15,7 +15,14 @@ import { actions } from "../../context/PromoContext";
 
 import useForm from "../../hooks/useForm";
 import validate from "./validation";
-import { Button } from "../../components/Wrappers/Wrappers";
+import { Typography, Button } from "../../components/Wrappers/Wrappers";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
+import ruLocale from "date-fns/locale/ru";
+import { resizeImageBase64 } from "../../helpers/base64";
 
 const EditPromo = () => {
   const classes = useStyles();
@@ -64,13 +71,50 @@ const EditPromo = () => {
   }, [currentPromo, id]);
 
   const saveData = () => {
-    actions.doUpdate(id, values, history)(managementDispatch, sendNotification);
+    actions.doUpdate(id, values, sendNotification)(managementDispatch, history);
   };
 
   const { values, errors, handleChange, handleSubmit, setValues } = useForm(
     saveData,
     validate
   );
+  const handleDateChange = (dateFromTo) => {
+    if (dateFromTo != null && dateFromTo !== "")
+      setValues({
+        ...values,
+        ...dateFromTo,
+      });
+  };
+  // `medicalnet_actions_id` int(11) NOT NULL AUTO_INCREMENT,
+  // `description` varchar(100) DEFAULT NULL,
+  // `medicalnet_id` int(11) DEFAULT NULL,
+  // `sort_order` int(11) DEFAULT NULL,
+  // `date_from` datetime DEFAULT NULL,
+  // `date_to` datetime DEFAULT NULL,
+  // `url` varchar(1000) DEFAULT NULL,
+  // `image` mediumtext NOT NULL,
+  // `action_text` varchar(1000) DEFAULT NULL COMMENT 'Текст',
+  const fileInput = React.useRef(null);
+
+  const deleteOneImage = () => {
+    setValues({
+      ...values,
+      image: "",
+    });
+  };
+
+  const handleFile = async (event) => {
+    event.preventDefault();
+    const filedata = event.target.files[0];
+    const base64result = await resizeImageBase64(filedata, 610, 610);
+    console.log("base64result", base64result);
+    const image = base64result.split(",")[1];
+    console.log("image", image);
+    setValues({
+      ...values,
+      image,
+    });
+  };
 
   return (
     <Grid container spacing={3}>
@@ -80,32 +124,149 @@ const EditPromo = () => {
             <Box display={"flex"} flexDirection={"column"} width={600}>
               <TextField
                 variant="outlined"
-                value={values?.title || ""}
-                name="title"
+                value={values?.action_text || ""}
+                name="action_text"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
                 placeholder="Промо"
+                label="Промо"
+                multiline
+                rows={4}
                 type="text"
                 fullWidth
                 required
-                error={errors?.title != null}
-                helperText={errors?.title != null && errors?.title}
+                error={errors?.action_text != null}
+                helperText={errors?.action_text != null && errors?.action_text}
+              />
+
+              <TextField
+                variant="outlined"
+                value={values?.description || ""}
+                name="description"
+                onChange={handleChange}
+                style={{ marginBottom: 35 }}
+                placeholder="Описание"
+                label="Описание"
+                multiline
+                rows={4}
+                type="text"
+                fullWidth
+                required
+                error={errors?.description != null}
+                helperText={errors?.description != null && errors?.description}
               />
               <TextField
                 variant="outlined"
-                value={values?.sort || ""}
-                name="sort"
+                value={`${values?.sort_order}`}
+                name="sort_order"
                 onChange={handleChange}
-                style={{ marginBottom: 35 }}
+                style={{ marginBottom: 25 }}
                 placeholder="Сортировка"
+                label="Сортировка"
                 type="text"
                 fullWidth
                 required
-                error={errors?.sort != null}
-                helperText={errors?.sort != null && errors?.sort}
+                error={errors?.sort_order != null}
+                helperText={errors?.sort_order != null && errors?.sort_order}
               />
+              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
+                <KeyboardDatePicker
+                  disableToolbar
+                  style={{ marginBottom: 25 }}
+                  autoOk
+                  name="date_from"
+                  variant="inline"
+                  inputVariant="outlined"
+                  format="dd.MM.yyyy"
+                  margin="normal"
+                  //id="date-picker-inline"
+                  placeholder="Начало акции"
+                  label="Начало акции"
+                  value={values.date_from || null}
+                  onChange={(date_from) => handleDateChange({ date_from })}
+                  KeyboardButtonProps={{
+                    "aria-label": "date_from",
+                  }}
+                  fullWidth
+                  error={errors?.date_from != null}
+                  helperText={errors?.date_from != null && errors?.date_from}
+                />
+              </MuiPickersUtilsProvider>
+
+              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ruLocale}>
+                <KeyboardDatePicker
+                  disableToolbar
+                  style={{ marginBottom: 35 }}
+                  autoOk
+                  name="date_to"
+                  variant="inline"
+                  inputVariant="outlined"
+                  format="dd.MM.yyyy"
+                  margin="normal"
+                  //id="date-picker-inline"
+                  placeholder="Конец акции"
+                  label="Конец акции"
+                  value={values.date_to || null}
+                  onChange={(date_to) => handleDateChange({ date_to })}
+                  KeyboardButtonProps={{
+                    "aria-label": "date_to",
+                  }}
+                  fullWidth
+                  error={errors?.date_to != null}
+                  helperText={errors?.date_to != null && errors?.date_to}
+                />
+              </MuiPickersUtilsProvider>
+
+              <TextField
+                variant="outlined"
+                value={`${values?.url}`}
+                style={{ marginBottom: 35 }}
+                name="url"
+                onChange={handleChange}
+                placeholder="URL"
+                label="URL"
+                type="text"
+                fullWidth
+                required
+                error={errors?.url != null}
+                helperText={errors?.url != null && errors?.url}
+              />
+              {values.image != null && (
+                <div className={classes.galleryWrap}>
+                  <div className={classes.imgWrap}>
+                    <span
+                      className={classes.deleteImageX}
+                      onClick={() => deleteOneImage()}
+                    >
+                      ×
+                    </span>
+                    <img
+                      src={`data:image/jpeg;base64,${values.image}`}
+                      alt=""
+                      height={"100%"}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <label
+                className={classes.uploadLabel}
+                style={{ cursor: "pointer" }}
+              >
+                Выбрать файл
+                <input
+                  style={{ display: "none" }}
+                  accept="image/*"
+                  type="file"
+                  ref={fileInput}
+                  onChange={handleFile}
+                />
+              </label>
+              <Typography size={"sm"} style={{ marginBottom: 35 }}>
+                .PNG, .JPG, .JPEG
+              </Typography>
             </Box>
-            <Grid item justify={"center"} container>
+            <Grid item justify={"center"} container style={{ marginTop: 35 }}>
               <Box
                 display={"flex"}
                 justifyContent={"space-between"}

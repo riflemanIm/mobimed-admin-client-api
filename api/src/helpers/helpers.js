@@ -19,6 +19,9 @@ export const localDateTime = new Date(Date.now() - tzoffset)
   .slice(0, 19)
   .replace("T", " ");
 
+export const isoToDateTime = (isoDate) =>
+  isoDate.slice(0, 19).replace("T", " ");
+
 function setDeep(obj, path, value) {
   const arr = path.split(".");
   //  console.log("value", value);

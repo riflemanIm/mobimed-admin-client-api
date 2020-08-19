@@ -274,6 +274,7 @@ const EditUser = () => {
                   >
                     Персональная информация
                   </Typography>
+
                   <Typography weight={"medium"}>Фото:</Typography>
                   <div className={classes.galleryWrap}>
                     <div className={classes.imgWrap}>
@@ -296,6 +297,7 @@ const EditUser = () => {
                       )}
                     </div>
                   </div>
+
                   <label
                     className={classes.uploadLabel}
                     style={{ cursor: "pointer" }}
@@ -309,10 +311,10 @@ const EditUser = () => {
                       onChange={handleFile}
                     />
                   </label>
-
                   <Typography size={"sm"} style={{ marginBottom: 35 }}>
                     .PNG, .JPG, .JPEG
                   </Typography>
+
                   <TextField
                     variant="outlined"
                     value={(!isEmpty(values) && values.first_name) || ""}
