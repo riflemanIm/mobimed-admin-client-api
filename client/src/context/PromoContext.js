@@ -238,7 +238,7 @@ const actions = {
     }
   },
 
-  doCreate: (values, history) => async (dispatch, notify) => {
+  doCreate: (values, notify) => async (dispatch, history) => {
     try {
       dispatch({
         type: "PROMOS_FORM_CREATE_STARTED",

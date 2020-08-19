@@ -159,11 +159,11 @@ const PromoList = () => {
 
   const handleDelete = () => {
     actions.doDelete(promoValue.idToDelete)(promoDispatch);
-    sendNotification("Promo deleted");
+    sendNotification("Промо удалена");
   };
 
   React.useEffect(() => {
-    sendNotification("Все промоы");
+    // sendNotification("Все промо");
     async function fetchAPI() {
       try {
         await actions.doFetch({}, false)(promoDispatch);

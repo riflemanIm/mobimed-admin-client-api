@@ -1,28 +1,26 @@
 import React, { useEffect } from "react";
-import { Grid, Box, TextField } from "@material-ui/core";
 import { useParams } from "react-router";
-
-import { useHistory } from "react-router-dom";
-import useStyles from "./styles";
-
-import Widget from "../../components/Widget/Widget";
-import { toast } from "react-toastify";
-
-import Notification from "../../components/Notification/Notification";
-import { usePromoDispatch, usePromoState } from "../../context/PromoContext";
-
-import { actions } from "../../context/PromoContext";
-
-import useForm from "../../hooks/useForm";
-import validate from "./validation";
-import { Typography, Button } from "../../components/Wrappers/Wrappers";
+import { Grid, Box, TextField } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
+
+import { useHistory } from "react-router-dom";
+import useStyles from "./styles";
+import { toast } from "react-toastify";
+import Widget from "../../components/Widget/Widget";
+import { Typography, Button } from "../../components/Wrappers/Wrappers";
+import Notification from "../../components/Notification/Notification";
+
+import { actions } from "../../context/PromoContext";
+import { usePromoDispatch, usePromoState } from "../../context/PromoContext";
+
+import useForm from "../../hooks/useForm";
 import DateFnsUtils from "@date-io/date-fns";
 import ruLocale from "date-fns/locale/ru";
 import { resizeImageBase64 } from "../../helpers/base64";
+import validate from "./validation";
 
 const EditPromo = () => {
   const classes = useStyles();
@@ -85,15 +83,7 @@ const EditPromo = () => {
         ...dateFromTo,
       });
   };
-  // `medicalnet_actions_id` int(11) NOT NULL AUTO_INCREMENT,
-  // `description` varchar(100) DEFAULT NULL,
-  // `medicalnet_id` int(11) DEFAULT NULL,
-  // `sort_order` int(11) DEFAULT NULL,
-  // `date_from` datetime DEFAULT NULL,
-  // `date_to` datetime DEFAULT NULL,
-  // `url` varchar(1000) DEFAULT NULL,
-  // `image` mediumtext NOT NULL,
-  // `action_text` varchar(1000) DEFAULT NULL COMMENT 'Текст',
+
   const fileInput = React.useRef(null);
 
   const deleteOneImage = () => {
@@ -107,7 +97,6 @@ const EditPromo = () => {
     event.preventDefault();
     const filedata = event.target.files[0];
     const base64result = await resizeImageBase64(filedata, 610, 610);
-    console.log("base64result", base64result);
     const image = base64result.split(",")[1];
     console.log("image", image);
     setValues({
