@@ -83,17 +83,18 @@ const headCells = [
   },
   { id: "actions", numeric: false, disablePadding: false, label: "Дествия" },
   {
-    id: "action_text",
-    numeric: false,
-    disablePadding: false,
-    label: "Название",
-  },
-  {
     id: "description",
     numeric: false,
     disablePadding: false,
-    label: "Описание",
+    label: "Промо",
   },
+  {
+    id: "action_text",
+    numeric: false,
+    disablePadding: false,
+    label: "Детали",
+  },
+
   { id: "url", numeric: false, disablePadding: false, label: "URL" },
   { id: "date_from", numeric: false, disablePadding: false, label: "С" },
   { id: "date_to", numeric: false, disablePadding: false, label: "По" },
