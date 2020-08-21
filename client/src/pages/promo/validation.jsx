@@ -1,18 +1,18 @@
 export default function validate(values) {
   let errors = {};
-  if (values.action_text === "") {
+  if (!values.action_text) {
     errors.action_text = "Заполните промо";
   }
-  if (values.description === "") {
+  if (!values.description) {
     errors.description = "Заполните описание";
   }
-  if (values.sort_order === "") {
+  if (!values.sort_order) {
     errors.sort_order = "Заполните сортировку";
   }
-  if (values.date_from == null) {
-    errors.date_from = "Заполните  начало акции";
+  if (!values.date_from) {
+    errors.date_from = "Заполните начало акции";
   }
-  if (!values.date_to == null) {
+  if (!values.date_to) {
     errors.date_to = "Заполните конец акции";
   }
 

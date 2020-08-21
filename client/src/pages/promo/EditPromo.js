@@ -113,8 +113,8 @@ const EditPromo = () => {
             <Box display={"flex"} flexDirection={"column"} width={600}>
               <TextField
                 variant="outlined"
-                value={values?.action_text || ""}
-                name="action_text"
+                value={values?.description || ""}
+                name="description"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
                 placeholder="Промо"
@@ -124,25 +124,25 @@ const EditPromo = () => {
                 type="text"
                 fullWidth
                 required
-                error={errors?.action_text != null}
-                helperText={errors?.action_text != null && errors?.action_text}
+                error={errors?.description != null}
+                helperText={errors?.description != null && errors?.description}
               />
 
               <TextField
                 variant="outlined"
-                value={values?.description || ""}
-                name="description"
+                value={values?.action_text || ""}
+                name="action_text"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
-                placeholder="Описание"
-                label="Описание"
+                placeholder="Детали"
+                label="Детали"
                 multiline
                 rows={4}
                 type="text"
                 fullWidth
                 required
-                error={errors?.description != null}
-                helperText={errors?.description != null && errors?.description}
+                error={errors?.action_text != null}
+                helperText={errors?.action_text != null && errors?.action_text}
               />
               <TextField
                 variant="outlined"
