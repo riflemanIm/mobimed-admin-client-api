@@ -33,7 +33,7 @@ const EditPromo = () => {
   function sendNotification(errorMessage) {
     const componentProps = {
       type: "feedback",
-      message: errorMessage != null ? errorMessage : "Промо отредактированн!",
+      message: errorMessage != null ? errorMessage : "Промо отредактированна!",
       variant: "contained",
       color: errorMessage != null ? "warning" : "success",
     };

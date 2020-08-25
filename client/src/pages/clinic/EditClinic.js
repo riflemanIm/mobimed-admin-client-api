@@ -1,124 +1,39 @@
 import React, { useEffect } from "react";
-import { Grid, Box, TextField } from "@material-ui/core";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
 import { useParams } from "react-router";
-import Checkbox from "@material-ui/core/Checkbox";
-import Switch from "@material-ui/core/Switch";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { Grid, Box, TextField } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import Switch from "@material-ui/core/Switch";
 
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-
-import { useLocation, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import useStyles from "./styles";
-
-import {
-  PersonOutline as PersonOutlineIcon,
-  Lock as LockIcon,
-  Settings as SettingsIcon,
-} from "@material-ui/icons";
-
-import Widget from "../../components/Widget/Widget";
-import { Typography, Button } from "../../components/Wrappers/Wrappers";
 import { toast } from "react-toastify";
-
+import Widget from "../../components/Widget/Widget";
+import { Button, Typography } from "../../components/Wrappers/Wrappers";
 import Notification from "../../components/Notification/Notification";
-import { useClinicDispatch, useClinicState } from "../../context/ClinicContext";
-import config from "../../config";
 
 import { actions } from "../../context/ClinicContext";
-import isEmpty from "../../helpers/isEmpty";
-import {
-  extractExtensionFrom,
-  uploadToServer,
-  deleteAvararServer,
-} from "../../helpers/file";
+import { useClinicDispatch, useClinicState } from "../../context/ClinicContext";
 
 import useForm from "../../hooks/useForm";
 import validate from "./validation";
-import DateFnsUtils from "@date-io/date-fns";
-import { Locales } from "../../helpers/dateFormat";
+import isEmpty from "../../helpers/isEmpty";
 
 const EditClinic = () => {
   const classes = useStyles();
   const history = useHistory();
-  const [tab, setTab] = React.useState(0);
-  const [password, setPassword] = React.useState({
-    newPassword: "",
-    confirmPassword: "",
-    currentPassword: "",
-  });
-
-  const [editable, setEditable] = React.useState(false);
-  const [isLoadingImg, setIsLoadingImg] = React.useState(false);
-
   const { id } = useParams();
 
-  const fileInput = React.useRef(null);
-  const handleChangeTab = (event, newValue) => {
-    setTab(newValue);
-  };
-  const location = useLocation();
-  const managementDispatch = useClinicDispatch();
-  const { currentClinic } = useClinicState();
-
-  const deleteOneImage = async () => {
-    setIsLoadingImg(true);
-    await deleteAvararServer(
-      `${config.baseURLimages}/clinics/upload-avatar/${id}`
-    )
-      .then((res) => {
-        setIsLoadingImg(false);
-      })
-      .catch((e) => {
-        console.log("delete img err", e);
-        setIsLoadingImg(false);
-      });
-  };
-
-  const handleFile = async (event) => {
-    const filedata = event.target.files[0];
-    const filename = filedata.name;
-    const extension = filename != null && extractExtensionFrom(filename);
-    if (
-      filename != null &&
-      ["png", "jpg", "jpeg", "gif"].includes(extension.toLowerCase())
-    ) {
-      const filename = `${id}.${extension}`;
-
-      setIsLoadingImg(true);
-      await uploadToServer(
-        `${config.baseURLimages}/clinics/upload-avatar/${id}`,
-        { filedata, filename }
-      )
-        .then((res) => {
-          setIsLoadingImg(false);
-          console.log("res", res);
-        })
-        .catch((e) => {
-          setIsLoadingImg(false);
-          console.log("ee", e);
-        });
-    } else {
-      sendNotification(
-        "Можно загружать только файлы с расширением .PNG, .JPG, .JPEG"
-      );
-    }
-    return null;
-  };
+  const dispatch = useClinicDispatch();
+  const { currentClinic, services, medical_net } = useClinicState();
 
   function sendNotification(errorMessage) {
     const componentProps = {
       type: "feedback",
-      message: errorMessage != null ? errorMessage : "Clinic edited!",
+      message:
+        errorMessage != null ? errorMessage : "Клиника отредактированна!",
       variant: "contained",
       color: errorMessage != null ? "warning" : "success",
     };
@@ -141,16 +56,10 @@ const EditClinic = () => {
   useEffect(() => {
     if (id) {
       console.log("id", id);
-      actions.doFind(id)(managementDispatch);
+      actions.doFind(id)(dispatch);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (location.pathname.includes("edit")) {
-      setEditable(true);
-    }
-  }, [location.pathname]);
 
   useEffect(() => {
     setValues({
@@ -160,394 +69,275 @@ const EditClinic = () => {
   }, [currentClinic, id]);
 
   const saveData = () => {
-    actions.doUpdate(id, values, history)(managementDispatch, sendNotification);
+    actions.doUpdate(id, values, sendNotification)(dispatch, history);
   };
-
-  function handleUpdatePassword() {
-    actions.doChangePassword(password)(managementDispatch);
-  }
-
-  function handleChangePassword(e) {
-    setPassword({
-      ...password,
-      [e.target.name]: e.target.value,
-    });
-  }
 
   const { values, errors, handleChange, handleSubmit, setValues } = useForm(
     saveData,
     validate
   );
-  const handleDateChange = (birth_date) => {
-    if (birth_date != null && birth_date !== "")
-      setValues({
-        ...values,
-        birth_date,
-      });
-  };
+
+  console.log("values", values);
+
+  // "c.code",
+  // "c.logo",
+  // "c.title",
+  // "c.url",
+  // "c.postal_address",
+  // "c.phone",
+  // "c.latitude",
+  // "c.longitude",
+
+  // "c.is_phone_required",
+  // "c.is_anonym_visit",
+  // "c.is_home_request",
+
+  // "c.medical_net_id",
+  // "c.client_service_id",
 
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <Widget>
-          <Box display={"flex"} justifyContent={"center"}>
-            <Tabs
-              indicatorColor="primary"
-              textColor="primary"
-              value={tab}
-              onChange={handleChangeTab}
-              aria-label="full width tabs example"
-            >
-              <Tab
-                label="ACCOUNT"
-                icon={<PersonOutlineIcon />}
-                classes={{ wrapper: classes.icon }}
-              />
+          {!isEmpty(values) && (
+            <Grid item justify={"center"} container>
+              <Box display={"flex"} flexDirection={"column"} width={600}>
+                <TextField
+                  variant="outlined"
+                  value={values?.code || ""}
+                  name="code"
+                  onChange={handleChange}
+                  style={{ marginBottom: 35 }}
+                  placeholder="Код"
+                  label="Код"
+                  type="text"
+                  fullWidth
+                  required
+                  error={errors?.code != null}
+                  helperText={errors?.code != null && errors?.code}
+                />
 
-              <Tab
-                label="PROFILE"
-                icon={<PersonOutlineIcon />}
-                classes={{ wrapper: classes.icon }}
-              />
-              <Tab
-                label="CHANGE PASSWORD"
-                icon={<LockIcon />}
-                classes={{ wrapper: classes.icon }}
-              />
-              <Tab
-                label="SETTINGS"
-                icon={<SettingsIcon />}
-                classes={{ wrapper: classes.icon }}
-              />
-            </Tabs>
-          </Box>
-        </Widget>
-      </Grid>
-      <Grid item xs={12}>
-        <Widget>
-          <Grid item justify={"center"} container>
-            <Box display={"flex"} flexDirection={"column"} width={600}>
-              {tab === 0 ? (
-                <>
-                  <Typography
-                    variant={"h5"}
-                    weight={"medium"}
-                    style={{ marginBottom: 30 }}
-                  >
-                    Аккаунт
-                  </Typography>
-                  <TextField
-                    variant="outlined"
-                    value={values?.clinicname || ""}
-                    name="clinicname"
-                    onChange={handleChange}
-                    style={{ marginBottom: 35 }}
-                    placeholder="Clinicname"
-                    type="text"
-                    fullWidth
-                    required
-                    error={errors?.clinicname != null}
-                    helperText={
-                      errors?.clinicname != null && errors?.clinicname
-                    }
-                  />
+                <TextField
+                  variant="outlined"
+                  value={values?.title || ""}
+                  name="title"
+                  onChange={handleChange}
+                  style={{ marginBottom: 35 }}
+                  placeholder="Название"
+                  label="Название"
+                  type="text"
+                  fullWidth
+                  required
+                  error={errors?.title != null}
+                  helperText={errors?.title != null && errors?.title}
+                />
 
-                  {/* <FormControl variant="outlined" style={{ marginBottom: 35 }}>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      defaultValue="clinic"
-                      value={data && data.role}
-                      name="email"
-                      onChange={handleChange}
-                    >
-                      <MenuItem value={"admin"}>Admin</MenuItem>
-                      <MenuItem value={"clinic"}>Clinic</MenuItem>
-                    </Select>
-                  </FormControl> */}
-                </>
-              ) : tab === 1 ? (
-                <>
-                  <Typography
-                    variant={"h5"}
-                    weight={"medium"}
-                    style={{ marginBottom: 35 }}
-                  >
-                    Персональная информация
-                  </Typography>
-                  <Typography weight={"medium"}>Фото:</Typography>
-                  <div className={classes.galleryWrap}>
-                    <div className={classes.imgWrap}>
-                      {isLoadingImg ? (
-                        <CircularProgress size={18} />
-                      ) : (
-                        <>
-                          <span
-                            className={classes.deleteImageX}
-                            onClick={() => deleteOneImage()}
-                          >
-                            ×
-                          </span>
-                          <img
-                            src={`${config.baseURLApi}/clinics/photo/${currentClinic.clinic_id}`}
-                            alt=""
-                            height={"100%"}
-                          />
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <label
-                    className={classes.uploadLabel}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {"Upload an image"}
-                    <input
-                      style={{ display: "none" }}
-                      accept="image/*"
-                      type="file"
-                      ref={fileInput}
-                      onChange={handleFile}
-                    />
-                  </label>
+                <TextField
+                  variant="outlined"
+                  value={`${values?.url}`}
+                  name="url"
+                  onChange={handleChange}
+                  style={{ marginBottom: 35 }}
+                  placeholder="URL"
+                  label="URL"
+                  type="text"
+                  fullWidth
+                />
 
-                  <Typography size={"sm"} style={{ marginBottom: 35 }}>
-                    .PNG, .JPG, .JPEG
-                  </Typography>
-                  <TextField
-                    variant="outlined"
-                    value={(!isEmpty(values) && values.first_name) || ""}
-                    name="first_name"
-                    onChange={handleChange}
-                    style={{ marginBottom: 35 }}
-                    placeholder="Имя"
-                    type="text"
-                    fullWidth
-                    required
-                    error={errors?.first_name != null}
-                    helperText={
-                      errors?.first_name != null && errors?.first_name
-                    }
-                  />
-                  <TextField
-                    variant="outlined"
-                    value={values.middle_name || ""}
-                    name="middle_name"
-                    onChange={handleChange}
-                    style={{ marginBottom: 35 }}
-                    placeholder="Отчество"
-                    type="text"
-                    fullWidth
-                  />
-                  <TextField
-                    variant="outlined"
-                    value={values.last_name || ""}
-                    name="last_name"
-                    onChange={handleChange}
-                    style={{ marginBottom: 35 }}
-                    placeholder="Фамилие"
-                    type="text"
-                    fullWidth
-                    required
-                    error={errors?.last_name != null}
-                    helperText={errors?.last_name != null && errors?.last_name}
-                  />
-                  <TextField
-                    variant="outlined"
-                    style={{ marginBottom: 35 }}
-                    value={values?.phone || ""}
-                    name="phone"
-                    onChange={handleChange}
-                    placeholder="Телефон"
-                    type="tel"
-                    fullWidth
-                    required
-                    error={errors?.phone != null}
-                    helperText={errors?.phone != null && errors?.phone}
-                  />
-                  <TextField
-                    variant="outlined"
-                    style={{ marginBottom: 35 }}
-                    value={values?.notify_email || ""}
-                    name="notify_email"
-                    onChange={handleChange}
-                    placeholder="Email"
-                    type="email"
-                    fullWidth
-                    required
-                    error={errors?.notify_email != null}
-                    helperText={
-                      errors?.notify_email != null && errors?.notify_email
-                    }
-                  />
-                  <MuiPickersUtilsProvider
-                    utils={DateFnsUtils}
-                    locale={Locales["ru"]}
-                  >
-                    <KeyboardDatePicker
-                      disableToolbar
-                      autoOk
-                      variant="inline"
-                      inputVariant="outlined"
-                      format={"dd.MM.yyyy"}
-                      margin="normal"
-                      //id="date-picker-inline"
-                      label="Дата рождения"
-                      value={values.birth_date}
-                      onChange={handleDateChange}
-                      KeyboardButtonProps={{
-                        "aria-label": "aria-birth-date-label",
-                      }}
-                      style={{ marginBottom: 35 }}
-                      fullWidth
-                      error={errors?.birth_date != null}
-                      helperText={
-                        errors?.birth_date != null && errors?.birth_date
-                      }
-                    />
-                  </MuiPickersUtilsProvider>
+                <TextField
+                  variant="outlined"
+                  value={values?.postal_address || ""}
+                  name="postal_address"
+                  onChange={handleChange}
+                  style={{ marginBottom: 35 }}
+                  placeholder="Почтовый адрес"
+                  label="Почтовый адрес"
+                  multiline
+                  rows={4}
+                  type="text"
+                  fullWidth
+                  required
+                  error={errors?.postal_address != null}
+                  helperText={
+                    errors?.postal_address != null && errors?.postal_address
+                  }
+                />
 
-                  <FormControl
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    style={{ marginBottom: 35 }}
+                <TextField
+                  variant="outlined"
+                  value={`${values?.phone}`}
+                  name="phone"
+                  onChange={handleChange}
+                  style={{ marginBottom: 35 }}
+                  placeholder="Телефон"
+                  label="Телефон"
+                  type="text"
+                  fullWidth
+                  required
+                  error={errors?.phone != null}
+                  helperText={errors?.phone != null && errors?.phone}
+                />
+                <TextField
+                  variant="outlined"
+                  value={`${values?.latitude}`}
+                  name="latitude"
+                  onChange={handleChange}
+                  style={{ marginBottom: 35 }}
+                  placeholder="Latitude"
+                  label="Latitude"
+                  type="text"
+                  fullWidth
+                  required
+                  error={errors?.latitude != null}
+                  helperText={errors?.latitude != null && errors?.latitude}
+                />
+                <TextField
+                  variant="outlined"
+                  value={`${values?.longitude}`}
+                  name="longitude"
+                  onChange={handleChange}
+                  style={{ marginBottom: 35 }}
+                  placeholder="Longitude"
+                  label="Longitude"
+                  type="text"
+                  fullWidth
+                  required
+                  error={errors?.longitude != null}
+                  helperText={errors?.longitude != null && errors?.longitude}
+                />
+
+                <FormControl
+                  variant="outlined"
+                  style={{ marginBottom: 35 }}
+                  fullWidth
+                  required
+                  error={errors?.client_service_id != null}
+                  helperText={
+                    errors?.client_service_id != null &&
+                    errors?.client_service_id
+                  }
+                >
+                  <InputLabel id="id-services-label">Сервис</InputLabel>
+                  <Select
+                    name="client_service_id"
+                    labelId="id-services-label"
+                    id="id-services-select"
+                    label="Сервис"
+                    onChange={handleChange}
+                    value={values?.client_service_id}
                   >
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Пол
-                    </InputLabel>
-                    <Select
-                      //labelId="demo-simple-select-outlined-label"
-                      //id="demo-simple-select-outlined"
-                      name="gender"
-                      value={values.gender != null && values.gender}
-                      onChange={handleChange}
-                      label="Пол"
-                    >
-                      <MenuItem value="M">Мужской</MenuItem>
-                      <MenuItem value="F">Женский</MenuItem>
-                    </Select>
-                  </FormControl>
-                </>
-              ) : tab === 2 ? (
-                <>
-                  <Typography
-                    variant={"h5"}
-                    weight={"medium"}
-                    style={{ marginBottom: 35 }}
+                    {services.map((item) => (
+                      <MenuItem value={item.id} key={item.id}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+
+                <FormControl
+                  variant="outlined"
+                  style={{ marginBottom: 35 }}
+                  fullWidth
+                  required
+                  error={errors?.medical_net_id != null}
+                  helperText={
+                    errors?.medical_net_id != null && errors?.medical_net_id
+                  }
+                >
+                  <InputLabel id="id-medical_net-label">Сеть</InputLabel>
+                  <Select
+                    name="medical_net_id"
+                    labelId="id-medical_net-label"
+                    id="id-medical_net-select"
+                    label="Сеть"
+                    onChange={handleChange}
+                    value={values?.medical_net_id}
                   >
-                    Password
-                  </Typography>
-                  <TextField
-                    variant="outlined"
-                    style={{ marginBottom: 35 }}
-                    defaultValue={"Current Password"}
-                    value={password.currentPassword || ""}
-                    name="currentPassword"
-                    onChange={handleChangePassword}
-                    helperText={"Forgot Password?"}
-                  />
-                  <TextField
-                    variant="outlined"
-                    style={{ marginBottom: 35 }}
-                    defaultValue={"New Password"}
-                    value={password.newPassword || ""}
-                    name="newPassword"
-                    onChange={handleChangePassword}
-                  />
-                  <TextField
-                    variant="outlined"
-                    style={{ marginBottom: 35 }}
-                    defaultValue={"Verify Password"}
-                    value={password.confirmPassword || ""}
-                    name="confirmPassword"
-                    onChange={handleChangePassword}
-                  />
-                </>
-              ) : tab === 3 ? (
-                <>
-                  <Typography
-                    variant={"h5"}
-                    weight={"medium"}
-                    style={{ marginBottom: 35 }}
-                  >
-                    Settings
-                  </Typography>
-                  <FormControl variant="outlined" style={{ marginBottom: 35 }}>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={10}
-                    >
-                      <MenuItem value={10}>English</MenuItem>
-                      <MenuItem value={20}>Admin</MenuItem>
-                      <MenuItem value={30}>Super Admin</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <Typography weight={"bold"}>Communication:</Typography>
-                  <Box display={"flex"}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked name="checkedB" color="secondary" />
-                      }
-                      label="Email"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="checkedB" color="secondary" />}
-                      label="Messages"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox name="checkedB" color="secondary" />}
-                      label="Phone"
-                    />
-                  </Box>
-                  <Box display={"flex"} mt={2} alignItems={"center"}>
-                    <Typography weight={"medium"}>
-                      Email notification
-                    </Typography>
-                    <Switch color={"primary"} checked />
-                  </Box>
-                  <Box display={"flex"} mt={2} mb={2} alignItems={"center"}>
-                    <Typography weight={"medium"}>
-                      Send copy to personal email
-                    </Typography>
-                    <Switch color={"primary"} />
-                  </Box>
-                </>
-              ) : null}
-              {editable && (
-                <Box display={"flex"} justifyContent={"space-between"}>
-                  {tab !== 2 ? (
-                    <>
-                      <Button variant={"outlined"} color={"primary"}>
-                        Reset
-                      </Button>
-                      <Button
-                        variant={"contained"}
-                        color={"success"}
-                        onClick={handleSubmit}
+                    {medical_net.map((item) => (
+                      <MenuItem
+                        value={item.medical_net_id}
+                        key={item.medical_net_id}
                       >
-                        Сохранить
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button variant={"outlined"} color={"primary"}>
-                        Reset
-                      </Button>
-                      <Button
-                        variant={"contained"}
-                        color={"success"}
-                        onClick={handleUpdatePassword}
-                      >
-                        Save Password
-                      </Button>
-                    </>
-                  )}
+                        {item.title}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+
+                <Box display={"flex"} mb={2} alignItems={"center"}>
+                  <Typography weight={"medium"}>is_phone_required</Typography>
+                  <Switch
+                    onChange={() =>
+                      setValues({
+                        ...values,
+                        is_phone_required: !values.is_phone_required,
+                      })
+                    }
+                    color={"primary"}
+                    checked={values?.is_phone_required}
+                    name="is_phone_required"
+                    value={values?.is_phone_required}
+                  />
                 </Box>
-              )}
-            </Box>
-          </Grid>
+
+                <Box display={"flex"} mb={2} alignItems={"center"}>
+                  <Typography weight={"medium"}>is_anonym_visit</Typography>
+                  <Switch
+                    onChange={() =>
+                      setValues({
+                        ...values,
+                        is_anonym_visit: !values.is_anonym_visit,
+                      })
+                    }
+                    color={"primary"}
+                    checked={values?.is_anonym_visit}
+                    name="is_anonym_visit"
+                    value={values?.is_anonym_visit}
+                  />
+                </Box>
+
+                <Box display={"flex"} mb={2} alignItems={"center"}>
+                  <Typography weight={"medium"}>is_home_request</Typography>
+                  <Switch
+                    onChange={() =>
+                      setValues({
+                        ...values,
+                        is_home_request: !values.is_home_request,
+                      })
+                    }
+                    color={"primary"}
+                    checked={values?.is_home_request}
+                    name="is_home_request"
+                    value={values?.is_home_request}
+                  />
+                </Box>
+              </Box>
+              <Grid item justify={"center"} container style={{ marginTop: 35 }}>
+                <Box
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  width={600}
+                >
+                  <>
+                    <Button
+                      variant={"outlined"}
+                      color={"primary"}
+                      onClick={() => history.push("/app/clinic/list")}
+                    >
+                      Отмена
+                    </Button>
+                    <Button
+                      variant={"contained"}
+                      color={"success"}
+                      onClick={handleSubmit}
+                    >
+                      Сохранить
+                    </Button>
+                  </>
+                </Box>
+              </Grid>
+            </Grid>
+          )}
         </Widget>
       </Grid>
     </Grid>

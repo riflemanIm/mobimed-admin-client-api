@@ -65,15 +65,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-// `medicalnet_actions`.`description`,
-// `medicalnet_actions`.`medicalnet_id`,
-// `medicalnet_actions`.`sort_order`,
-// `medicalnet_actions`.`date_from`,
-// `medicalnet_actions`.`date_to`,
-// `medicalnet_actions`.`url`,
-// `medicalnet_actions`.`image`,
-// `medicalnet_actions`.`action_text`
-
 const headCells = [
   {
     id: "medicalnet_actions_id",
@@ -164,11 +155,9 @@ const PromoList = () => {
   };
 
   React.useEffect(() => {
-    // sendNotification("Все промо");
     async function fetchAPI() {
       try {
         await actions.doFetch({}, false)(promoDispatch);
-        //setPromosRows(promoValue.rows);
       } catch (e) {
         console.log(e);
       }

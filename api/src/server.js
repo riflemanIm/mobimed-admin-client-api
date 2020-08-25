@@ -9,6 +9,8 @@ import clinicRouter from "./routes/clinic-crud";
 import regionRouter from "./routes/region-crud";
 import translationRouter from "./routes/translations-crud";
 import PromoRouter from "./routes/promo-crud";
+import ServiseRouter from "./routes/service-crud";
+import MedicalNetRouter from "./routes/medical_net-crud";
 
 import config from "./config/config";
 const server = express();
@@ -34,7 +36,8 @@ server.use("/api/users", usersRouter);
 server.use("/api/clinics", clinicRouter);
 server.use("/api/translations", translationRouter);
 server.use("/api/promos", PromoRouter);
-
+server.use("/api/services", ServiseRouter);
+server.use("/api/medical_net", MedicalNetRouter);
 //Serves all the request which includes /images in the url from Images folder
 server.use("/images", express.static(__dirname + "/../images"));
 

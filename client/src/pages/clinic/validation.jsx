@@ -1,24 +1,25 @@
 export default function validate(values) {
   let errors = {};
-  if (!values.clinicname) {
-    errors.clinicname = "Заполните Clinicname";
+  if (!values.code) {
+    errors.code = "Заполните Код";
   }
-  if (!values.first_name) {
-    errors.first_name = "Заполните Имя";
+  if (!values.title) {
+    errors.title = "Заполните Название";
   }
-  if (!values.last_name) {
-    errors.last_name = "Заполните Фамилие";
+  if (!values.postal_address) {
+    errors.postal_address = "Заполните Почтовый адрес";
   }
   if (!values.phone) {
     errors.phone = "Заполните Телефон";
   }
-  if (!values.notify_email) {
-    errors.notify_email = "Заполните Email";
+  if (!values.latitude) {
+    errors.latitude = "Заполните Latitude";
   }
-  if (!/\S+@\S+\.\S+/.test(values.notify_email)) {
-    errors.notify_email = "Неверный Email";
+  if (!values.longitude) {
+    errors.longitude = "Заполните Longitude";
   }
 
+  console.log("errors", errors);
   // if (!values?.password) {
   //   errors.password = "Заполните пароль";
   // }

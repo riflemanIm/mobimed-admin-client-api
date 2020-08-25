@@ -1,5 +1,5 @@
 import express from "express";
-import usersDB from "../models/user-model.js";
+import db from "../models/user-model.js";
 import { use } from "passport";
 import multer from "multer";
 const upload = multer();
@@ -8,7 +8,7 @@ const router = express.Router();
 // GET ALL USERS
 router.get("/", async (req, res) => {
   try {
-    const users = await usersDB.find();
+    const users = await db.find();
     // console.log("GET ALL USERS\n\n", users);
     res.status(200).json(users);
   } catch (err) {
@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const userId = req.params.id;
   try {
-    const user = await usersDB.findById(userId);
+    const user = await db.findById(userId);
     if (!user) {
       res
         .status(404)
@@ -37,7 +37,7 @@ router.get("/:id", async (req, res) => {
 router.get("/photo/:id", async (req, res) => {
   const userId = req.params.id;
   try {
-    const data = await usersDB.photoById(userId);
+    const data = await db.photoById(userId);
     if (!data || data.length === 0) {
       res
         .status(404)
@@ -60,10 +60,10 @@ router.post("/", async (req, res) => {
     res.status(404).json({ err: "Please provide the username" });
   } else {
     try {
-      const username = await usersDB.findUsername(newUser.username);
+      const username = await db.findUsername(newUser.username);
       console.log("\n\n\n username '" + username + "' \n\n\n");
       if (!username) {
-        const user = await usersDB.addUser(newUser);
+        const user = await db.addUser(newUser);
         console.log("\n\n\n addUser '" + user + "' \n\n\n");
         res.status(201).json(user);
       } else {
@@ -84,13 +84,13 @@ router.put("/:id", async (req, res) => {
   } else {
     try {
       console.log("\n\n ---  \n\n\n");
-      const usernameElse = await usersDB.findUsernameNotCurUser(
+      const usernameElse = await db.findUsernameNotCurUser(
         userId,
         newChanges.username
       );
       console.log("\n\n\n usernameElse '" + usernameElse + "' \n\n\n");
       if (!usernameElse) {
-        const addChanges = await usersDB.updateUser(userId, newChanges);
+        const addChanges = await db.updateUser(userId, newChanges);
         console.log("addChanges", addChanges);
         res.status(200).json(addChanges);
       } else {
@@ -118,7 +118,7 @@ router.put(
         const { filename } = req.body;
         const userId = req.params.id;
         console.log("\n ------- saveUserAvatar ------\n");
-        await usersDB.saveUserAvatar(userId, buffer);
+        await db.saveUserAvatar(userId, buffer);
         //send response
         res.send({ status: "ok", filename });
       }
@@ -131,7 +131,7 @@ router.put(
 router.delete("/upload-avatar/:id", async (req, res) => {
   const userId = req.params.id;
   try {
-    const deleting = await usersDB.removeUserAvatar(userId);
+    const deleting = await db.removeUserAvatar(userId);
     res.status(204).json(deleting);
   } catch (err) {
     res.status(500).json({ err: "Error deleting user avatar " });
@@ -141,7 +141,7 @@ router.delete("/upload-avatar/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const userId = req.params.id;
   try {
-    const deleting = await usersDB.removeUser(userId);
+    const deleting = await db.removeUser(userId);
     console.log("deleting \n", deleting);
     res.status(204).json(deleting);
   } catch (err) {

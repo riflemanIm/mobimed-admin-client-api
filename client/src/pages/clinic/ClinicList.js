@@ -10,8 +10,8 @@ import {
   DialogTitle,
   TextField as Input,
 } from "@material-ui/core";
-import Widget from "../../components/Widget";
-import { Button } from "../../components/Wrappers";
+import Widget from "../../components/Widget/Widget";
+import { Button } from "../../components/Wrappers/Wrappers";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -20,28 +20,25 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/DeleteOutlined";
 import Notification from "../../components/Notification/Notification";
 import { toast } from "react-toastify";
 
-import { Typography, Avatar, Link } from "../../components/Wrappers";
+import { Typography, Avatar, Link } from "../../components/Wrappers/Wrappers";
 import { useClinicDispatch, useClinicState } from "../../context/ClinicContext";
 
 import useStyles from "./styles";
 // Icons
 import {
   Add as AddIcon,
-  GetApp as DownloadIcon,
   Search as SearchIcon,
   CreateOutlined as CreateIcon,
-  HelpOutline as HelpIcon,
 } from "@material-ui/icons";
 
 import { actions } from "../../context/ClinicContext";
-import config from "../../config";
 import moment from "moment/moment";
+import config from "../../config";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -70,34 +67,30 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: "clinic_id", numeric: false, disablePadding: true, label: "ID" },
-  { id: "logo", numeric: false, disablePadding: false, label: "Лого" },
-  { id: "title", numeric: false, disablePadding: false, label: "Название" },
+  { id: "clinic_id", toRight: false, disablePadding: false, label: "ID" },
+  { id: "code", toRight: false, disablePadding: false, label: "Код" },
+  { id: "actions", toRight: false, disablePadding: false, label: "Дествия" },
+
+  { id: "logo", toRight: false, disablePadding: false, label: "Лого" },
+  { id: "title", toRight: false, disablePadding: false, label: "Название" },
   {
     id: "postal_address",
-    numeric: false,
+    toRight: false,
     disablePadding: false,
     label: "Адрес",
   },
-  { id: "net_name", numeric: false, disablePadding: false, label: "Сеть" },
+  { id: "net_name", toRight: false, disablePadding: false, label: "Сеть" },
+  { id: "service", toRight: false, disablePadding: false, label: "Сервис" },
   {
     id: "cdate",
-    numeric: false,
+    toRight: true,
     disablePadding: false,
     label: "Дата создания",
   },
-  { id: "actions", numeric: false, disablePadding: false, label: "Дествия" },
 ];
 
 function EnhancedTableHead(props) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -105,18 +98,10 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ "aria-label": "select all desserts" }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
+            align={headCell.toRight ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "default"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -142,7 +127,6 @@ const ClinicList = () => {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
 
-  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [clinicsRows, setClinicsRows] = React.useState([]);
 
@@ -158,11 +142,11 @@ const ClinicList = () => {
 
   const handleDelete = () => {
     actions.doDelete(clinicValue.idToDelete)(clinicDispatch);
-    sendNotification("Clinic deleted");
+    sendNotification("Промо удалена");
   };
 
   React.useEffect(() => {
-    sendNotification("GETTING ALL CLINICS");
+    // sendNotification("Все промо");
     async function fetchAPI() {
       try {
         await actions.doFetch({}, false)(clinicDispatch);
@@ -255,16 +239,15 @@ const ClinicList = () => {
     Math.min(rowsPerPage, clinicsRows.length - page * rowsPerPage);
 
   const handleSearch = (e) => {
-    const newArr = clinicsRows.filter((c) => {
-      return c.clinicname
+    const newArr = clinicValue.rows.filter((c) => {
+      return `${c.title}${c.postal_address}`
         .toLowerCase()
         .includes(e.currentTarget.value.toLowerCase());
     });
+
     setClinicsRows(newArr);
-    if (newArr.length > 0) setDense(true);
-    else setDense(false);
   };
-  console.log("clinicValue", clinicValue);
+  //console.log("clinicsRows", clinicsRows);
   return (
     <Grid container spacing={3}>
       <Dialog
@@ -274,19 +257,19 @@ const ClinicList = () => {
         aria-labelledby="scroll-dialog-title"
       >
         <DialogTitle id="alert-dialog-title">
-          Are you sure that you want to delete clinic?
+          Вы уверены что хотите удалить?
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Clinic will be deleted.
+            Запись будет удалена
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={closeModal} color="primary">
-            Disagree
+            Отмена
           </Button>
           <Button onClick={handleDelete} color="primary" autoFocus>
-            Agree
+            Применить
           </Button>
         </DialogActions>
       </Dialog>
@@ -303,7 +286,7 @@ const ClinicList = () => {
                   <Box mr={1} display={"flex"}>
                     <AddIcon />
                   </Box>
-                  Add
+                  Добавить
                 </Button>
               </Link>
             </Box>
@@ -312,15 +295,9 @@ const ClinicList = () => {
               flexDirection={"column"}
               alignItems={"flex-end"}
             >
-              <Button variant={"outlined"} color={"secondary"}>
-                <Box display={"flex"} mr={1}>
-                  <DownloadIcon />
-                </Box>
-                Download
-              </Button>
               <Input
                 id="search-field"
-                label="Search"
+                label="Поиск"
                 margin="dense"
                 variant="outlined"
                 onChange={(e) => handleSearch(e)}
@@ -339,11 +316,7 @@ const ClinicList = () => {
       <Grid item xs={12}>
         <Widget inheritHeight noBodyPadding>
           <TableContainer>
-            <Table
-              aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
-              aria-label="enhanced table"
-            >
+            <Table aria-labelledby="tableTitle" aria-label="enhanced table">
               <EnhancedTableHead
                 numSelected={selected.length}
                 order={order}
@@ -368,22 +341,39 @@ const ClinicList = () => {
                         key={row.clinic_id}
                         selected={isItemSelected}
                       >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={isItemSelected}
-                            inputProps={{
-                              "aria-labelledby": labelId,
+                        <TableCell component="th" id={labelId} scope="row">
+                          <Typography variant={"body2"}>
+                            {row.clinic_id}
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="left">
+                          <Typography variant={"body2"}>{row.code}</Typography>
+                        </TableCell>
+                        <TableCell align="left">
+                          <Box
+                            display={"flex"}
+                            style={{
+                              marginLeft: -12,
                             }}
-                          />
+                          >
+                            <IconButton color={"primary"}>
+                              <Link
+                                href={`#app/clinic/${row.clinic_id}/edit`}
+                                color="#fff"
+                              >
+                                <CreateIcon />
+                              </Link>
+                            </IconButton>
+
+                            <IconButton
+                              onClick={() => openModal(row.clinic_id)}
+                              color={"primary"}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Box>
                         </TableCell>
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                        >
-                          <Typography variant={"body2"}>{index + 1}</Typography>
-                        </TableCell>
+
                         <TableCell align="center">
                           {row.logo && (
                             <Avatar
@@ -410,52 +400,21 @@ const ClinicList = () => {
                             {row.net_name}
                           </Typography>
                         </TableCell>
+                        <TableCell align="left">
+                          <Typography variant={"body2"}>
+                            {row.service}
+                          </Typography>
+                        </TableCell>
                         <TableCell align="right">
                           <Typography variant={"body2"}>
                             {moment(row.cdate).format("DD.MM.YYYY")}
                           </Typography>
                         </TableCell>
-
-                        <TableCell align="left">
-                          <Box
-                            display={"flex"}
-                            style={{
-                              marginLeft: -12,
-                            }}
-                          >
-                            <IconButton color={"primary"}>
-                              <Link
-                                href={`#app/clinic/${row.clinic_id}/edit`}
-                                color="#fff"
-                              >
-                                <CreateIcon />
-                              </Link>
-                            </IconButton>
-                            <IconButton color={"primary"}>
-                              <Link
-                                href={`#app/clinic/${row.clinic_id}`}
-                                color="#fff"
-                              >
-                                <HelpIcon />
-                              </Link>
-                            </IconButton>
-                            <IconButton
-                              onClick={() => openModal(row.clinic_id)}
-                              color={"primary"}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </Box>
-                        </TableCell>
                       </TableRow>
                     );
                   })}
                 {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 33 : 53) * emptyRows,
-                    }}
-                  >
+                  <TableRow>
                     <TableCell colSpan={6} />
                   </TableRow>
                 )}

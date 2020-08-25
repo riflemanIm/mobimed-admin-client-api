@@ -1,5 +1,5 @@
 import express from "express";
-import translationsDB from "../models/translations-model";
+import db from "../models/translations-model";
 import { use } from "passport";
 import multer from "multer";
 import { tranformNoda } from "../helpers/helpers";
@@ -9,7 +9,7 @@ const router = express.Router();
 // GET ALL TRANSLATION
 router.get("/", async (req, res) => {
   try {
-    const translations = await translationsDB.find();
+    const translations = await db.find();
     res.status(200).json(translations);
   } catch (err) {
     res.status(500).json({ err });
@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
 // GET ALL BACKAPS
 router.get("/backups", async (req, res) => {
   try {
-    const backups = await translationsDB.findBackupsTranslations();
+    const backups = await db.findBackupsTranslations();
     console.log("\n backups \n", backups);
     res.status(200).json(backups);
   } catch (err) {
@@ -31,7 +31,7 @@ router.get("/backups", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const translationId = req.params.id;
   try {
-    const translation = await translationsDB.findById(translationId);
+    const translation = await db.findById(translationId);
     if (!translation) {
       res
         .status(404)
@@ -50,7 +50,7 @@ router.get("/download/:lang/:pname", async (req, res) => {
   const lang = req.params.lang;
   const pname = req.params.pname;
   try {
-    const translation = await translationsDB.findByLangPName(lang, pname);
+    const translation = await db.findByLangPName(lang, pname);
     if (!translation) {
       res
         .status(404)
@@ -116,10 +116,9 @@ router.put("/import-file", upload.single("filedata"), async (req, res) => {
         doBackup,
       } = req.body;
 
-      if (doBackup === "true") await translationsDB.backupTranslations(pname);
+      if (doBackup === "true") await db.backupTranslations(pname);
 
-      if (deleteOldKeys === "true")
-        await translationsDB.removeTranslationsByPName(pname);
+      if (deleteOldKeys === "true") await db.removeTranslationsByPName(pname);
 
       const translation = JSON.parse(buffer.toString("utf8"));
       const lang = filename.split(".")[0];
@@ -146,14 +145,7 @@ router.put("/import-file", upload.single("filedata"), async (req, res) => {
                 : tkey;
             //console.log(fullTKey);
             if (tkey !== "")
-              translationsDB.saveTranslation(
-                gkey,
-                fullTKey,
-                pname,
-                obj,
-                account_id,
-                lang
-              );
+              db.saveTranslation(gkey, fullTKey, pname, obj, account_id, lang);
           }
           parentTKeys = parentTKeys.slice(0, level);
         }
@@ -190,7 +182,7 @@ router.put("/import-file", upload.single("filedata"), async (req, res) => {
 router.put("/checked", async (req, res) => {
   const post = req.body.data;
   try {
-    const checkeds = await translationsDB.updateChecked(post);
+    const checkeds = await db.updateChecked(post);
     console.log("\n checkeds \n", checkeds);
     res.status(200).json(checkeds);
   } catch (err) {
@@ -203,7 +195,7 @@ router.put("/restorebackup", async (req, res) => {
   const post = req.body.data;
 
   try {
-    const r = await translationsDB.restoreBackup(post);
+    const r = await db.restoreBackup(post);
     console.log("\n resrored \n", r);
     res.status(200).json(r);
   } catch (err) {
@@ -216,10 +208,7 @@ router.put("/:id", async (req, res) => {
   const newChanges = req.body.data;
 
   try {
-    const addChanges = await translationsDB.updateTranslation(
-      translationId,
-      newChanges
-    );
+    const addChanges = await db.updateTranslation(translationId, newChanges);
     //console.log("\n addChanges \n", translationId, addChanges);
     res.status(200).json(addChanges);
   } catch (err) {
@@ -230,7 +219,7 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const translationId = req.params.id;
   try {
-    const deleting = await translationsDB.removeTranslation(translationId);
+    const deleting = await db.removeTranslation(translationId);
     console.log("deleting \n", deleting);
     res.status(204).json(deleting);
   } catch (err) {

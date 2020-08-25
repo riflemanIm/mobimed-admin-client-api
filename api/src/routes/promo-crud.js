@@ -1,5 +1,5 @@
 import express from "express";
-import promosDB from "../models/promo-model.js";
+import db from "../models/promo-model.js";
 import { use } from "passport";
 import multer from "multer";
 const upload = multer();
@@ -8,18 +8,18 @@ const router = express.Router();
 // GET ALL PROMO
 router.get("/", async (req, res) => {
   try {
-    const promos = await promosDB.find();
+    const promos = await db.find();
     res.status(200).json(promos);
   } catch (err) {
     res.status(500).json({ err });
   }
 });
 
-// GET USER BY ID
+// GET ROW BY ID
 router.get("/:id", async (req, res) => {
   const promoId = req.params.id;
   try {
-    const promo = await promosDB.findById(promoId);
+    const promo = await db.findById(promoId);
     if (!promo) {
       res
         .status(404)
@@ -32,12 +32,12 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// INSERT USER INTO DB
+// INSERT ROW INTO DB
 router.post("/", async (req, res) => {
   const newPromo = req.body.data;
 
   try {
-    await promosDB.addPromo(newPromo);
+    await db.addPromo(newPromo);
     res.status(201).json("ok");
   } catch (err) {
     console.log("err", err);
@@ -52,7 +52,7 @@ router.put("/:id", async (req, res) => {
   const newChanges = req.body.data;
 
   try {
-    const addChanges = await promosDB.updatePromo(promoId, newChanges);
+    const addChanges = await db.updatePromo(promoId, newChanges);
     console.log("\n addChanges\n", promoId, addChanges);
     res.status(200).json(addChanges);
   } catch (err) {
@@ -65,7 +65,7 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const promoId = req.params.id;
   try {
-    const deleting = await promosDB.removePromo(promoId);
+    const deleting = await db.removePromo(promoId);
     console.log("deleting \n", deleting);
     res.status(204).json(deleting);
   } catch (err) {

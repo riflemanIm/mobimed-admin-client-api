@@ -32,6 +32,8 @@ function clinicReducer(state = initialData, { type, payload }) {
     return {
       ...state,
       currentClinic: null,
+      services: [],
+      medical_net: [],
       findLoading: true,
     };
   }
@@ -39,7 +41,7 @@ function clinicReducer(state = initialData, { type, payload }) {
   if (type === "CLINICS_FORM_FIND_SUCCESS") {
     return {
       ...state,
-      currentClinic: payload,
+      ...payload,
       findLoading: false,
     };
   }
@@ -48,6 +50,9 @@ function clinicReducer(state = initialData, { type, payload }) {
     return {
       ...state,
       currentClinic: null,
+      services: [],
+      medical_net: [],
+
       findLoading: false,
     };
   }
@@ -57,6 +62,8 @@ function clinicReducer(state = initialData, { type, payload }) {
       ...state,
       saveLoading: true,
       currentClinic: { clinic_id: null },
+      services: [],
+      medical_net: [],
     };
   }
 
@@ -175,6 +182,8 @@ function ClinicProvider({ children }) {
     findLoading: false,
     saveLoading: false,
     currentClinic: { clinic_id: null },
+    services: [],
+    medical_net: [],
     rows: [],
     loading: false,
     idToDelete: null,
@@ -221,13 +230,19 @@ const actions = {
       dispatch({
         type: "CLINICS_FORM_FIND_STARTED",
       });
+      const req = [
+        axios.get(`/clinics/${id}`),
+        axios.get("/services"),
+        axios.get("/medical_net"),
+      ];
 
-      axios.get(`/clinics/${id}`).then((res) => {
-        const currentClinic = res.data;
-
+      axios.all(req).then((res) => {
+        const currentClinic = res[0].data;
+        const services = res[1].data;
+        const medical_net = res[2].data;
         dispatch({
           type: "CLINICS_FORM_FIND_SUCCESS",
-          payload: currentClinic,
+          payload: { currentClinic, services, medical_net },
         });
       });
     } catch (error) {
@@ -278,7 +293,7 @@ const actions = {
     }
   },
 
-  doUpdate: (id, values, history) => async (dispatch, notify) => {
+  doUpdate: (id, values, notify) => async (dispatch, history) => {
     dispatch({
       type: "CLINICS_FORM_UPDATE_STARTED",
     });

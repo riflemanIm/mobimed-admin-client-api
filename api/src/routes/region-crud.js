@@ -1,5 +1,5 @@
 import express from "express";
-import regionsDB from "../models/region-model.js";
+import db from "../models/region-model.js";
 import { use } from "passport";
 import multer from "multer";
 const upload = multer();
@@ -8,18 +8,18 @@ const router = express.Router();
 // GET ALL REGION
 router.get("/", async (req, res) => {
   try {
-    const regions = await regionsDB.find();
+    const regions = await db.find();
     res.status(200).json(regions);
   } catch (err) {
     res.status(500).json({ err });
   }
 });
 
-// GET USER BY ID
+// GET  BY ID
 router.get("/:id", async (req, res) => {
   const regionId = req.params.id;
   try {
-    const region = await regionsDB.findById(regionId);
+    const region = await db.findById(regionId);
     if (!region) {
       res
         .status(404)
@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
   const newRegion = req.body.data;
 
   try {
-    await regionsDB.addRegion(newRegion);
+    await db.addRegion(newRegion);
     res.status(201).json("ok");
   } catch (err) {
     console.log("err", err);
@@ -52,7 +52,7 @@ router.put("/:id", async (req, res) => {
   const newChanges = req.body.data;
 
   try {
-    const addChanges = await regionsDB.updateRegion(regionId, newChanges);
+    const addChanges = await db.updateRegion(regionId, newChanges);
     console.log("\n addChanges\n", regionId, addChanges);
     res.status(200).json(addChanges);
   } catch (err) {
@@ -65,7 +65,7 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const regionId = req.params.id;
   try {
-    const deleting = await regionsDB.removeRegion(regionId);
+    const deleting = await db.removeRegion(regionId);
     console.log("deleting \n", deleting);
     res.status(204).json(deleting);
   } catch (err) {

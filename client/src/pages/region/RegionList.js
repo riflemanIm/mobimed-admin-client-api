@@ -124,11 +124,10 @@ const RegionList = () => {
 
   const handleDelete = () => {
     actions.doDelete(regionValue.idToDelete)(regionDispatch);
-    sendNotification("Region deleted");
+    sendNotification("Запись удалена");
   };
 
   React.useEffect(() => {
-    sendNotification("Все регионы");
     async function fetchAPI() {
       try {
         await actions.doFetch({}, false)(regionDispatch);
