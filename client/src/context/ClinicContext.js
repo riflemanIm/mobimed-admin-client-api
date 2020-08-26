@@ -318,49 +318,6 @@ const actions = {
           payload: error.response.data?.err,
         });
       });
-
-    // try {
-    //   dispatch({
-    //     type: "CLINICS_FORM_UPDATE_STARTED",
-    //   });
-    //   await axios.put(`/clinics/${id}`, { id, data: values });
-
-    //   dispatch({
-    //     type: "CLINICS_FORM_UPDATE_SUCCESS",
-    //     payload: values,
-    //   });
-
-    //   history.push("/app/clinic/list");
-    // } catch (e) {
-    //   dispatch({
-    //     type: "CLINICS_FORM_UPDATE_ERROR",
-    //     payload: e.response.data?.err,
-    //   });
-    // }
-  },
-
-  doChangePassword: ({ newPassword, currentPassword }) => async (dispatch) => {
-    try {
-      dispatch({
-        type: "CLINICS_FORM_CREATE_STARTED",
-      });
-      await axios.put("/auth/password-update", {
-        newPassword,
-        currentPassword,
-      });
-      dispatch({
-        type: "CLINICS_PASSWORD_UPDATE_SUCCESS",
-      });
-
-      toast("Password updated");
-    } catch (error) {
-      toast("Error");
-      console.log(error);
-
-      dispatch({
-        type: "CLINICS_FORM_CREATE_ERROR",
-      });
-    }
   },
 
   doFetch: (filter, keepPagination = false) => async (dispatch) => {

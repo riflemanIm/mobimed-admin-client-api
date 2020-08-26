@@ -16,10 +16,17 @@ import Notification from "../../components/Notification/Notification";
 
 import { actions } from "../../context/ClinicContext";
 import { useClinicDispatch, useClinicState } from "../../context/ClinicContext";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import useForm from "../../hooks/useForm";
 import validate from "./validation";
 import isEmpty from "../../helpers/isEmpty";
+import {
+  extractExtensionFrom,
+  uploadToServer,
+  deleteAvararServer,
+} from "../../helpers/file";
+import config from "../../config";
 
 const EditClinic = () => {
   const classes = useStyles();
@@ -28,6 +35,7 @@ const EditClinic = () => {
 
   const dispatch = useClinicDispatch();
   const { currentClinic, services, medical_net } = useClinicState();
+  const [isLoadingImg, setIsLoadingImg] = React.useState(false);
 
   function sendNotification(errorMessage) {
     const componentProps = {
@@ -77,23 +85,58 @@ const EditClinic = () => {
     validate
   );
 
+  const deleteOneImage = async () => {
+    setIsLoadingImg(true);
+    await deleteAvararServer(`${config.baseURLApi}/clinics/upload-avatar/${id}`)
+      .then(() => {
+        setIsLoadingImg(false);
+        setValues({
+          ...values,
+          logo: "",
+        });
+      })
+      .catch((e) => {
+        console.log("delete img err", e);
+        setIsLoadingImg(false);
+      });
+  };
+
+  const handleFile = async (event) => {
+    const filedata = event.target.files[0];
+    const filename = filedata.name;
+    const extension = filename != null && extractExtensionFrom(filename);
+    if (
+      filename != null &&
+      ["png", "jpg", "jpeg", "gif"].includes(extension.toLowerCase())
+    ) {
+      const filename = `${id}.${extension}`;
+
+      setIsLoadingImg(true);
+      await uploadToServer(`${config.baseURLApi}/clinics/upload-avatar/${id}`, {
+        filedata,
+        filename,
+      })
+        .then((res) => {
+          setIsLoadingImg(false);
+          console.log("res", res.data.filename);
+          setValues({
+            ...values,
+            logo: res.data.filename,
+          });
+        })
+        .catch((e) => {
+          setIsLoadingImg(false);
+          console.log("ee", e);
+        });
+    } else {
+      sendNotification(
+        "Можно загружать только файлы с расширением .PNG, .JPG, .JPEG"
+      );
+    }
+    return null;
+  };
+
   console.log("values", values);
-
-  // "c.code",
-  // "c.logo",
-  // "c.title",
-  // "c.url",
-  // "c.postal_address",
-  // "c.phone",
-  // "c.latitude",
-  // "c.longitude",
-
-  // "c.is_phone_required",
-  // "c.is_anonym_visit",
-  // "c.is_home_request",
-
-  // "c.medical_net_id",
-  // "c.client_service_id",
 
   return (
     <Grid container spacing={3}>
@@ -311,6 +354,49 @@ const EditClinic = () => {
                     value={values?.is_home_request}
                   />
                 </Box>
+
+                {isLoadingImg ? (
+                  <CircularProgress size={18} />
+                ) : (
+                  <Box mb={2}>
+                    <Typography weight={"medium"}>Фото:</Typography>
+                    <div className={classes.galleryWrap}>
+                      <div className={classes.imgWrap}>
+                        {values.logo && (
+                          <>
+                            <span
+                              className={classes.deleteImageX}
+                              onClick={() => deleteOneImage()}
+                            >
+                              ×
+                            </span>
+                            <img
+                              src={`${config.baseURLimages}/clinics/${values.logo}`}
+                              alt=""
+                              height={"100%"}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    <label
+                      className={classes.uploadLabel}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {"Upload an image"}
+                      <input
+                        style={{ display: "none" }}
+                        accept="image/*"
+                        type="file"
+                        onChange={handleFile}
+                      />
+                    </label>
+                    <Typography size={"sm"} style={{ marginBottom: 35 }}>
+                      .PNG, .JPG, .JPEG
+                    </Typography>
+                  </Box>
+                )}
               </Box>
               <Grid item justify={"center"} container style={{ marginTop: 35 }}>
                 <Box

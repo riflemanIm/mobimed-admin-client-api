@@ -29,6 +29,15 @@ const findById = (id) => {
     .where("c.clinic_id", id);
 };
 
+// GET LOGO
+const findLogoById = (id) => {
+  return db
+    .select("c.logo")
+    .from("clinic as c")
+    .first()
+    .where("c.clinic_id", id);
+};
+
 // GET ALL CLINICS
 const find = () => {
   const r = db
@@ -62,6 +71,11 @@ const addRow = (row) => {
   return db("clinic").insert(row);
 };
 
+// SAVE PHOTO FILE NAME
+const saveLogo = (id, logo) => {
+  return db("clinic").where("clinic_id", id).update({ logo });
+};
+
 // UPDATE
 const updateRow = (id, post) => {
   return db("clinic").where("clinic_id", id).update(post);
@@ -78,4 +92,6 @@ module.exports = {
   addRow,
   updateRow,
   removeRow,
+  saveLogo,
+  findLogoById,
 };

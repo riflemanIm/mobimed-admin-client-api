@@ -2,8 +2,11 @@ import express from "express";
 import db from "../models/clinic-model.js";
 import { use } from "passport";
 import multer from "multer";
-const upload = multer();
 const router = express.Router();
+const path = require("path");
+const { promisify } = require("util");
+const fs = require("fs");
+const unlinkAsync = promisify(fs.unlink);
 
 // GET ALL CLINICS
 router.get("/", async (req, res) => {
@@ -47,19 +50,75 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
+  const id = req.params.id;
+  const newChanges = req.body.data;
+  console.log("newChanges", newChanges);
+  try {
+    const addChanges = await db.updateRow(id, newChanges);
+    console.log("\n addChanges\n", id, addChanges);
+    res.status(200).json(addChanges);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ err: "Error in updating region", message: err.message });
+  }
+});
+
+// SAVE LOGO ON DISK, FILE NAME TO DB
+let filename = "";
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images/clinics");
+  },
+  filename: (req, file, cb) => {
+    const clinicId = req.params.id;
+    filename = `clinic_${clinicId}${path.extname(file.originalname)}`;
+    cb(null, filename);
+  },
+});
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({ storage: storage, fileFilter: fileFilter });
+
+router.put(
+  "/upload-avatar/:id",
+  upload.single("filedata"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        res.send({
+          status: false,
+          message: "No file uploaded",
+        });
+      } else {
+        const id = req.params.id;
+
+        await db.saveLogo(id, filename);
+        res.send({ status: "ok", filename });
+      }
+    } catch (err) {
+      res.status(500).json({ err: "Error uploading file " });
+    }
+  }
+);
+
+router.delete("/upload-avatar/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const clinic = await db.findById(id);
-    if (!clinic) {
-      res
-        .status(404)
-        .json({ err: "The clinic with the specified id does not exist" });
-    } else {
-      res.status(200).json(clinic);
-    }
+    const r = await db.findLogoById(id);
+    await unlinkAsync(`images/clinics/${r.logo}`);
+    await db.saveLogo(id, "");
+
+    res.status(204).json({ status: "ok", filename: null });
   } catch (err) {
-    res.status({ err: "The clinic information could not be retrieved" });
+    res.status(500).json({ err: err.message });
   }
 });
 
