@@ -254,7 +254,31 @@ const actions = {
     }
   },
 
-  doCreate: (values, backStep, history) => async (dispatch, notify) => {
+  doReferenceLists: () => async (dispatch) => {
+    try {
+      dispatch({
+        type: "CLINICS_FORM_FIND_STARTED",
+      });
+      const req = [axios.get("/services"), axios.get("/medical_net")];
+
+      axios.all(req).then((res) => {
+        const services = res[0].data;
+        const medical_net = res[1].data;
+        dispatch({
+          type: "CLINICS_FORM_FIND_SUCCESS",
+          payload: { services, medical_net },
+        });
+      });
+    } catch (error) {
+      toast("Error");
+      console.log(error);
+      dispatch({
+        type: "CLINICS_FORM_FIND_ERROR",
+      });
+    }
+  },
+
+  doCreate: (values, notify) => async (dispatch, history) => {
     try {
       dispatch({
         type: "CLINICS_FORM_CREATE_STARTED",
@@ -268,7 +292,7 @@ const actions = {
             type: "CLINICS_FORM_CREATE_SUCCESS",
             payload: { clinic_id: res.data },
           });
-          notify();
+          notify("Клиника добавлена");
           history.push("/app/clinic/list");
         })
         .catch((error) => {
@@ -279,7 +303,6 @@ const actions = {
             type: "CLINICS_FORM_CREATE_ERROR",
             payload: error.response.data?.err,
           });
-          backStep();
         });
     } catch (error) {
       //toast("Error");
