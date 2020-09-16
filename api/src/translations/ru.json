@@ -1,22 +1,19 @@
 {
   "Adres": "Адрес",
-
   "recordInfo": {
     "date": "Дата",
     "description": "Описание",
     "type": "Тип"
   },
   "scenes": {
-    "SignInWithEmail": {
-      "headTitle": "Уже являетесь нашим пациентом?",
-      "signup": {
-        "part1": "Если вы обращаетесь к нам первый раз,вам необходимо ",
-        "part2": "зарегистрироваться."
-      },
-      "sendRequestWithoutAuth": "Оставить заявку без регистрации"
-    },
     "ConfirmVisit": {
       "sendRequest": "Отправить заявку"
+    },
+    "ConfirmationCode": {
+      "changeEmail": "Другой e-mail",
+      "title": {
+        "email": "Введите код подверждения отправленный на e-mail"
+      }
     },
     "EditProfile": {
       "deleteAccount": {
@@ -32,16 +29,12 @@
       },
       "routeName": "Редактирование профиля"
     },
-    "FastDecision": {
-      "text": {
-        "aboutClinic": "О клинике"
-      }
-    },
+    "ddd": { "df": "fff" },
     "Home": {
       "title": {
         "signIn": {
-          "part1": "Для получения доступа ко всем услугамвам необходимо ",
-          "part2": "войти"
+          "part1": "Для -- получения доступа ко всем услугамвам необходимо",
+          "part3": "войти="
         }
       },
       "visits": {
@@ -52,6 +45,14 @@
       "card": "Карта",
       "editProfile": "редактировать профиль",
       "title": "Профиль"
+    },
+    "SignInWithEmail": {
+      "headTitle": "Уже являетесь нашим пациентом?",
+      "sendRequestWithoutAuth": "Оставить заявку без регистрации",
+      "signup": {
+        "part1": "Если вы обращаетесь к нам первый раз,\nвам необходимо",
+        "part2": "зарегистрироваться."
+      }
     },
     "SignUpWithEmailStep1Fio": {
       "title": "Для продолжения укажите ваши данные"
@@ -67,11 +68,8 @@
     },
     "SignUpWithEmailStep4Password": {
       "password": "Пароль",
-      "passwordConfirmation": "Подтвердите пароль",
+      "passwordConfirmation": "Пароль",
       "title": "Установите пароль"
     }
-  },
-  "specsList": {
-    "emptyText": "Список специалистов пока пуст."
   }
 }

@@ -10,9 +10,10 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const translations = await db.find();
+    console.log("translations", translations);
     res.status(200).json(translations);
   } catch (err) {
-    res.status(500).json({ err });
+    res.status(500).json({ err: err.message });
   }
 });
 

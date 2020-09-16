@@ -43,12 +43,16 @@ const findByPName = (pname) => {
   return db("translations").where("pname", pname);
 };
 
-const findByLangPName = (lang, pname) => {
-  return db
-    .select("gkey", "tkey", `lang_${lang}`)
-    .from("translations")
-    .where("pname", pname)
-    .orderBy([{ column: "gkey" }, { column: "tkey" }]);
+const findByLangPName = (lang, pname /*, checkedOnly = null*/) => {
+  return (
+    db
+      .select("gkey", "tkey", `lang_${lang}`)
+      .from("translations")
+      .where("pname", pname)
+      // .where(() => checkedOnly != null && this.where(`checked_${lang}`, 1))
+
+      .orderBy([{ column: "gkey" }, { column: "tkey" }])
+  );
 };
 
 // ADD A TRANSLATION

@@ -64,7 +64,7 @@ const AddClinic = () => {
     validate
   );
 
-  console.log("values", values);
+  // console.log("values", values);
 
   return (
     <Grid container spacing={3}>

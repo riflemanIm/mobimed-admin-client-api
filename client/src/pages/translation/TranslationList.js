@@ -202,6 +202,8 @@ const TranslationList = () => {
     filterVals,
   } = useTranslationState();
 
+  console.log("rows", rows);
+
   //const pNames = [...new Set(rows.map((item) => item.pname))];
   const pNames = config.pNames;
   const gKeys = [
