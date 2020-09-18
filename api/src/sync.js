@@ -4,49 +4,63 @@ import requestPromise from "request-promise";
 import request from "request";
 import fs from "fs";
 
-const LANG = "ru";
-const PROJECT_NAME = "test";
-const url = `http://localhost:8000/api/translations/download/${LANG}/${PROJECT_NAME}`;
-const urlUpload = "http://localhost:8000/api/translations/import-file";
-const distFile = `${__dirname}/translations/${LANG}.json`;
+try {
+  if (!["ru", "en", "fr"].includes(process.argv[2]))
+    throw new Error("Needed param LANG after name script ");
+  if (
+    !["mobimed_site", "mobi_app", "telemedialog", "telemed", "test"].includes(
+      process.argv[3]
+    )
+  )
+    throw new Error("Needed param PROJECT_NAME after param LANG");
 
-/**  GET REMOTE JSON  */
-requestPromise({
-  url,
-  method: "GET",
-  json: true,
-})
-  .then((remoteJson) => {
-    /**  MERGE LOCAL AND REMOTE  */
-    const mergedJson = merge(remoteJson, localJson);
+  const LANG = process.argv[2];
+  const PROJECT_NAME = process.argv[3];
+  const HOST = "http://localhost:8000";
+  const url = `${HOST}/api/translations/download/${LANG}/${PROJECT_NAME}`;
+  const urlUpload = `${HOST}/api/translations/import-file`;
+  const distFile = `${__dirname}/translations/${LANG}.json`;
 
-    /**  SAVE mergedJson TO LOCAL  */
-    return new Promise(function (resolve, reject) {
-      fs.writeFile(distFile, JSON.stringify(mergedJson, null, 2), (err) => {
-        if (err) reject(err);
-        else resolve(true);
-      });
-    });
+  /**  GET REMOTE JSON  */
+  requestPromise({
+    url,
+    method: "GET",
+    json: true,
   })
-  .then((saved) => {
-    if (saved) {
-      setTimeout(() => {
-        /** UPLOAD */
-        const req = request.put(urlUpload, function (err, resp, body) {
-          if (err) {
-            console.error("Error!", err.message);
-          } else {
-            console.log("Result: " + body);
-          }
+    .then((remoteJson) => {
+      /**  MERGE LOCAL AND REMOTE  */
+      const mergedJson = merge(remoteJson, localJson);
+
+      /**  SAVE mergedJson TO LOCAL  */
+      return new Promise(function (resolve, reject) {
+        fs.writeFile(distFile, JSON.stringify(mergedJson, null, 2), (err) => {
+          if (err) reject(err);
+          else resolve(true);
         });
-        const form = req.form();
-        form.append("filedata", fs.createReadStream(distFile));
-        form.append("filename", `${LANG}.json`);
-        form.append("account_id", "1");
-        form.append("pname", "test");
-        form.append("deleteOldKeys", "false");
-        form.append("doBackup", "true");
-      }, 2000);
-    }
-  })
-  .catch((err) => console.error(err.message));
+      });
+    })
+    .then((saved) => {
+      if (saved) {
+        setTimeout(() => {
+          /** UPLOAD */
+          const req = request.put(urlUpload, function (err, resp, body) {
+            if (err) {
+              console.error("Error!", err.message);
+            } else {
+              console.log("Result: " + body);
+            }
+          });
+          const form = req.form();
+          form.append("filedata", fs.createReadStream(distFile));
+          form.append("filename", `${LANG}.json`);
+          form.append("account_id", "1");
+          form.append("pname", "test");
+          form.append("deleteOldKeys", "false");
+          form.append("doBackup", "true");
+        }, 2000);
+      }
+    })
+    .catch((err) => console.error(err.message));
+} catch (e) {
+  console.log(e.message);
+}
