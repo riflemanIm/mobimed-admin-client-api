@@ -23,6 +23,11 @@ try {
   const urlUpload = `${HOST}/api/translations/import-file`;
   const distFile = `${__dirname}/translations/${LANG}.json`;
 
+  /** ================ CHECK Destination file ================ */
+  if (!fs.existsSync(distFile)) {
+    throw new Error("Destination file not exists");
+  }
+
   /** ================ GET REMOTE JSON ================ */
   requestPromise({
     url,
