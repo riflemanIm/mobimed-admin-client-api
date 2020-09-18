@@ -1,7 +1,7 @@
 {
   "name": "api-nodejs-knex-mysql",
   "version": "1.0.0",
-  "description": "REST API code for quick setup for CRUD applications using express/knex/mysql",
+  "description": "Sync trtanslations script ",
   "main": "index.js",
   "engines": {
     "node": "12.x"
@@ -16,18 +16,10 @@
   "bugs": {
     "url": "https://github.com/riflemanIm/api-node.js-knex-mysql/issues"
   },
-  "homepage": "https://github.com/riflemanIm/api-node.js-knex-mysql#readme",
+  "homepage": "https://github.com/riflemanIm/api-node.js-knex-mysql/sync/readme",
   "dependencies": {
-    "lodash": "^4.17.20",
+    "lodash.merge": "^4.6.2",
     "request": "^2.88.2",
     "request-promise": "^4.2.6"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.10.3",
-    "@babel/core": "^7.10.3",
-    "@babel/node": "^7.10.3",
-    "@babel/polyfill": "^7.10.1",
-    "@babel/preset-env": "^7.10.3",
-    "@now/node": "^1.7.1"
   }
 }
