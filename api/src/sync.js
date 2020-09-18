@@ -20,12 +20,11 @@ requestPromise({
     /**  MERGE LOCAL AND REMOTE  */
     const mergedJson = merge(remoteJson, localJson);
 
-    /**  SAVE TO LOCAL  */
-
+    /**  SAVE mergedJson TO LOCAL  */
     return new Promise(function (resolve, reject) {
       fs.writeFile(
         `${__dirname}/translations/ru.json`,
-        JSON.stringify(mergedJson, null, 2),
+        JSON.stringify(, null, 2),
         (err) => {
           if (err) reject(err);
           else resolve(true);
@@ -36,6 +35,7 @@ requestPromise({
   .then((saved) => {
     if (saved) {
       setTimeout(() => {
+        /** UPLOAD */
         const req = request.put(urlUpload, function (err, resp, body) {
           if (err) {
             console.error("Error!", err.message);
