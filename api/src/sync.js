@@ -5,6 +5,7 @@ import request from "request";
 import fs from "fs";
 
 try {
+  /**  CHECK process.argv  */
   if (!["ru", "en", "fr"].includes(process.argv[2]))
     throw new Error("Needed param LANG after name script ");
   if (
