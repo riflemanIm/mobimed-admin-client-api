@@ -29,12 +29,10 @@
   },
   "homepage": "https://github.com/riflemanIm/api-node.js-knex-mysql#readme",
   "dependencies": {
-    "axios": "^0.20.0",
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "form-data": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.20.4",
     "lodash": "^4.17.20",
@@ -47,7 +45,8 @@
     "passport-google-oauth2": "^0.2.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "passport-microsoft": "^0.1.0"
+    "passport-microsoft": "^0.1.0",
+    "request-promise": "^4.2.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.3",
