@@ -1,47 +1,63 @@
-import { /*transform, isEqual, isObject,*/ merge } from "lodash";
+import { merge } from "lodash";
 import localJson from "./translations/ru.json";
-
+const axios = require("axios");
 const request = require("request");
 const LANG = "ru";
 const PROJECT_NAME = "test";
 const url = `http://localhost:8000/api/translations/download/${LANG}/${PROJECT_NAME}`;
 
-// console.log(url);
-const options = {
-  url,
-  method: "GET",
-  headers: {
-    Accept: "application/json",
-    "Accept-Charset": "utf-8",
-    "User-Agent": "my-node-script",
-  },
-};
+const fs = require("fs");
+const FormData = require("form-data");
 
 /**  GET REMOTE JSON  */
-request(options, function (err, res, body) {
-  const remoteJson = JSON.parse(body);
-  const mergedJson = merge(remoteJson, localJson);
-  console.log(
-    " \n\n\n---\n\n\n ",
-    // JSON.stringify(difference(remoteJson, localJson), null, 2)
-    JSON.stringify(mergedJson, null, 2)
-  );
-});
+request(
+  {
+    url,
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Accept-Charset": "utf-8",
+      "User-Agent": "my-node-script",
+    },
+  },
+  (err, res, body) => {
+    const remoteJson = JSON.parse(body);
+    const mergedJson = merge(remoteJson, localJson);
+    // console.log(
+    //   " \n\n\n---\n\n\n ",
+    //   JSON.stringify(mergedJson, null, 2)
+    // );
 
-/**
- * Deep diff between two object, using lodash
- * @param  {Object} object Object compared
- * @param  {Object} base   Object to compare with
- * @return {Object}        Return a new object who represent the diff
- 
-function difference(object, base) {
-  return transform(object, (result, value, key) => {
-    if (!isEqual(value, base[key])) {
-      result[key] =
-        isObject(value) && isObject(base[key])
-          ? difference(value, base[key])
-          : value;
-    }
-  });
-}
-*/
+    fs.writeFile(
+      `${__dirname}/translations/ru.json`,
+      JSON.stringify(mergedJson, null, 2),
+      (err) => {
+        if (err) throw err;
+        console.log("Data written to file");
+
+        const form = new FormData();
+
+        form.append(
+          "filedata",
+          fs.createReadStream(`${__dirname}/translations/ru.json`)
+        );
+        form.append("filename", `${LANG}.json`);
+        form.append("account_id", 1);
+        form.append("pname", "test");
+        form.append("deleteOldKeys", false);
+        form.append("doBackup", true);
+
+        const formHeaders = form.getHeaders();
+
+        axios
+          .put("http://localhost:8000/api/translations/import-file", form, {
+            headers: {
+              ...formHeaders,
+            },
+          })
+          .then((response) => response)
+          .catch((error) => error);
+      }
+    );
+  }
+);

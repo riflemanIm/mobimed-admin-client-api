@@ -14,12 +14,12 @@ export const uploadToServer = async (uri, params) => {
     console.log(`${key}: ${value}`);
     formData.append(key, value);
   }
-
-  return await axios.put(uri, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  console.log("formData", formData);
+  // return await axios.put(uri, formData, {
+  //   headers: {
+  //     "Content-Type": "multipart/form-data",
+  //   },
+  // });
 };
 
 export const deleteAvararServer = async (uri) => {
