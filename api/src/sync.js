@@ -23,6 +23,28 @@ try {
   const urlUpload = `${HOST}/api/translations/import-file`;
   const distFile = `${__dirname}/translations/${LANG}.json`;
 
+  const uploadData = async () => {
+    /** ================ UPLOAD ================*/
+    try {
+      const req = await request.put(urlUpload, (err, resp, body) => {
+        if (err) {
+          console.error("Error!", err.message);
+        } else {
+          console.log("Result: " + body);
+        }
+      });
+      const form = req.form();
+      form.append("filedata", fs.createReadStream(distFile));
+      form.append("filename", `${LANG}.json`);
+      form.append("account_id", "1");
+      form.append("pname", "test");
+      form.append("deleteOldKeys", "false");
+      form.append("doBackup", "true");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   /** ================ CHECK Destination file ================ */
   if (!fs.existsSync(distFile)) {
     throw new Error("Destination file not exists");
@@ -48,23 +70,8 @@ try {
     })
     .then((saved) => {
       if (saved) {
-        setTimeout(() => {
-          /** ================ UPLOAD ================*/
-          const req = request.put(urlUpload, function (err, resp, body) {
-            if (err) {
-              console.error("Error!", err.message);
-            } else {
-              console.log("Result: " + body);
-            }
-          });
-          const form = req.form();
-          form.append("filedata", fs.createReadStream(distFile));
-          form.append("filename", `${LANG}.json`);
-          form.append("account_id", "1");
-          form.append("pname", "test");
-          form.append("deleteOldKeys", "false");
-          form.append("doBackup", "true");
-        }, 2000);
+        setTimeout(uploadData, 2000);
+        //uploadData();
       }
     })
     .catch((err) => console.error(err.message));
