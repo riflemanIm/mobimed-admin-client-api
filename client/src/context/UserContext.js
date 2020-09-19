@@ -105,7 +105,7 @@ export { UserProvider, useUserState, useUserDispatch, loginUser, signOut };
 
 // ###########################################################
 
-function loginUser(
+async function loginUser(
   dispatch,
   login,
   password,
@@ -118,7 +118,7 @@ function loginUser(
   setIsLoading(true);
 
   if (login.length > 0 && password.length > 0) {
-    axios
+    await axios
       .post("/auth/signin/local", { email: login, password })
       .then((res) => {
         console.log("login data", res.data);
@@ -128,7 +128,7 @@ function loginUser(
           setIsLoading(false);
           receiveToken(res.data, dispatch);
           doInit(res.data.user)(dispatch);
-        }, 2000);
+        }, 1000);
       })
       .catch(() => {
         setError(true);
@@ -140,14 +140,14 @@ function loginUser(
 }
 
 export function sendPasswordResetEmail(email) {
-  return (dispatch) => {
+  return async (dispatch) => {
     if (!config.isBackend) {
       return;
     } else {
       dispatch({
         type: "PASSWORD_RESET_EMAIL_REQUEST",
       });
-      axios
+      await axios
         .post("/auth/send-password-reset-email", { email })
         .then((res) => {
           dispatch({
@@ -229,7 +229,7 @@ export function registerUser(
   setError,
   social = ""
 ) {
-  return () => {
+  return async () => {
     if (!config.isBackend) {
       history.push("/login");
     } else {
@@ -237,7 +237,7 @@ export function registerUser(
         type: "REGISTER_REQUEST",
       });
       if (login.length > 0 && password.length > 0) {
-        axios
+        await axios
           .post("/auth/signup", { email: login, password })
           .then((res) => {
             dispatch({
@@ -259,11 +259,11 @@ export function registerUser(
 }
 
 export function verifyEmail(token, history) {
-  return (dispatch) => {
+  return async (dispatch) => {
     if (!config.isBackend) {
       history.push("/login");
     } else {
-      axios
+      await axios
         .put("/auth/verify-email", { token })
         .then((verified) => {
           if (verified) {
@@ -281,7 +281,7 @@ export function verifyEmail(token, history) {
 }
 
 export function resetPassword(token, password, history) {
-  return (dispatch, setIsLoading) => {
+  return async (dispatch, setIsLoading) => {
     if (!config.isBackend) {
       history.push("/login");
     } else {
@@ -289,7 +289,7 @@ export function resetPassword(token, password, history) {
       dispatch({
         type: "RESET_REQUEST",
       });
-      axios
+      await axios
         .put("/auth/password-reset", { token, password })
         .then((res) => {
           dispatch({

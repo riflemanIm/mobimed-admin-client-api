@@ -1,7 +1,6 @@
 import React from "react";
 import axios from "axios";
 import config from "../config";
-import { toast } from "react-toastify";
 
 async function list() {
   const response = await axios.get(`/regions`);
@@ -94,7 +93,6 @@ function regionReducer(state = initialData, { type, payload }) {
   }
 
   if (type === "REGIONS_FORM_UPDATE_ERROR") {
-    console.log("REGIONS_FORM_UPDATE_ERROR", payload);
     return {
       ...state,
       saveLoading: false,
@@ -231,7 +229,6 @@ const actions = {
         });
       });
     } catch (error) {
-      toast("Error");
       console.log(error);
       dispatch({
         type: "REGIONS_FORM_FIND_ERROR",
@@ -239,12 +236,12 @@ const actions = {
     }
   },
 
-  doCreate: (values, history) => async (dispatch, notify) => {
+  doCreate: (values, notify) => async (dispatch, history) => {
     try {
       dispatch({
         type: "REGIONS_FORM_CREATE_STARTED",
       });
-      axios
+      await axios
         .post("/regions", { data: values })
         .then((res) => {
           console.log("------- doCreate -----------", res.data);
@@ -266,8 +263,6 @@ const actions = {
           });
         });
     } catch (error) {
-      //toast("Error");
-
       console.log("error", error);
 
       notify("Error add region");
@@ -277,7 +272,7 @@ const actions = {
     }
   },
 
-  doUpdate: (id, values, history) => async (dispatch, notify) => {
+  doUpdate: (id, values, notify) => async (dispatch, history) => {
     dispatch({
       type: "REGIONS_FORM_UPDATE_STARTED",
     });
@@ -321,9 +316,7 @@ const actions = {
         },
       });
     } catch (error) {
-      //toast("Error");
       console.log(error);
-
       dispatch({
         type: "REGIONS_LIST_FETCH_ERROR",
       });
@@ -355,7 +348,6 @@ const actions = {
           },
         });
       } catch (error) {
-        toast("Error");
         console.log(error);
         dispatch({
           type: "REGIONS_LIST_DELETE_ERROR",
@@ -364,7 +356,7 @@ const actions = {
     }
   },
 
-  doOpenConfirm: (id) => async (dispatch) => {
+  doOpenConfirm: (id) => (dispatch) => {
     dispatch({
       type: "REGIONS_LIST_OPEN_CONFIRM",
       payload: {
@@ -372,7 +364,7 @@ const actions = {
       },
     });
   },
-  doCloseConfirm: () => async (dispatch) => {
+  doCloseConfirm: () => (dispatch) => {
     dispatch({
       type: "REGIONS_LIST_CLOSE_CONFIRM",
     });

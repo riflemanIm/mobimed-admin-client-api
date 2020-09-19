@@ -47,7 +47,7 @@ const AddRegion = () => {
   const history = useHistory();
 
   const saveData = () => {
-    actions.doCreate(values, history)(managementDispatch, sendNotification);
+    actions.doCreate(values, sendNotification)(managementDispatch, history);
   };
 
   const { values, errors, handleChange, handleSubmit } = useForm(

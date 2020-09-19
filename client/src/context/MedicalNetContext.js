@@ -3,16 +3,16 @@ import axios from "axios";
 import config from "../config";
 
 async function list() {
-  const response = await axios.get(`/promos`);
+  const response = await axios.get(`/medical_net`);
   return response.data;
 }
 
-const PromoStateContext = React.createContext();
-const PromoDispatchContext = React.createContext();
+const MedicalNetStateContext = React.createContext();
+const MedicalNetDispatchContext = React.createContext();
 const initialData = {
   findLoading: false,
   saveLoading: false,
-  currentPromo: null,
+  currentMedicalNet: null,
   rows: [],
   loading: false,
   idToDelete: null,
@@ -20,63 +20,63 @@ const initialData = {
   errorMessage: null,
 };
 
-function promoReducer(state = initialData, { type, payload }) {
-  if (type === "PROMOS_FORM_RESET") {
+function MedicalNetReducer(state = initialData, { type, payload }) {
+  if (type === "MEDICALNET_FORM_RESET") {
     return {
       ...initialData,
     };
   }
 
-  if (type === "PROMOS_FORM_FIND_STARTED") {
+  if (type === "MEDICALNET_FORM_FIND_STARTED") {
     return {
       ...state,
-      currentPromo: null,
+      currentMedicalNet: null,
       findLoading: true,
     };
   }
 
-  if (type === "PROMOS_FORM_FIND_SUCCESS") {
+  if (type === "MEDICALNET_FORM_FIND_SUCCESS") {
     return {
       ...state,
-      currentPromo: payload,
+      currentMedicalNet: payload,
       findLoading: false,
     };
   }
 
-  if (type === "PROMOS_FORM_FIND_ERROR") {
+  if (type === "MEDICALNET_FORM_FIND_ERROR") {
     return {
       ...state,
-      currentPromo: null,
+      currentMedicalNet: null,
       findLoading: false,
     };
   }
 
-  if (type === "PROMOS_FORM_CREATE_STARTED") {
+  if (type === "MEDICALNET_FORM_CREATE_STARTED") {
     return {
       ...state,
       saveLoading: true,
-      currentPromo: { promo_id: null },
+      currentMedicalNet: { medical_net_id: null },
     };
   }
 
-  if (type === "PROMOS_FORM_CREATE_SUCCESS") {
+  if (type === "MEDICALNET_FORM_CREATE_SUCCESS") {
     return {
       ...state,
       saveLoading: false,
-      currentPromo: payload,
+      currentMedicalNet: payload,
     };
   }
 
-  if (type === "PROMOS_FORM_CREATE_ERROR") {
+  if (type === "MEDICALNET_FORM_CREATE_ERROR") {
     return {
       ...state,
       saveLoading: false,
       errorMessage: payload,
-      currentPromo: { promo_id: null },
+      currentMedicalNet: { medical_net_id: null },
     };
   }
 
-  if (type === "PROMOS_FORM_UPDATE_STARTED") {
+  if (type === "MEDICALNET_FORM_UPDATE_STARTED") {
     return {
       ...state,
       saveLoading: true,
@@ -84,15 +84,15 @@ function promoReducer(state = initialData, { type, payload }) {
     };
   }
 
-  if (type === "PROMOS_FORM_UPDATE_SUCCESS") {
+  if (type === "MEDICALNET_FORM_UPDATE_SUCCESS") {
     return {
       ...state,
-      currentPromo: payload,
+      currentMedicalNet: payload,
       saveLoading: false,
     };
   }
 
-  if (type === "PROMOS_FORM_UPDATE_ERROR") {
+  if (type === "MEDICALNET_FORM_UPDATE_ERROR") {
     return {
       ...state,
       saveLoading: false,
@@ -100,14 +100,14 @@ function promoReducer(state = initialData, { type, payload }) {
     };
   }
 
-  if (type === "PROMOS_LIST_FETCH_STARTED") {
+  if (type === "MEDICALNET_LIST_FETCH_STARTED") {
     return {
       ...state,
       loading: true,
     };
   }
 
-  if (type === "PROMOS_LIST_FETCH_SUCCESS") {
+  if (type === "MEDICALNET_LIST_FETCH_SUCCESS") {
     return {
       ...state,
       loading: false,
@@ -115,7 +115,7 @@ function promoReducer(state = initialData, { type, payload }) {
     };
   }
 
-  if (type === "PROMOS_LIST_FETCH_ERROR") {
+  if (type === "MEDICALNET_LIST_FETCH_ERROR") {
     return {
       ...state,
       loading: false,
@@ -123,7 +123,7 @@ function promoReducer(state = initialData, { type, payload }) {
     };
   }
 
-  if (type === "PROMOS_LIST_DELETE_STARTED") {
+  if (type === "MEDICALNET_LIST_DELETE_STARTED") {
     return {
       ...state,
       loading: true,
@@ -131,7 +131,7 @@ function promoReducer(state = initialData, { type, payload }) {
     };
   }
 
-  if (type === "PROMOS_LIST_DELETE_SUCCESS") {
+  if (type === "MEDICALNET_LIST_DELETE_SUCCESS") {
     return {
       ...state,
       loading: false,
@@ -139,7 +139,7 @@ function promoReducer(state = initialData, { type, payload }) {
     };
   }
 
-  if (type === "PROMOS_LIST_DELETE_ERROR") {
+  if (type === "MEDICALNET_LIST_DELETE_ERROR") {
     return {
       ...state,
       loading: false,
@@ -148,7 +148,7 @@ function promoReducer(state = initialData, { type, payload }) {
     };
   }
 
-  if (type === "PROMOS_LIST_OPEN_CONFIRM") {
+  if (type === "MEDICALNET_LIST_OPEN_CONFIRM") {
     return {
       ...state,
       loading: false,
@@ -157,7 +157,7 @@ function promoReducer(state = initialData, { type, payload }) {
     };
   }
 
-  if (type === "PROMOS_LIST_CLOSE_CONFIRM") {
+  if (type === "MEDICALNET_LIST_CLOSE_CONFIRM") {
     return {
       ...state,
       loading: false,
@@ -168,11 +168,11 @@ function promoReducer(state = initialData, { type, payload }) {
   return state;
 }
 
-function PromoProvider({ children }) {
-  const [state, dispatch] = React.useReducer(promoReducer, {
+function MedicalNetProvider({ children }) {
+  const [state, dispatch] = React.useReducer(medicalnetReducer, {
     findLoading: false,
     saveLoading: false,
-    currentPromo: { promo_id: null },
+    currentMedicalNet: { medical_net_id: null },
     rows: [],
     loading: false,
     idToDelete: null,
@@ -181,26 +181,30 @@ function PromoProvider({ children }) {
   });
 
   return (
-    <PromoStateContext.Provider value={state}>
-      <PromoDispatchContext.Provider value={dispatch}>
+    <MedicalNetStateContext.Provider value={state}>
+      <MedicalNetDispatchContext.Provider value={dispatch}>
         {children}
-      </PromoDispatchContext.Provider>
-    </PromoStateContext.Provider>
+      </MedicalNetDispatchContext.Provider>
+    </MedicalNetStateContext.Provider>
   );
 }
 
-function usePromoState() {
-  const context = React.useContext(PromoStateContext);
+function useMedicalNetState() {
+  const context = React.useContext(MedicalNetStateContext);
   if (context === undefined) {
-    throw new Error("usePromoState must be used within a PromoProvider");
+    throw new Error(
+      "useMedicalNetState must be used within a MedicalNetProvider"
+    );
   }
   return context;
 }
 
-function usePromoDispatch() {
-  const context = React.useContext(PromoDispatchContext);
+function useMedicalNetDispatch() {
+  const context = React.useContext(MedicalNetDispatchContext);
   if (context === undefined) {
-    throw new Error("usePromoDispatch must be used within a PromoProvider");
+    throw new Error(
+      "useMedicalNetDispatch must be used within a MedicalNetProvider"
+    );
   }
   return context;
 }
@@ -210,28 +214,28 @@ function usePromoDispatch() {
 const actions = {
   doNew: () => {
     return {
-      type: "PROMOS_FORM_RESET",
+      type: "MEDICALNET_FORM_RESET",
     };
   },
 
   doFind: (id) => async (dispatch) => {
     try {
       dispatch({
-        type: "PROMOS_FORM_FIND_STARTED",
+        type: "MEDICALNET_FORM_FIND_STARTED",
       });
 
-      await axios.get(`/promos/${id}`).then((res) => {
-        const currentPromo = res.data;
+      await axios.get(`/medical_net/${id}`).then((res) => {
+        const currentMedicalNet = res.data;
 
         dispatch({
-          type: "PROMOS_FORM_FIND_SUCCESS",
-          payload: currentPromo,
+          type: "MEDICALNET_FORM_FIND_SUCCESS",
+          payload: currentMedicalNet,
         });
       });
     } catch (error) {
       console.log(error);
       dispatch({
-        type: "PROMOS_FORM_FIND_ERROR",
+        type: "MEDICALNET_FORM_FIND_ERROR",
       });
     }
   },
@@ -239,77 +243,76 @@ const actions = {
   doCreate: (values, notify) => async (dispatch, history) => {
     try {
       dispatch({
-        type: "PROMOS_FORM_CREATE_STARTED",
+        type: "MEDICALNET_FORM_CREATE_STARTED",
       });
       await axios
-        .post("/promos", { data: values })
+        .post("/medical_net", { data: values })
         .then((res) => {
           console.log("------- doCreate -----------", res.data);
 
           dispatch({
-            type: "PROMOS_FORM_CREATE_SUCCESS",
-            payload: { promo_id: res.data },
+            type: "MEDICALNET_FORM_CREATE_SUCCESS",
+            payload: { medical_net_id: res.data },
           });
           notify();
-          history.push("/app/promo/list");
+          history.push("/app/medicalnet/list");
         })
         .catch((error) => {
           console.log("error", error);
           notify(error.response.data?.err);
 
           dispatch({
-            type: "PROMOS_FORM_CREATE_ERROR",
+            type: "MEDICALNET_FORM_CREATE_ERROR",
             payload: error.response.data?.err,
           });
         });
     } catch (error) {
       console.log("error", error);
-
-      notify("Error add promo");
+      notify("Error add medicalnet");
       dispatch({
-        type: "PROMOS_FORM_CREATE_ERROR",
+        type: "MEDICALNET_FORM_CREATE_ERROR",
       });
     }
   },
 
   doUpdate: (id, values, notify) => async (dispatch, history) => {
     dispatch({
-      type: "PROMOS_FORM_UPDATE_STARTED",
+      type: "MEDICALNET_FORM_UPDATE_STARTED",
     });
 
     await axios
-      .put(`/promos/${id}`, { id, data: values })
+      .put(`/medical_net/${id}`, { id, data: values })
       .then((response) => {
         dispatch({
-          type: "PROMOS_FORM_UPDATE_SUCCESS",
+          type: "MEDICALNET_FORM_UPDATE_SUCCESS",
           payload: values,
         });
         notify();
         console.log("response", response);
-        history.push("/app/promo/list");
+        history.push("/app/medicalnet/list");
       })
       .catch((error) => {
-        console.log("error", error.message);
-        //notify(error?.response?.data?.err);
+        console.log("error", error);
+        notify(error.response.data?.err);
 
-        // dispatch({
-        //   type: "PROMOS_FORM_UPDATE_ERROR",
-        //   payload: error.response.data?.err,
-        // });
+        dispatch({
+          type: "MEDICALNET_FORM_UPDATE_ERROR",
+          payload: error.response.data?.err,
+        });
       });
   },
 
   doFetch: (filter, keepPagination = false) => async (dispatch) => {
     try {
       dispatch({
-        type: "PROMOS_LIST_FETCH_STARTED",
+        type: "MEDICALNET_LIST_FETCH_STARTED",
         payload: { filter, keepPagination },
       });
 
       const response = await list();
 
       dispatch({
-        type: "PROMOS_LIST_FETCH_SUCCESS",
+        type: "MEDICALNET_LIST_FETCH_SUCCESS",
         payload: {
           rows: response,
           count: response.length,
@@ -317,9 +320,8 @@ const actions = {
       });
     } catch (error) {
       console.log(error);
-
       dispatch({
-        type: "PROMOS_LIST_FETCH_ERROR",
+        type: "MEDICALNET_LIST_FETCH_ERROR",
       });
     }
   },
@@ -327,22 +329,22 @@ const actions = {
   doDelete: (id) => async (dispatch) => {
     if (!config.isBackend) {
       dispatch({
-        type: "PROMOS_LIST_DELETE_ERROR",
+        type: "MEDICALNET_LIST_DELETE_ERROR",
       });
     } else {
       try {
         dispatch({
-          type: "PROMOS_LIST_DELETE_STARTED",
+          type: "MEDICALNET_LIST_DELETE_STARTED",
         });
 
-        await axios.delete(`/promos/${id}`);
+        await axios.delete(`/medical_net/${id}`);
 
         dispatch({
-          type: "PROMOS_LIST_DELETE_SUCCESS",
+          type: "MEDICALNET_LIST_DELETE_SUCCESS",
         });
         const response = await list();
         dispatch({
-          type: "PROMOS_LIST_FETCH_SUCCESS",
+          type: "MEDICALNET_LIST_FETCH_SUCCESS",
           payload: {
             rows: response,
             count: response.length,
@@ -351,7 +353,7 @@ const actions = {
       } catch (error) {
         console.log(error);
         dispatch({
-          type: "PROMOS_LIST_DELETE_ERROR",
+          type: "MEDICALNET_LIST_DELETE_ERROR",
         });
       }
     }
@@ -359,7 +361,7 @@ const actions = {
 
   doOpenConfirm: (id) => (dispatch) => {
     dispatch({
-      type: "PROMOS_LIST_OPEN_CONFIRM",
+      type: "MEDICALNET_LIST_OPEN_CONFIRM",
       payload: {
         id: id,
       },
@@ -367,10 +369,15 @@ const actions = {
   },
   doCloseConfirm: () => (dispatch) => {
     dispatch({
-      type: "PROMOS_LIST_CLOSE_CONFIRM",
+      type: "MEDICALNET_LIST_CLOSE_CONFIRM",
     });
   },
 };
 
 // eslint-disable-next-line no-use-before-define
-export { PromoProvider, usePromoState, usePromoDispatch, actions };
+export {
+  MedicalNetProvider,
+  useMedicalNetState,
+  useMedicalNetDispatch,
+  actions,
+};

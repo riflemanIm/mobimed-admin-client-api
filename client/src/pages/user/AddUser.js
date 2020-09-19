@@ -169,15 +169,15 @@ const AddUser = () => {
       actions.doCreate(
         { username: values.username, password: md5(values.password) },
         handleBack,
-        history
-      )(managementDispatch, sendNotification);
+        sendNotification
+      )(managementDispatch, history);
     }
     if (activeStep === 1 && user_id != null) {
       actions.doUpdate(
         user_id,
         values,
-        history
-      )(managementDispatch, sendNotification);
+        sendNotification
+      )(managementDispatch, history);
     }
   };
 

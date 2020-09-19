@@ -235,7 +235,6 @@ const actions = {
         });
       });
     } catch (error) {
-      toast("Error");
       console.log(error);
       dispatch({
         type: "USERS_FORM_FIND_ERROR",
@@ -243,7 +242,7 @@ const actions = {
     }
   },
 
-  doCreate: (values, backStep, history) => async (dispatch, notify) => {
+  doCreate: (values, backStep, notify) => async (dispatch, history) => {
     try {
       dispatch({
         type: "USERS_FORM_CREATE_STARTED",
@@ -271,8 +270,6 @@ const actions = {
           backStep();
         });
     } catch (error) {
-      //toast("Error");
-
       console.log("error", error);
 
       notify("Error add user");
@@ -282,7 +279,7 @@ const actions = {
     }
   },
 
-  doUpdate: (id, values, history) => async (dispatch, notify) => {
+  doUpdate: (id, values, notify) => async (dispatch, history) => {
     dispatch({
       type: "USERS_FORM_UPDATE_STARTED",
     });
@@ -343,7 +340,6 @@ const actions = {
 
       toast("Password updated");
     } catch (error) {
-      toast("Error");
       console.log(error);
 
       dispatch({
@@ -369,7 +365,6 @@ const actions = {
         },
       });
     } catch (error) {
-      toast("Error");
       console.log(error);
 
       dispatch({
@@ -403,7 +398,6 @@ const actions = {
           },
         });
       } catch (error) {
-        toast("Error");
         console.log(error);
         dispatch({
           type: "USERS_LIST_DELETE_ERROR",
@@ -412,7 +406,7 @@ const actions = {
     }
   },
 
-  doOpenConfirm: (id) => async (dispatch) => {
+  doOpenConfirm: (id) => (dispatch) => {
     dispatch({
       type: "USERS_LIST_OPEN_CONFIRM",
       payload: {
@@ -420,7 +414,7 @@ const actions = {
       },
     });
   },
-  doCloseConfirm: () => async (dispatch) => {
+  doCloseConfirm: () => (dispatch) => {
     dispatch({
       type: "USERS_LIST_CLOSE_CONFIRM",
     });

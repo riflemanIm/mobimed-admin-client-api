@@ -1,7 +1,6 @@
 import React from "react";
 import axios from "axios";
 import config from "../config";
-import { toast } from "react-toastify";
 
 async function list() {
   const response = await axios.get(`/clinics`);
@@ -236,7 +235,7 @@ const actions = {
         axios.get("/medical_net"),
       ];
 
-      axios.all(req).then((res) => {
+      await axios.all(req).then((res) => {
         const currentClinic = res[0].data;
         const services = res[1].data;
         const medical_net = res[2].data;
@@ -246,7 +245,6 @@ const actions = {
         });
       });
     } catch (error) {
-      toast("Error");
       console.log(error);
       dispatch({
         type: "CLINICS_FORM_FIND_ERROR",
@@ -261,7 +259,7 @@ const actions = {
       });
       const req = [axios.get("/services"), axios.get("/medical_net")];
 
-      axios.all(req).then((res) => {
+      await axios.all(req).then((res) => {
         const services = res[0].data;
         const medical_net = res[1].data;
         dispatch({
@@ -270,7 +268,6 @@ const actions = {
         });
       });
     } catch (error) {
-      toast("Error");
       console.log(error);
       dispatch({
         type: "CLINICS_FORM_FIND_ERROR",
@@ -283,11 +280,10 @@ const actions = {
       dispatch({
         type: "CLINICS_FORM_CREATE_STARTED",
       });
-      axios
+      await axios
         .post("/clinics", { data: values })
         .then((res) => {
-          console.log("------- doCreate -----------", res.data);
-
+          //console.log("------- doCreate -----------", res.data);
           dispatch({
             type: "CLINICS_FORM_CREATE_SUCCESS",
             payload: { clinic_id: res.data },
@@ -305,8 +301,6 @@ const actions = {
           });
         });
     } catch (error) {
-      //toast("Error");
-
       console.log("error", error);
 
       notify("Error add clinic");
@@ -360,7 +354,6 @@ const actions = {
         },
       });
     } catch (error) {
-      toast("Error");
       console.log(error);
 
       dispatch({
@@ -394,7 +387,6 @@ const actions = {
           },
         });
       } catch (error) {
-        toast("Error");
         console.log(error);
         dispatch({
           type: "CLINICS_LIST_DELETE_ERROR",

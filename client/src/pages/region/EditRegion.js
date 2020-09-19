@@ -64,7 +64,7 @@ const EditRegion = () => {
   }, [currentRegion, id]);
 
   const saveData = () => {
-    actions.doUpdate(id, values, history)(managementDispatch, sendNotification);
+    actions.doUpdate(id, values, sendNotification)(managementDispatch, history);
   };
 
   const { values, errors, handleChange, handleSubmit, setValues } = useForm(
