@@ -26,7 +26,10 @@ import Notification from "../../components/Notification/Notification";
 import { toast } from "react-toastify";
 
 import { Typography, Link } from "../../components/Wrappers";
-import { useRegionDispatch, useRegionState } from "../../context/RegionContext";
+import {
+  useServiceDispatch,
+  useServiceState,
+} from "../../context/ServiceContext";
 
 import useStyles from "./styles";
 // Icons
@@ -36,7 +39,7 @@ import {
   CreateOutlined as CreateIcon,
 } from "@material-ui/icons";
 
-import { actions } from "../../context/RegionContext";
+import { actions } from "../../context/ServiceContext";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -65,7 +68,7 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: "region_id", numeric: false, disablePadding: false, label: "ID" },
+  { id: "service_id", numeric: false, disablePadding: false, label: "ID" },
   { id: "actions", numeric: false, disablePadding: false, label: "Дествия" },
   { id: "title", numeric: false, disablePadding: false, label: "Название" },
   { id: "sort", numeric: false, disablePadding: false, label: "Сортировка" },
@@ -103,38 +106,38 @@ function EnhancedTableHead(props) {
   );
 }
 
-const RegionList = () => {
+const ServiceList = () => {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const regionRowsPerPage = localStorage.getItem("regionRowsPerPage");
+  const serviceRowsPerPage = localStorage.getItem("serviceRowsPerPage");
 
   const [rowsPerPage, setRowsPerPage] = React.useState(
-    regionRowsPerPage != null ? parseInt(regionRowsPerPage, 10) : 5
+    serviceRowsPerPage != null ? parseInt(serviceRowsPerPage, 10) : 5
   );
-  const [regionsRows, setRegionsRows] = React.useState([]);
+  const [servicesRows, setServicesRows] = React.useState([]);
 
-  const regionDispatch = useRegionDispatch();
-  const regionValue = useRegionState();
+  const serviceDispatch = useServiceDispatch();
+  const serviceValue = useServiceState();
   const openModal = (cell) => {
-    actions.doOpenConfirm(cell)(regionDispatch);
+    actions.doOpenConfirm(cell)(serviceDispatch);
   };
 
   const closeModal = () => {
-    actions.doCloseConfirm()(regionDispatch);
+    actions.doCloseConfirm()(serviceDispatch);
   };
 
   const handleDelete = () => {
-    actions.doDelete(regionValue.idToDelete)(regionDispatch);
+    actions.doDelete(serviceValue.idToDelete)(serviceDispatch);
     sendNotification("Запись удалена");
   };
 
   React.useEffect(() => {
     async function fetchAPI() {
       try {
-        await actions.doFetch({}, false)(regionDispatch);
-        //setRegionsRows(regionValue.rows);
+        await actions.doFetch({}, false)(serviceDispatch);
+        //setServicesRows(serviceValue.rows);
       } catch (e) {
         console.log(e);
       }
@@ -169,8 +172,8 @@ const RegionList = () => {
   }
 
   React.useEffect(() => {
-    setRegionsRows(regionValue.rows);
-  }, [regionValue.rows]);
+    setServicesRows(serviceValue.rows);
+  }, [serviceValue.rows]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -180,7 +183,7 @@ const RegionList = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = regionValue.rows.map((n) => n.id);
+      const newSelecteds = serviceValue.rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -214,7 +217,7 @@ const RegionList = () => {
   const handleChangeRowsPerPage = (event) => {
     const rowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPage(rowsPerPage);
-    localStorage.setItem("regionRowsPerPage", rowsPerPage);
+    localStorage.setItem("serviceRowsPerPage", rowsPerPage);
     setPage(0);
   };
 
@@ -222,22 +225,22 @@ const RegionList = () => {
 
   const emptyRows =
     rowsPerPage -
-    Math.min(rowsPerPage, regionsRows.length - page * rowsPerPage);
+    Math.min(rowsPerPage, servicesRows.length - page * rowsPerPage);
 
   const handleSearch = (e) => {
-    const newArr = regionValue.rows.filter((c) => {
+    const newArr = serviceValue.rows.filter((c) => {
       return c.title
         .toLowerCase()
         .includes(e.currentTarget.value.toLowerCase());
     });
 
-    setRegionsRows(newArr);
+    setServicesRows(newArr);
   };
 
   return (
     <Grid container spacing={3}>
       <Dialog
-        open={regionValue.modalOpen}
+        open={serviceValue.modalOpen}
         onClose={closeModal}
         scroll={"body"}
         aria-labelledby="scroll-dialog-title"
@@ -263,7 +266,7 @@ const RegionList = () => {
         <Widget inheritHeight>
           <Grid container spacing={2}>
             <Grid item md={6} xs={12}>
-              <Link href="#/app/region/add" underline="none" color="#fff">
+              <Link href="#/app/service/add" underline="none" color="#fff">
                 <Button variant={"contained"} color={"success"}>
                   <Box mr={1} display={"flex"}>
                     <AddIcon />
@@ -302,27 +305,27 @@ const RegionList = () => {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={regionsRows.length}
+                rowCount={servicesRows.length}
               />
               <TableBody>
-                {stableSort(regionsRows, getComparator(order, orderBy))
+                {stableSort(servicesRows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.region_id);
+                    const isItemSelected = isSelected(row.service_id);
                     const labelId = `enhanced-table-checkbox-${index}`;
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row.region_id)}
+                        onClick={(event) => handleClick(event, row.service_id)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.region_id}
+                        key={row.service_id}
                         selected={isItemSelected}
                       >
                         <TableCell component="th" id={labelId} scope="row">
                           <Typography variant={"body2"}>
-                            {row.region_id}
+                            {row.service_id}
                           </Typography>
                         </TableCell>
                         <TableCell align="left">
@@ -334,7 +337,7 @@ const RegionList = () => {
                           >
                             <IconButton color={"primary"}>
                               <Link
-                                href={`#app/region/${row.region_id}/edit`}
+                                href={`#app/service/${row.service_id}/edit`}
                                 color="#fff"
                               >
                                 <CreateIcon />
@@ -342,7 +345,7 @@ const RegionList = () => {
                             </IconButton>
 
                             <IconButton
-                              onClick={() => openModal(row.region_id)}
+                              onClick={() => openModal(row.service_id)}
                               color={"primary"}
                             >
                               <DeleteIcon />
@@ -374,7 +377,7 @@ const RegionList = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={regionsRows.length}
+            count={servicesRows.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}
@@ -386,4 +389,4 @@ const RegionList = () => {
   );
 };
 
-export default RegionList;
+export default ServiceList;

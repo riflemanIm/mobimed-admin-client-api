@@ -331,8 +331,7 @@ const TranslationList = () => {
   const handleChangeRowsPerPage = (event) => {
     const rowsPerPage = parseInt(event.target.value, 10);
     localStorage.setItem("translationRowsPerPage", rowsPerPage);
-
-    setRowsPerPage(parseInt(rowsPerPage, 10));
+    setRowsPerPage(rowsPerPage);
     setPage(0);
   };
 

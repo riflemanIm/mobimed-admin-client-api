@@ -1,34 +1,29 @@
-import React, { useEffect } from "react";
-import { Grid, Box, TextField } from "@material-ui/core";
-import { useParams } from "react-router";
+import React from "react";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import TextField from "@material-ui/core/TextField";
 
 import { useHistory } from "react-router-dom";
 import useStyles from "./styles";
-
-import Widget from "../../components/Widget/Widget";
 import { toast } from "react-toastify";
 
 import Notification from "../../components/Notification/Notification";
-import { useRegionDispatch, useRegionState } from "../../context/RegionContext";
 
-import { actions } from "../../context/RegionContext";
+import { Button } from "../../components/Wrappers/Wrappers";
+import Widget from "../../components/Widget/Widget";
 
+import { actions } from "../../context/ServiceContext";
+import { useServiceDispatch } from "../../context/ServiceContext";
 import useForm from "../../hooks/useForm";
 import validate from "./validation";
-import { Button } from "../../components/Wrappers/Wrappers";
 
-const EditRegion = () => {
+const AddService = () => {
   const classes = useStyles();
-  const history = useHistory();
-  const { id } = useParams();
 
-  const managementDispatch = useRegionDispatch();
-  const { currentRegion } = useRegionState();
-
-  function sendNotification(errorMessage) {
+  function sendNotification(errorMessage = null) {
     const componentProps = {
       type: "feedback",
-      message: errorMessage != null ? errorMessage : "Регион отредактированн!",
+      message: errorMessage != null ? errorMessage : "Регион добавлен!",
       variant: "contained",
       color: errorMessage != null ? "warning" : "success",
     };
@@ -48,30 +43,18 @@ const EditRegion = () => {
     );
   }
 
-  useEffect(() => {
-    if (id) {
-      console.log("id", id);
-      actions.doFind(id)(managementDispatch);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    setValues({
-      ...currentRegion,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentRegion, id]);
+  const managementDispatch = useServiceDispatch();
+  const history = useHistory();
 
   const saveData = () => {
-    actions.doUpdate(id, values, sendNotification)(managementDispatch, history);
+    actions.doCreate(values, sendNotification)(managementDispatch, history);
   };
 
-  const { values, errors, handleChange, handleSubmit, setValues } = useForm(
+  const { values, errors, handleChange, handleSubmit } = useForm(
     saveData,
     validate
   );
-  console.log("values", values);
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -93,7 +76,7 @@ const EditRegion = () => {
               />
               <TextField
                 variant="outlined"
-                value={values?.sort != null ? values?.sort : ""}
+                value={values?.sort || ""}
                 name="sort"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
@@ -115,7 +98,7 @@ const EditRegion = () => {
                   <Button
                     variant={"outlined"}
                     color={"primary"}
-                    onClick={() => history.push("/app/region/list")}
+                    onClick={() => history.push("/app/service/list")}
                   >
                     Отмена
                   </Button>
@@ -136,4 +119,4 @@ const EditRegion = () => {
   );
 };
 
-export default EditRegion;
+export default AddService;

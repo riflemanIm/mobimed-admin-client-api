@@ -9,21 +9,24 @@ import Widget from "../../components/Widget/Widget";
 import { toast } from "react-toastify";
 
 import Notification from "../../components/Notification/Notification";
-import { useRegionDispatch, useRegionState } from "../../context/RegionContext";
+import {
+  useServiceDispatch,
+  useServiceState,
+} from "../../context/ServiceContext";
 
-import { actions } from "../../context/RegionContext";
+import { actions } from "../../context/ServiceContext";
 
 import useForm from "../../hooks/useForm";
 import validate from "./validation";
 import { Button } from "../../components/Wrappers/Wrappers";
 
-const EditRegion = () => {
+const EditService = () => {
   const classes = useStyles();
   const history = useHistory();
   const { id } = useParams();
 
-  const managementDispatch = useRegionDispatch();
-  const { currentRegion } = useRegionState();
+  const managementDispatch = useServiceDispatch();
+  const { currentService } = useServiceState();
 
   function sendNotification(errorMessage) {
     const componentProps = {
@@ -58,10 +61,10 @@ const EditRegion = () => {
 
   useEffect(() => {
     setValues({
-      ...currentRegion,
+      ...currentService,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentRegion, id]);
+  }, [currentService, id]);
 
   const saveData = () => {
     actions.doUpdate(id, values, sendNotification)(managementDispatch, history);
@@ -115,7 +118,7 @@ const EditRegion = () => {
                   <Button
                     variant={"outlined"}
                     color={"primary"}
-                    onClick={() => history.push("/app/region/list")}
+                    onClick={() => history.push("/app/service/list")}
                   >
                     Отмена
                   </Button>
@@ -136,4 +139,4 @@ const EditRegion = () => {
   );
 };
 
-export default EditRegion;
+export default EditService;
