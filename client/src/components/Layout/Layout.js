@@ -72,6 +72,10 @@ import PromoList from "../../pages/promo";
 import PromoAdd from "../../pages/promo/AddPromo";
 import PromoEdit from "../../pages/promo/EditPromo";
 
+import ServiceList from "../../pages/service";
+import ServiceAdd from "../../pages/service/AddService";
+import ServiceEdit from "../../pages/service/EditService";
+
 import TranslationList from "../../pages/translation";
 import ImportTranslation from "../../pages/translation/ImportTranslation";
 import TranslationEdit from "../../pages/translation/EditTranslation";
@@ -86,6 +90,7 @@ import { ManagementProvider } from "../../context/ManagementContext";
 import { ClinicProvider } from "../../context/ClinicContext";
 import { RegionProvider } from "../../context/RegionContext";
 import { PromoProvider } from "../../context/PromoContext";
+import { ServiceProvider } from "../../context/ServiceContext";
 import { TranslationProvider } from "../../context/TranslationContext";
 
 //Sidebar structure
@@ -302,6 +307,28 @@ function Layout(props) {
               <PromoEdit />
             </PromoProvider>
           </Route>
+
+          <Route
+            exact
+            path="/app/service"
+            render={() => <Redirect to="/app/service/list" />}
+          />
+          <Route path="/app/service/list">
+            <ServiceProvider>
+              <ServiceList />
+            </ServiceProvider>
+          </Route>
+          <Route path="/app/service/add">
+            <ServiceProvider>
+              <ServiceAdd />
+            </ServiceProvider>
+          </Route>
+          <Route path="/app/service/:id/edit">
+            <ServiceProvider>
+              <ServiceEdit />
+            </ServiceProvider>
+          </Route>
+
           <Route path="/app/promo/:id">
             <PromoProvider>
               <PromoEdit />

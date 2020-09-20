@@ -20,6 +20,7 @@ import {
   Description as DocumentationIcon,
   Person as PersonIcon,
   CardGiftcard as CardGiftcardIcon,
+  LocalLaundryService as LocalLaundryServiceIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 
@@ -91,6 +92,15 @@ const structure = [
     badgeColor: "success",
     icon: <LocalHospitalIcon />,
     link: "/app/clinic/list",
+  },
+  {
+    id: "service",
+    label: "Сервисы",
+    role: ["admin"],
+    badge: "NodeJS",
+    badgeColor: "success",
+    icon: <LocalLaundryServiceIcon />,
+    link: "/app/service/list",
   },
 
   {
