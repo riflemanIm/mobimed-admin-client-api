@@ -83,29 +83,65 @@ const EditService = () => {
             <Box display={"flex"} flexDirection={"column"} width={600}>
               <TextField
                 variant="outlined"
-                value={values?.title || ""}
-                name="title"
+                value={values?.label || ""}
+                name="label"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
-                placeholder="Регион"
+                placeholder="Название(Label)"
+                label="Название(Label)"
                 type="text"
                 fullWidth
                 required
-                error={errors?.title != null}
-                helperText={errors?.title != null && errors?.title}
+                error={errors?.label != null}
+                helperText={errors?.label != null && errors?.label}
               />
               <TextField
                 variant="outlined"
-                value={values?.sort != null ? values?.sort : ""}
-                name="sort"
+                value={values?.address || ""}
+                name="address"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
-                placeholder="Сортировка"
+                placeholder="Адрес"
+                label="Адрес"
                 type="text"
                 fullWidth
                 required
-                error={errors?.sort != null}
-                helperText={errors?.sort != null && errors?.sort}
+                error={errors?.address != null}
+                helperText={errors?.address != null && errors?.address}
+              />
+              <TextField
+                variant="outlined"
+                value={values?.file_server_address || ""}
+                name="file_server_address"
+                onChange={handleChange}
+                style={{ marginBottom: 35 }}
+                placeholder="Адрес сервера"
+                label="Адрес сервера"
+                type="text"
+                fullWidth
+                required
+                error={errors?.file_server_address != null}
+                helperText={
+                  errors?.file_server_address != null &&
+                  errors?.file_server_address
+                }
+              />
+              <TextField
+                variant="outlined"
+                value={values?.file_server_binding_name || ""}
+                name="file_server_binding_name"
+                onChange={handleChange}
+                style={{ marginBottom: 35 }}
+                placeholder="Имя сборки"
+                label="Имя сборки"
+                type="text"
+                fullWidth
+                required
+                error={errors?.file_server_binding_name != null}
+                helperText={
+                  errors?.file_server_binding_name != null &&
+                  errors?.file_server_binding_name
+                }
               />
             </Box>
             <Grid item justify={"center"} container>

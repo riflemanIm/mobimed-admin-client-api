@@ -6,7 +6,7 @@ import isEmpty from "../helpers/isEmpty";
 
 async function list() {
   const response = await axios.get(`/translations`);
-  console.log("response", response.data);
+  //console.log("response", response.data);
   return response.data;
 }
 

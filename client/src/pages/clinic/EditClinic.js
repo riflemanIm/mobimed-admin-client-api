@@ -5,7 +5,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import Switch from "@material-ui/core/Switch";
+//import Switch from "@material-ui/core/Switch";
 
 import { useHistory } from "react-router-dom";
 import useStyles from "./styles";
@@ -307,7 +307,7 @@ const EditClinic = () => {
                   </Select>
                 </FormControl>
 
-                <Box display={"flex"} mb={2} alignItems={"center"}>
+                {/* <Box display={"flex"} mb={2} alignItems={"center"}>
                   <Typography weight={"medium"}>is_phone_required</Typography>
                   <Switch
                     onChange={() =>
@@ -353,13 +353,13 @@ const EditClinic = () => {
                     name="is_home_request"
                     value={values?.is_home_request}
                   />
-                </Box>
+                </Box> */}
 
                 {isLoadingImg ? (
                   <CircularProgress size={18} />
                 ) : (
                   <Box mb={2}>
-                    <Typography weight={"medium"}>Фото:</Typography>
+                    <Typography weight={"medium"}>Лого клиники:</Typography>
                     <div className={classes.galleryWrap}>
                       <div className={classes.imgWrap}>
                         {values.logo && (

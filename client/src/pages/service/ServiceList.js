@@ -40,6 +40,7 @@ import {
 } from "@material-ui/icons";
 
 import { actions } from "../../context/ServiceContext";
+import moment from "moment/moment";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -68,10 +69,34 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: "service_id", numeric: false, disablePadding: false, label: "ID" },
-  { id: "actions", numeric: false, disablePadding: false, label: "Дествия" },
-  { id: "title", numeric: false, disablePadding: false, label: "Название" },
-  { id: "sort", numeric: false, disablePadding: false, label: "Сортировка" },
+  { id: "id", alignRight: false, disablePadding: false, label: "ID" },
+  { id: "actions", alignRight: false, disablePadding: false, label: "Дествия" },
+  {
+    id: "label",
+    alignRight: false,
+    disablePadding: false,
+    label: "Название(Label)",
+  },
+  { id: "state", alignRight: false, disablePadding: false, label: "Статус" },
+  { id: "address", alignRight: false, disablePadding: false, label: "Адрес" },
+  {
+    id: "file_server_address",
+    alignRight: false,
+    disablePadding: false,
+    label: "Адрес сервера",
+  },
+  {
+    id: "file_server_binding_name",
+    alignRight: false,
+    disablePadding: false,
+    label: "Имя сборки",
+  },
+  {
+    id: "lastCheck",
+    alignRight: true,
+    disablePadding: false,
+    label: "Проверка была",
+  },
 ];
 
 function EnhancedTableHead(props) {
@@ -86,7 +111,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
+            align={headCell.alignRight ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "default"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -229,13 +254,15 @@ const ServiceList = () => {
 
   const handleSearch = (e) => {
     const newArr = serviceValue.rows.filter((c) => {
-      return c.title
+      return c.label
         .toLowerCase()
         .includes(e.currentTarget.value.toLowerCase());
     });
 
     setServicesRows(newArr);
   };
+
+  console.log("servicesRows", servicesRows);
 
   return (
     <Grid container spacing={3}>
@@ -311,22 +338,20 @@ const ServiceList = () => {
                 {stableSort(servicesRows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.service_id);
+                    const isItemSelected = isSelected(row.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row.service_id)}
+                        onClick={(event) => handleClick(event, row.id)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.service_id}
+                        key={row.id}
                         selected={isItemSelected}
                       >
                         <TableCell component="th" id={labelId} scope="row">
-                          <Typography variant={"body2"}>
-                            {row.service_id}
-                          </Typography>
+                          <Typography variant={"body2"}>{row.id}</Typography>
                         </TableCell>
                         <TableCell align="left">
                           <Box
@@ -337,7 +362,7 @@ const ServiceList = () => {
                           >
                             <IconButton color={"primary"}>
                               <Link
-                                href={`#app/service/${row.service_id}/edit`}
+                                href={`#app/service/${row.id}/edit`}
                                 color="#fff"
                               >
                                 <CreateIcon />
@@ -345,7 +370,7 @@ const ServiceList = () => {
                             </IconButton>
 
                             <IconButton
-                              onClick={() => openModal(row.service_id)}
+                              onClick={() => openModal(row.id)}
                               color={"primary"}
                             >
                               <DeleteIcon />
@@ -353,16 +378,20 @@ const ServiceList = () => {
                           </Box>
                         </TableCell>
 
-                        <TableCell align="left">
-                          <Typography variant={"body2"} block={true}>
-                            {row.title}
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="left">
-                          <Typography variant={"body2"} block={true}>
-                            {row.sort}
-                          </Typography>
-                        </TableCell>
+                        {headCells.map(
+                          (item, inx) =>
+                            inx > 1 && (
+                              <TableCell align="left" key={item.id}>
+                                {["lastCheck"].includes(item.id) ? (
+                                  moment(row[item.id]).format("DD.MM.YYYY")
+                                ) : (
+                                  <Typography variant={"body2"} block={true}>
+                                    {row[item.id]}
+                                  </Typography>
+                                )}
+                              </TableCell>
+                            )
+                        )}
                       </TableRow>
                     );
                   })}
