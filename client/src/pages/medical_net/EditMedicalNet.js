@@ -67,7 +67,6 @@ const EditMedicalNet = () => {
   }, [currentMedicalNet, id]);
 
   const saveData = () => {
-    console.log("saveData");
     actions.doUpdate(id, values, sendNotification)(managementDispatch, history);
   };
 
@@ -75,7 +74,7 @@ const EditMedicalNet = () => {
     saveData,
     validate
   );
-  console.log("values", values);
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>

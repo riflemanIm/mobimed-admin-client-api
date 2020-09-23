@@ -106,11 +106,6 @@ const AddMedicalNet = () => {
                 label="Email"
                 type="text"
                 fullWidth
-                required
-                error={errors?.notify_email != null}
-                helperText={
-                  errors?.notify_email != null && errors?.notify_email
-                }
               />
               <TextField
                 variant="outlined"
@@ -122,11 +117,6 @@ const AddMedicalNet = () => {
                 label="Телефон"
                 type="text"
                 fullWidth
-                required
-                error={errors?.notify_phone != null}
-                helperText={
-                  errors?.notify_phone != null && errors?.notify_phone
-                }
               />
               <TextField
                 variant="outlined"
