@@ -11,12 +11,14 @@ import { useHistory } from "react-router-dom";
 import useStyles from "./styles";
 import { toast } from "react-toastify";
 import Widget from "../../components/Widget/Widget";
-import { Button, Typography } from "../../components/Wrappers/Wrappers";
+import { Button, Typography, Link } from "../../components/Wrappers/Wrappers";
 import Notification from "../../components/Notification/Notification";
 
 import { actions } from "../../context/ClinicContext";
 import { useClinicDispatch, useClinicState } from "../../context/ClinicContext";
 import CircularProgress from "@material-ui/core/CircularProgress";
+// Icons
+import { Add as AddIcon } from "@material-ui/icons";
 
 import useForm from "../../hooks/useForm";
 import validate from "./validation";
@@ -249,63 +251,95 @@ const EditClinic = () => {
                   helperText={errors?.longitude != null && errors?.longitude}
                 />
 
-                <FormControl
-                  variant="outlined"
-                  style={{ marginBottom: 35 }}
-                  fullWidth
-                  required
-                  error={errors?.client_service_id != null}
-                  helperText={
-                    errors?.client_service_id != null &&
-                    errors?.client_service_id
-                  }
-                >
-                  <InputLabel id="id-services-label">Сервис</InputLabel>
-                  <Select
-                    name="client_service_id"
-                    labelId="id-services-label"
-                    id="id-services-select"
-                    label="Сервис"
-                    onChange={handleChange}
-                    value={values?.client_service_id}
+                <Box display={"flex"} mb={2} alignItems="flex-start">
+                  <FormControl
+                    variant="outlined"
+                    style={{ marginBottom: 35, marginRight: 8 }}
+                    fullWidth
+                    required
+                    error={errors?.client_service_id != null}
+                    helperText={
+                      errors?.client_service_id != null &&
+                      errors?.client_service_id
+                    }
                   >
-                    {services.map((item) => (
-                      <MenuItem value={item.id} key={item.id}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                    <InputLabel id="id-services-label">Сервис</InputLabel>
+                    <Select
+                      name="client_service_id"
+                      labelId="id-services-label"
+                      id="id-services-select"
+                      label="Сервис"
+                      onChange={handleChange}
+                      value={values?.client_service_id}
+                    >
+                      {services.map((item) => (
+                        <MenuItem value={item.id} key={item.id}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <Link
+                    href={`#/app/service/add/${id}`}
+                    underline="none"
+                    color="#fff"
+                  >
+                    <Button
+                      variant={"outlined"}
+                      style={{ padding: 15 }}
+                      size="large"
+                      color={"primary"}
+                    >
+                      <AddIcon />
+                    </Button>
+                  </Link>
+                </Box>
 
-                <FormControl
-                  variant="outlined"
-                  style={{ marginBottom: 35 }}
-                  fullWidth
-                  required
-                  error={errors?.medical_net_id != null}
-                  helperText={
-                    errors?.medical_net_id != null && errors?.medical_net_id
-                  }
-                >
-                  <InputLabel id="id-medical_net-label">Сеть</InputLabel>
-                  <Select
-                    name="medical_net_id"
-                    labelId="id-medical_net-label"
-                    id="id-medical_net-select"
-                    label="Сеть"
-                    onChange={handleChange}
-                    value={values?.medical_net_id}
+                <Box display={"flex"} mb={2} alignItems="flex-start">
+                  <FormControl
+                    variant="outlined"
+                    style={{ marginBottom: 35, marginRight: 8 }}
+                    fullWidth
+                    required
+                    error={errors?.medical_net_id != null}
+                    helperText={
+                      errors?.medical_net_id != null && errors?.medical_net_id
+                    }
                   >
-                    {medical_net.map((item) => (
-                      <MenuItem
-                        value={item.medical_net_id}
-                        key={item.medical_net_id}
-                      >
-                        {item.title}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                    <InputLabel id="id-medical_net-label">Сеть</InputLabel>
+                    <Select
+                      name="medical_net_id"
+                      labelId="id-medical_net-label"
+                      id="id-medical_net-select"
+                      label="Сеть"
+                      onChange={handleChange}
+                      value={values?.medical_net_id}
+                    >
+                      {medical_net.map((item) => (
+                        <MenuItem
+                          value={item.medical_net_id}
+                          key={item.medical_net_id}
+                        >
+                          {item.title}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <Link
+                    href={`#/app/medical_net/add/${id}`}
+                    underline="none"
+                    color="#fff"
+                  >
+                    <Button
+                      variant={"outlined"}
+                      style={{ padding: 15 }}
+                      size="large"
+                      color={"primary"}
+                    >
+                      <AddIcon />
+                    </Button>
+                  </Link>
+                </Box>
 
                 {/* <Box display={"flex"} mb={2} alignItems={"center"}>
                   <Typography weight={"medium"}>is_phone_required</Typography>

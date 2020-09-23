@@ -318,11 +318,18 @@ function Layout(props) {
               <ServiceList />
             </ServiceProvider>
           </Route>
+          <Route path="/app/service/add/:returnToClinic">
+            <ServiceProvider>
+              <ServiceAdd />
+            </ServiceProvider>
+          </Route>
+
           <Route path="/app/service/add">
             <ServiceProvider>
               <ServiceAdd />
             </ServiceProvider>
           </Route>
+
           <Route path="/app/service/:id/edit">
             <ServiceProvider>
               <ServiceEdit />

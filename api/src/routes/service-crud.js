@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
   const newService = req.body.data;
 
   try {
-    await db.addService(newService);
+    await db.addRow(newService);
     res.status(201).json("ok");
   } catch (err) {
     console.log("err", err);
@@ -52,7 +52,7 @@ router.put("/:id", async (req, res) => {
   const newChanges = req.body.data;
 
   try {
-    const addChanges = await db.updateService(serviceId, newChanges);
+    const addChanges = await db.updateRow(serviceId, newChanges);
     console.log("\n addChanges\n", serviceId, addChanges);
     res.status(200).json(addChanges);
   } catch (err) {
@@ -65,7 +65,7 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const serviceId = req.params.id;
   try {
-    const deleting = await db.removeService(serviceId);
+    const deleting = await db.removeRow(serviceId);
     console.log("deleting \n", deleting);
     res.status(204).json(deleting);
   } catch (err) {

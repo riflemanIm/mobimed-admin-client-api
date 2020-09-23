@@ -236,7 +236,7 @@ const actions = {
     }
   },
 
-  doCreate: (values, notify) => async (dispatch, history) => {
+  doCreate: (values, notify, urlBack) => async (dispatch, history) => {
     try {
       dispatch({
         type: "SERVICES_FORM_CREATE_STARTED",
@@ -251,7 +251,7 @@ const actions = {
             payload: { service_id: res.data },
           });
           notify();
-          history.push("/app/service/list");
+          history.push(urlBack);
         })
         .catch((error) => {
           console.log("error", error);

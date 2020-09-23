@@ -1,9 +1,11 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
+import { useParams } from "react-router";
+
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 
-import { useHistory } from "react-router-dom";
 import useStyles from "./styles";
 import { toast } from "react-toastify";
 
@@ -19,7 +21,21 @@ import validate from "./validation";
 
 const AddService = () => {
   const classes = useStyles();
+  const { returnToClinic } = useParams();
+  console.log("returnToClinic", returnToClinic);
 
+  const urlBackClinic = !isNaN(returnToClinic)
+    ? `/app/clinic/${returnToClinic}/edit`
+    : returnToClinic != null
+    ? "/app/clinic/add"
+    : "/app/service/list";
+
+  console.log(
+    "urlBackClinic",
+    returnToClinic,
+    !isNaN(returnToClinic),
+    urlBackClinic
+  );
   function sendNotification(errorMessage = null) {
     const componentProps = {
       type: "feedback",
@@ -47,7 +63,11 @@ const AddService = () => {
   const history = useHistory();
 
   const saveData = () => {
-    actions.doCreate(values, sendNotification)(managementDispatch, history);
+    actions.doCreate(
+      values,
+      sendNotification,
+      urlBackClinic
+    )(managementDispatch, history);
   };
 
   const { values, errors, handleChange, handleSubmit } = useForm(
@@ -63,29 +83,65 @@ const AddService = () => {
             <Box display={"flex"} flexDirection={"column"} width={600}>
               <TextField
                 variant="outlined"
-                value={values?.title || ""}
-                name="title"
+                value={values?.label || ""}
+                name="label"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
-                placeholder="Регион"
+                placeholder="Название(Label)"
+                label="Название(Label)"
                 type="text"
                 fullWidth
                 required
-                error={errors?.title != null}
-                helperText={errors?.title != null && errors?.title}
+                error={errors?.label != null}
+                helperText={errors?.label != null && errors?.label}
               />
               <TextField
                 variant="outlined"
-                value={values?.sort || ""}
-                name="sort"
+                value={values?.address || ""}
+                name="address"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
-                placeholder="Сортировка"
+                placeholder="Адрес"
+                label="Адрес"
                 type="text"
                 fullWidth
                 required
-                error={errors?.sort != null}
-                helperText={errors?.sort != null && errors?.sort}
+                error={errors?.address != null}
+                helperText={errors?.address != null && errors?.address}
+              />
+              <TextField
+                variant="outlined"
+                value={values?.file_server_address || ""}
+                name="file_server_address"
+                onChange={handleChange}
+                style={{ marginBottom: 35 }}
+                placeholder="Адрес сервера"
+                label="Адрес сервера"
+                type="text"
+                fullWidth
+                required
+                error={errors?.file_server_address != null}
+                helperText={
+                  errors?.file_server_address != null &&
+                  errors?.file_server_address
+                }
+              />
+              <TextField
+                variant="outlined"
+                value={values?.file_server_binding_name || ""}
+                name="file_server_binding_name"
+                onChange={handleChange}
+                style={{ marginBottom: 35 }}
+                placeholder="Имя сборки"
+                label="Имя сборки"
+                type="text"
+                fullWidth
+                required
+                error={errors?.file_server_binding_name != null}
+                helperText={
+                  errors?.file_server_binding_name != null &&
+                  errors?.file_server_binding_name
+                }
               />
             </Box>
             <Grid item justify={"center"} container>
@@ -98,7 +154,7 @@ const AddService = () => {
                   <Button
                     variant={"outlined"}
                     color={"primary"}
-                    onClick={() => history.push("/app/service/list")}
+                    onClick={() => history.push(urlBackClinic)}
                   >
                     Отмена
                   </Button>

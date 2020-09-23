@@ -8,7 +8,10 @@ const find = () => {
 };
 // GET SPECIFIC REGION BY ID
 const findById = (id) => {
-  return db("region_").where("region_id", id);
+  return db
+    .select("region_id", "title", "sort")
+    .from("region_")
+    .where("region_id", id);
 };
 
 // ADD A REGION

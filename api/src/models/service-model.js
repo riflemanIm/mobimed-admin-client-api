@@ -7,7 +7,16 @@ const find = () => {
 };
 // GET  BY ID
 const findById = (id) => {
-  return db("client_service").where("id", id);
+  return db
+    .select(
+      "id",
+      "label",
+      "address",
+      "file_server_address",
+      "file_server_binding_name"
+    )
+    .from("client_service")
+    .where("id", id);
 };
 
 // ADD
