@@ -7,7 +7,10 @@ const find = () => {
 };
 // GET  BY ID
 const findById = (id) => {
-  return db("medical_net").where("medical_net_id", id);
+  return db
+    .select("title", "notify_email", "notify_phone", "code")
+    .from("medical_net")
+    .where("medical_net_id", id);
 };
 
 // ADD

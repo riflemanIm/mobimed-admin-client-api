@@ -39,7 +39,7 @@ const AddService = () => {
   function sendNotification(errorMessage = null) {
     const componentProps = {
       type: "feedback",
-      message: errorMessage != null ? errorMessage : "Регион добавлен!",
+      message: errorMessage != null ? errorMessage : "Сервис добавлен!",
       variant: "contained",
       color: errorMessage != null ? "warning" : "success",
     };

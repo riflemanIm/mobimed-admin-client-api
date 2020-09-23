@@ -10,28 +10,28 @@ import { toast } from "react-toastify";
 
 import Notification from "../../components/Notification/Notification";
 import {
-  useServiceDispatch,
-  useServiceState,
-} from "../../context/ServiceContext";
+  useMedicalNetDispatch,
+  useMedicalNetState,
+} from "../../context/MedicalNetContext";
 
-import { actions } from "../../context/ServiceContext";
+import { actions } from "../../context/MedicalNetContext";
 
 import useForm from "../../hooks/useForm";
 import validate from "./validation";
 import { Button } from "../../components/Wrappers/Wrappers";
 
-const EditService = () => {
+const EditMedicalNet = () => {
   const classes = useStyles();
   const history = useHistory();
   const { id } = useParams();
 
-  const managementDispatch = useServiceDispatch();
-  const { currentService } = useServiceState();
+  const managementDispatch = useMedicalNetDispatch();
+  const { currentMedicalNet } = useMedicalNetState();
 
   function sendNotification(errorMessage) {
     const componentProps = {
       type: "feedback",
-      message: errorMessage != null ? errorMessage : "Сервис отредактирован!",
+      message: errorMessage != null ? errorMessage : "Сеть отредактирована!",
       variant: "contained",
       color: errorMessage != null ? "warning" : "success",
     };
@@ -61,12 +61,13 @@ const EditService = () => {
 
   useEffect(() => {
     setValues({
-      ...currentService,
+      ...currentMedicalNet,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentService, id]);
+  }, [currentMedicalNet, id]);
 
   const saveData = () => {
+    console.log("saveData");
     actions.doUpdate(id, values, sendNotification)(managementDispatch, history);
   };
 
@@ -83,65 +84,53 @@ const EditService = () => {
             <Box display={"flex"} flexDirection={"column"} width={600}>
               <TextField
                 variant="outlined"
-                value={values?.label || ""}
-                name="label"
+                value={values?.title || ""}
+                name="title"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
-                placeholder="Название(Label)"
-                label="Название(Label)"
+                placeholder="Название"
+                label="Название"
                 type="text"
                 fullWidth
                 required
-                error={errors?.label != null}
-                helperText={errors?.label != null && errors?.label}
+                error={errors?.title != null}
+                helperText={errors?.title != null && errors?.title}
               />
               <TextField
                 variant="outlined"
-                value={values?.address || ""}
-                name="address"
+                value={values?.notify_email || ""}
+                name="notify_email"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
-                placeholder="Адрес"
-                label="Адрес"
+                placeholder="Email"
+                label="Email"
                 type="text"
                 fullWidth
-                required
-                error={errors?.address != null}
-                helperText={errors?.address != null && errors?.address}
               />
               <TextField
                 variant="outlined"
-                value={values?.file_server_address || ""}
-                name="file_server_address"
+                value={values?.notify_phone || ""}
+                name="notify_phone"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
-                placeholder="Адрес сервера"
-                label="Адрес сервера"
+                placeholder="Телефон"
+                label="Телефон"
                 type="text"
                 fullWidth
-                required
-                error={errors?.file_server_address != null}
-                helperText={
-                  errors?.file_server_address != null &&
-                  errors?.file_server_address
-                }
               />
               <TextField
                 variant="outlined"
-                value={values?.file_server_binding_name || ""}
-                name="file_server_binding_name"
+                value={values?.code || ""}
+                name="code"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
-                placeholder="Имя сборки"
-                label="Имя сборки"
+                placeholder="Код"
+                label="Код"
                 type="text"
                 fullWidth
                 required
-                error={errors?.file_server_binding_name != null}
-                helperText={
-                  errors?.file_server_binding_name != null &&
-                  errors?.file_server_binding_name
-                }
+                error={errors?.code != null}
+                helperText={errors?.code != null && errors?.code}
               />
             </Box>
             <Grid item justify={"center"} container>
@@ -154,7 +143,7 @@ const EditService = () => {
                   <Button
                     variant={"outlined"}
                     color={"primary"}
-                    onClick={() => history.push("/app/service/list")}
+                    onClick={() => history.push("/app/medical_net/list")}
                   >
                     Отмена
                   </Button>
@@ -175,4 +164,4 @@ const EditService = () => {
   );
 };
 
-export default EditService;
+export default EditMedicalNet;

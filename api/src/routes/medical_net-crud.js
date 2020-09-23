@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
   const newMedicalNet = req.body.data;
 
   try {
-    await db.addMedical_net(newMedicalNet);
+    await db.addRow(newMedicalNet);
     res.status(201).json("ok");
   } catch (err) {
     console.log("err", err);
@@ -52,7 +52,7 @@ router.put("/:id", async (req, res) => {
   const newChanges = req.body.data;
 
   try {
-    const addChanges = await db.updateMedical_net(medicalNetId, newChanges);
+    const addChanges = await db.updateRow(medicalNetId, newChanges);
     console.log("\n addChanges\n", medicalNetId, addChanges);
     res.status(200).json(addChanges);
   } catch (err) {
@@ -65,7 +65,7 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const medicalNetId = req.params.id;
   try {
-    const deleting = await db.removeMedical_net(medicalNetId);
+    const deleting = await db.removeRow(medicalNetId);
     console.log("deleting \n", deleting);
     res.status(204).json(deleting);
   } catch (err) {

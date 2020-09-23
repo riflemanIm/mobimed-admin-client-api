@@ -21,6 +21,7 @@ import {
   Person as PersonIcon,
   CardGiftcard as CardGiftcardIcon,
   Dns as DnsIcon,
+  LibraryAdd as LibraryAddIcon,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 
@@ -101,6 +102,15 @@ const structure = [
     badgeColor: "success",
     icon: <DnsIcon />,
     link: "/app/service/list",
+  },
+  {
+    id: "medical_net",
+    label: "Сети",
+    role: ["admin"],
+    badge: "NodeJS",
+    badgeColor: "success",
+    icon: <LibraryAddIcon />,
+    link: "/app/medical_net/list",
   },
 
   {

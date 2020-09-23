@@ -169,7 +169,7 @@ function MedicalNetReducer(state = initialData, { type, payload }) {
 }
 
 function MedicalNetProvider({ children }) {
-  const [state, dispatch] = React.useReducer(medicalnetReducer, {
+  const [state, dispatch] = React.useReducer(MedicalNetReducer, {
     findLoading: false,
     saveLoading: false,
     currentMedicalNet: { medical_net_id: null },
@@ -240,7 +240,7 @@ const actions = {
     }
   },
 
-  doCreate: (values, notify) => async (dispatch, history) => {
+  doCreate: (values, notify, urlBack) => async (dispatch, history) => {
     try {
       dispatch({
         type: "MEDICALNET_FORM_CREATE_STARTED",
@@ -255,7 +255,7 @@ const actions = {
             payload: { medical_net_id: res.data },
           });
           notify();
-          history.push("/app/medicalnet/list");
+          history.push(urlBack);
         })
         .catch((error) => {
           console.log("error", error);
@@ -268,7 +268,7 @@ const actions = {
         });
     } catch (error) {
       console.log("error", error);
-      notify("Error add medicalnet");
+      notify("Error add Medical Net");
       dispatch({
         type: "MEDICALNET_FORM_CREATE_ERROR",
       });
@@ -288,8 +288,8 @@ const actions = {
           payload: values,
         });
         notify();
-        console.log("response", response);
-        history.push("/app/medicalnet/list");
+        // console.log("response", response);
+        history.push("/app/medical_net/list");
       })
       .catch((error) => {
         console.log("error", error);

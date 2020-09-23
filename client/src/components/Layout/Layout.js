@@ -76,6 +76,10 @@ import ServiceList from "../../pages/service";
 import ServiceAdd from "../../pages/service/AddService";
 import ServiceEdit from "../../pages/service/EditService";
 
+import MedicalNetList from "../../pages/medical_net";
+import MedicalNetAdd from "../../pages/medical_net/AddMedicalNet";
+import MedicalNetEdit from "../../pages/medical_net/EditMedicalNet";
+
 import TranslationList from "../../pages/translation";
 import ImportTranslation from "../../pages/translation/ImportTranslation";
 import TranslationEdit from "../../pages/translation/EditTranslation";
@@ -91,6 +95,7 @@ import { ClinicProvider } from "../../context/ClinicContext";
 import { RegionProvider } from "../../context/RegionContext";
 import { PromoProvider } from "../../context/PromoContext";
 import { ServiceProvider } from "../../context/ServiceContext";
+import { MedicalNetProvider } from "../../context/MedicalNetContext";
 import { TranslationProvider } from "../../context/TranslationContext";
 
 //Sidebar structure
@@ -209,6 +214,9 @@ function Layout(props) {
           <Route path="/app/core/colors" component={Colors} />
           {/* <Route path="/app/maps/google" component={MapsGoogle} />
                     <Route path="/app/maps/vector" component={VectorMaps} /> */}
+
+          {/* ----------------- user ----------------- */}
+
           <Route
             exact
             path="/app/user"
@@ -234,6 +242,8 @@ function Layout(props) {
               <UserEdit />
             </ManagementProvider>
           </Route>
+
+          {/* ----------------- clinic ----------------- */}
 
           <Route
             exact
@@ -261,6 +271,8 @@ function Layout(props) {
             </ClinicProvider>
           </Route>
 
+          {/* ----------------- region ----------------- */}
+
           <Route
             exact
             path="/app/region"
@@ -287,6 +299,8 @@ function Layout(props) {
             </RegionProvider>
           </Route>
 
+          {/* ----------------- promo ----------------- */}
+
           <Route
             exact
             path="/app/promo"
@@ -308,6 +322,8 @@ function Layout(props) {
             </PromoProvider>
           </Route>
 
+          {/* ----------------- service ----------------- */}
+
           <Route
             exact
             path="/app/service"
@@ -323,43 +339,61 @@ function Layout(props) {
               <ServiceAdd />
             </ServiceProvider>
           </Route>
-
           <Route path="/app/service/add">
             <ServiceProvider>
               <ServiceAdd />
             </ServiceProvider>
           </Route>
-
           <Route path="/app/service/:id/edit">
             <ServiceProvider>
               <ServiceEdit />
             </ServiceProvider>
           </Route>
 
-          <Route path="/app/promo/:id">
-            <PromoProvider>
-              <PromoEdit />
-            </PromoProvider>
+          {/* ----------------- medical_net ----------------- */}
+
+          <Route
+            exact
+            path="/app/medical_net"
+            render={() => <Redirect to="/app/medical_net/list" />}
+          />
+          <Route path="/app/medical_net/list">
+            <MedicalNetProvider>
+              <MedicalNetList />
+            </MedicalNetProvider>
           </Route>
+          <Route path="/app/medical_net/add/:returnToClinic">
+            <MedicalNetProvider>
+              <MedicalNetAdd />
+            </MedicalNetProvider>
+          </Route>
+          <Route path="/app/medical_net/add">
+            <MedicalNetProvider>
+              <MedicalNetAdd />
+            </MedicalNetProvider>
+          </Route>
+          <Route path="/app/medical_net/:id/edit">
+            <MedicalNetProvider>
+              <MedicalNetEdit />
+            </MedicalNetProvider>
+          </Route>
+
+          {/* ----------------- translation ----------------- */}
           <TranslationProvider>
             <Route
               exact
               path="/app/translation"
               render={() => <Redirect to="/app/translation/list" />}
             />
-
             <Route exact path="/app/translation/list">
               <TranslationList />
             </Route>
-
             <Route exact path="/app/translation/import">
               <ImportTranslation />
             </Route>
-
             <Route exact path="/app/translation/backups">
               <BackupTranslation />
             </Route>
-
             <Route exact path="/app/translation/:id/edit">
               <TranslationEdit />
             </Route>

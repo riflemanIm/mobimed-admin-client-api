@@ -1,37 +1,46 @@
-import React, { useEffect } from "react";
-import { Grid, Box, TextField } from "@material-ui/core";
+import React from "react";
+import { useHistory } from "react-router-dom";
 import { useParams } from "react-router";
 
-import { useHistory } from "react-router-dom";
-import useStyles from "./styles";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import TextField from "@material-ui/core/TextField";
 
-import Widget from "../../components/Widget/Widget";
+import useStyles from "./styles";
 import { toast } from "react-toastify";
 
 import Notification from "../../components/Notification/Notification";
-import {
-  useServiceDispatch,
-  useServiceState,
-} from "../../context/ServiceContext";
 
-import { actions } from "../../context/ServiceContext";
+import { Button } from "../../components/Wrappers/Wrappers";
+import Widget from "../../components/Widget/Widget";
 
+import { actions } from "../../context/MedicalNetContext";
+import { useMedicalNetDispatch } from "../../context/MedicalNetContext";
 import useForm from "../../hooks/useForm";
 import validate from "./validation";
-import { Button } from "../../components/Wrappers/Wrappers";
 
-const EditService = () => {
+const AddMedicalNet = () => {
   const classes = useStyles();
-  const history = useHistory();
-  const { id } = useParams();
+  const { returnToClinic } = useParams();
+  console.log("returnToClinic", returnToClinic);
 
-  const managementDispatch = useServiceDispatch();
-  const { currentService } = useServiceState();
+  const urlBackClinic = !isNaN(returnToClinic)
+    ? `/app/clinic/${returnToClinic}/edit`
+    : returnToClinic != null
+    ? "/app/clinic/add"
+    : "/app/medical_net/list";
 
-  function sendNotification(errorMessage) {
+  console.log(
+    "urlBackClinic",
+    returnToClinic,
+    !isNaN(returnToClinic),
+    urlBackClinic
+  );
+
+  function sendNotification(errorMessage = null) {
     const componentProps = {
       type: "feedback",
-      message: errorMessage != null ? errorMessage : "Сервис отредактирован!",
+      message: errorMessage != null ? errorMessage : " Сеть добавлена!",
       variant: "contained",
       color: errorMessage != null ? "warning" : "success",
     };
@@ -51,30 +60,22 @@ const EditService = () => {
     );
   }
 
-  useEffect(() => {
-    if (id) {
-      console.log("id", id);
-      actions.doFind(id)(managementDispatch);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    setValues({
-      ...currentService,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentService, id]);
+  const managementDispatch = useMedicalNetDispatch();
+  const history = useHistory();
 
   const saveData = () => {
-    actions.doUpdate(id, values, sendNotification)(managementDispatch, history);
+    actions.doCreate(
+      values,
+      sendNotification,
+      urlBackClinic
+    )(managementDispatch, history);
   };
 
-  const { values, errors, handleChange, handleSubmit, setValues } = useForm(
+  const { values, errors, handleChange, handleSubmit } = useForm(
     saveData,
     validate
   );
-  console.log("values", values);
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -83,65 +84,63 @@ const EditService = () => {
             <Box display={"flex"} flexDirection={"column"} width={600}>
               <TextField
                 variant="outlined"
-                value={values?.label || ""}
-                name="label"
+                value={values?.title || ""}
+                name="title"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
-                placeholder="Название(Label)"
-                label="Название(Label)"
+                placeholder="Название"
+                label="Название"
                 type="text"
                 fullWidth
                 required
-                error={errors?.label != null}
-                helperText={errors?.label != null && errors?.label}
+                error={errors?.title != null}
+                helperText={errors?.title != null && errors?.title}
               />
               <TextField
                 variant="outlined"
-                value={values?.address || ""}
-                name="address"
+                value={values?.notify_email || ""}
+                name="notify_email"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
-                placeholder="Адрес"
-                label="Адрес"
+                placeholder="Email"
+                label="Email"
                 type="text"
                 fullWidth
                 required
-                error={errors?.address != null}
-                helperText={errors?.address != null && errors?.address}
-              />
-              <TextField
-                variant="outlined"
-                value={values?.file_server_address || ""}
-                name="file_server_address"
-                onChange={handleChange}
-                style={{ marginBottom: 35 }}
-                placeholder="Адрес сервера"
-                label="Адрес сервера"
-                type="text"
-                fullWidth
-                required
-                error={errors?.file_server_address != null}
+                error={errors?.notify_email != null}
                 helperText={
-                  errors?.file_server_address != null &&
-                  errors?.file_server_address
+                  errors?.notify_email != null && errors?.notify_email
                 }
               />
               <TextField
                 variant="outlined"
-                value={values?.file_server_binding_name || ""}
-                name="file_server_binding_name"
+                value={values?.notify_phone || ""}
+                name="notify_phone"
                 onChange={handleChange}
                 style={{ marginBottom: 35 }}
-                placeholder="Имя сборки"
-                label="Имя сборки"
+                placeholder="Телефон"
+                label="Телефон"
                 type="text"
                 fullWidth
                 required
-                error={errors?.file_server_binding_name != null}
+                error={errors?.notify_phone != null}
                 helperText={
-                  errors?.file_server_binding_name != null &&
-                  errors?.file_server_binding_name
+                  errors?.notify_phone != null && errors?.notify_phone
                 }
+              />
+              <TextField
+                variant="outlined"
+                value={values?.code || ""}
+                name="code"
+                onChange={handleChange}
+                style={{ marginBottom: 35 }}
+                placeholder="Код"
+                label="Код"
+                type="text"
+                fullWidth
+                required
+                error={errors?.code != null}
+                helperText={errors?.code != null && errors?.code}
               />
             </Box>
             <Grid item justify={"center"} container>
@@ -154,7 +153,7 @@ const EditService = () => {
                   <Button
                     variant={"outlined"}
                     color={"primary"}
-                    onClick={() => history.push("/app/service/list")}
+                    onClick={() => history.push(urlBackClinic)}
                   >
                     Отмена
                   </Button>
@@ -175,4 +174,4 @@ const EditService = () => {
   );
 };
 
-export default EditService;
+export default AddMedicalNet;
