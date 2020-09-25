@@ -263,7 +263,7 @@ const MedicalNetList = () => {
 
   const handleSearch = (e) => {
     const newArr = medicalNetValue.rows.filter((c) => {
-      return c.label
+      return c.title
         .toLowerCase()
         .includes(e.currentTarget.value.toLowerCase());
     });
@@ -314,7 +314,7 @@ const MedicalNetList = () => {
             <Grid item md={6} xs={12}>
               <Input
                 id="search-field"
-                label="Поиск"
+                label="Поиск по названию"
                 margin="dense"
                 fullWidth
                 variant="outlined"

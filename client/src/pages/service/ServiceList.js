@@ -262,8 +262,6 @@ const ServiceList = () => {
     setServicesRows(newArr);
   };
 
-  console.log("servicesRows", servicesRows);
-
   return (
     <Grid container spacing={3}>
       <Dialog
@@ -305,7 +303,7 @@ const ServiceList = () => {
             <Grid item md={6} xs={12}>
               <Input
                 id="search-field"
-                label="Поиск"
+                label="Поиск по названию"
                 margin="dense"
                 fullWidth
                 variant="outlined"

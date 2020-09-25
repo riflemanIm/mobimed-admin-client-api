@@ -297,7 +297,7 @@ const ClinicList = () => {
             >
               <Input
                 id="search-field"
-                label="Поиск"
+                label="Поиск по названию и адресу"
                 margin="dense"
                 variant="outlined"
                 onChange={(e) => handleSearch(e)}
