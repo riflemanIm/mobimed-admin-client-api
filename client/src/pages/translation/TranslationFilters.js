@@ -1,57 +1,181 @@
 import React from "react";
-import Box from "@material-ui/core/Box";
-import DownloadIcon from "@material-ui/icons/GetApp";
-import RestoreIcon from "@material-ui/icons/Restore";
-import LabelImportantIcon from "@material-ui/icons/LabelImportant";
-
-import { Link, Button } from "../../components/Wrappers/Wrappers";
+import {
+  Grid,
+  Box,
+  TextField as Input,
+  InputAdornment,
+} from "@material-ui/core";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import SearchIcon from "@material-ui/icons/Search";
+import {
+  useTranslationDispatch,
+  useTranslationState,
+} from "../../context/TranslationContext";
+import isEmpty from "../../helpers/isEmpty";
 import config from "../../config";
 
-const TranslationAdminActions = ({ pname }) => {
-  const langs = ["ru", "en", "fr"];
-  return (
-    <>
-      <Link href="#/app/translation/import" underline="none" color="#fff">
-        <Button variant={"contained"} color={"success"}>
-          <Box mr={1} display={"flex"}>
-            <LabelImportantIcon />
-          </Box>
-          Import
-        </Button>
-      </Link>
+export default function TranslationFilters({ setPage, setTranslationsRows }) {
+  const { rows, filterVals } = useTranslationState();
 
-      <Link href="#/app/translation/backups" underline="none" color="#fff">
-        <Button
-          variant={"contained"}
-          color={"success"}
-          style={{ marginLeft: 16 }}
-        >
-          <Box mr={1} display={"flex"}>
-            <RestoreIcon />
-          </Box>
-          Restore
-        </Button>
-      </Link>
-      {langs.map((lang) => (
-        <Link
-          href={`${config.baseURLApi}/translations/download/ru/${pname}`}
-          underline="none"
-          color="#fff"
-          key={lang}
-        >
-          <Button
-            variant={"outlined"}
-            color={"secondary"}
-            style={{ marginLeft: 16 }}
+  React.useEffect(() => {
+    //setTranslationsRows(rows);
+    if (!isEmpty(rows)) doFilter(filterVals);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows]);
+  //const pNames = [...new Set(rows.map((item) => item.pname))];
+  const pNames = config.pNames;
+  const gKeys = [
+    ...new Set(
+      rows
+        .filter(
+          (item) => item.pname === filterVals.pname || filterVals.pname === ""
+        )
+        .map((item) => item.gkey)
+    ),
+  ].sort();
+
+  const translationDispatch = useTranslationDispatch();
+
+  const handleChangeFilter = (e, curKey = null) => {
+    const newFilterVals = { ...filterVals };
+
+    if (curKey != null) {
+      newFilterVals[curKey] = e.target.value;
+    } else {
+      newFilterVals.lang_value = e.target.value;
+    }
+
+    translationDispatch({
+      type: "TRANSLATIONS_SET_FILTERS",
+      payload: { ...newFilterVals },
+    });
+
+    doFilter(newFilterVals);
+    setPage(0);
+  };
+
+  const doFilter = (params) => {
+    let newArr = [...rows];
+    Object.keys(params)
+      .filter((item) => item === "pname" || item === "gkey")
+      .forEach((fkey) => {
+        if (params[fkey] !== "") {
+          newArr = newArr.filter((c) => c[fkey] === params[fkey]);
+        }
+      });
+
+    if (params.checked === "checked_all") {
+      newArr = newArr.filter(
+        (row) => row.checked_en && row.checked_ru && row.checked_fr
+      );
+    }
+    if (params.checked === "not_checked_all") {
+      newArr = newArr.filter(
+        (row) => !row.checked_en || !row.checked_ru || !row.checked_fr
+      );
+    }
+    if (["ru", "en", "fr"].includes(params.checked)) {
+      const lang = params.checked;
+      newArr = newArr.filter((row) => !row[`checked_${lang}`]);
+    }
+
+    if (params.lang_value !== "")
+      newArr = newArr.filter((c) => {
+        return `${c.tkey}${c.lang_ru}${c.lang_en}${c.lang_fr}`
+          .toLowerCase()
+          .includes(params.lang_value.toLowerCase());
+      });
+
+    //    console.log("params", params, "newArr", newArr);
+    setTranslationsRows(newArr);
+  };
+  return (
+    <Box display={"flex"}>
+      <Box style={{ minWidth: 150 }}>
+        <FormControl variant="outlined" margin="dense" fullWidth>
+          <InputLabel id="id-pname-label">Name of project</InputLabel>
+          <Select
+            labelId="id-pname-label"
+            id="id-pname-select"
+            label="Name of project"
+            onChange={(e) => handleChangeFilter(e, "pname")}
+            value={filterVals.pname}
           >
-            <Box display={"flex"} mr={1}>
-              <DownloadIcon />
-            </Box>
-            {lang}
-          </Button>
-        </Link>
-      ))}
-    </>
+            <MenuItem value="">
+              <em>All</em>
+            </MenuItem>
+            {pNames.map((item) => (
+              <MenuItem value={item} key={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+      <Box style={{ marginLeft: 16 }}>
+        <FormControl variant="outlined" margin="dense" fullWidth>
+          <InputLabel id="id-gkey-select-label">Status</InputLabel>
+          <Select
+            labelId="id-gkey-select-label"
+            id="id-gkey-select"
+            label="Status"
+            onChange={(e) => handleChangeFilter(e, "checked")}
+            value={filterVals.checked}
+          >
+            <MenuItem value="">
+              <em>All</em>
+            </MenuItem>
+            <MenuItem value="checked_all">Verified</MenuItem>
+            <MenuItem value="not_checked_all">Not verified</MenuItem>
+            <MenuItem value="ru">Not Verified RU</MenuItem>
+            <MenuItem value="en">Not Verified EN</MenuItem>
+            <MenuItem value="fr">Not Verified FR</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
+      <Box style={{ marginLeft: 16, minWidth: 100 }}>
+        <FormControl variant="outlined" margin="dense" fullWidth>
+          <InputLabel id="id-gkey-select-label">Group</InputLabel>
+          <Select
+            labelId="id-gkey-select-label"
+            id="id-gkey-select"
+            label="Group"
+            onChange={(e) => handleChangeFilter(e, "gkey")}
+            value={filterVals.gkey}
+          >
+            <MenuItem value="">
+              <em>All</em>
+            </MenuItem>
+            {gKeys.map((item) => (
+              <MenuItem value={item} key={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+
+      <Box style={{ marginLeft: 16 }}>
+        <Input
+          id="search-field"
+          label="Search by Key and/or Value"
+          margin="dense"
+          variant="outlined"
+          value={filterVals.lang_value}
+          onChange={(e) => handleChangeFilter(e)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
+    </Box>
   );
-};
-export default TranslationAdminActions;
+}
