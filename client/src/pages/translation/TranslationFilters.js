@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Grid,
-  Box,
-  TextField as Input,
-  InputAdornment,
-} from "@material-ui/core";
+import { Grid, TextField as Input, InputAdornment } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -93,9 +88,14 @@ export default function TranslationFilters({ setPage, setTranslationsRows }) {
     setTranslationsRows(newArr);
   };
   return (
-    <Box display={"flex"}>
-      <Box style={{ minWidth: 150 }}>
-        <FormControl variant="outlined" margin="dense" fullWidth>
+    <>
+      <Grid item>
+        <FormControl
+          variant="outlined"
+          margin="dense"
+          fullWidth
+          style={{ minWidth: 150 }}
+        >
           <InputLabel id="id-pname-label">Name of project</InputLabel>
           <Select
             labelId="id-pname-label"
@@ -114,9 +114,14 @@ export default function TranslationFilters({ setPage, setTranslationsRows }) {
             ))}
           </Select>
         </FormControl>
-      </Box>
-      <Box style={{ marginLeft: 16 }}>
-        <FormControl variant="outlined" margin="dense" fullWidth>
+      </Grid>
+      <Grid item>
+        <FormControl
+          variant="outlined"
+          margin="dense"
+          fullWidth
+          style={{ minWidth: 150 }}
+        >
           <InputLabel id="id-gkey-select-label">Status</InputLabel>
           <Select
             labelId="id-gkey-select-label"
@@ -135,10 +140,14 @@ export default function TranslationFilters({ setPage, setTranslationsRows }) {
             <MenuItem value="fr">Not Verified FR</MenuItem>
           </Select>
         </FormControl>
-      </Box>
-
-      <Box style={{ marginLeft: 16, minWidth: 100 }}>
-        <FormControl variant="outlined" margin="dense" fullWidth>
+      </Grid>
+      <Grid item>
+        <FormControl
+          variant="outlined"
+          margin="dense"
+          fullWidth
+          style={{ minWidth: 150 }}
+        >
           <InputLabel id="id-gkey-select-label">Group</InputLabel>
           <Select
             labelId="id-gkey-select-label"
@@ -157,9 +166,8 @@ export default function TranslationFilters({ setPage, setTranslationsRows }) {
             ))}
           </Select>
         </FormControl>
-      </Box>
-
-      <Box style={{ marginLeft: 16 }}>
+      </Grid>
+      <Grid item>
         <Input
           id="search-field"
           label="Search by Key and/or Value"
@@ -175,7 +183,7 @@ export default function TranslationFilters({ setPage, setTranslationsRows }) {
             ),
           }}
         />
-      </Box>
-    </Box>
+      </Grid>
+    </>
   );
 }

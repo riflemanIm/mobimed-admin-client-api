@@ -3,6 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import Grid from "@material-ui/core/Grid";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import DownloadIcon from "@material-ui/icons/GetApp";
@@ -61,8 +62,14 @@ export default function TranslationAdminActions({ pname }) {
   };
 
   return (
-    <div>
-      <IconButton aria-label="delete" color="primary" onClick={handleClick}>
+    <Grid item>
+      <IconButton
+        variant={"outlined"}
+        aria-label="delete"
+        style={{ marginTop: 8 }}
+        onClick={handleClick}
+        color="primary"
+      >
         <MenuIcon />
       </IconButton>
       <StyledMenu
@@ -105,6 +112,6 @@ export default function TranslationAdminActions({ pname }) {
           </Link>
         ))}
       </StyledMenu>
-    </div>
+    </Grid>
   );
 }

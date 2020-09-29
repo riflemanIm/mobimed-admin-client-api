@@ -37,7 +37,6 @@ import useStyles from "./styles";
 import {
   DeleteOutlined as DeleteIcon,
   DoneAll as DoneAllIcon,
-  Search as SearchIcon,
   CreateOutlined as CreateIcon,
 } from "@material-ui/icons";
 
@@ -471,15 +470,11 @@ const TranslationList = () => {
 
       <Grid item xs={12}>
         <Widget inheritHeight>
-          <Box
-            justifyContent={"space-between"}
-            display={"flex"}
-            alignItems={"flex-start"}
-          >
-            <Box>
-              {/* actions for interpreter  */}
+          <Grid container spacing={2}>
+            {/* actions for interpreter  */}
 
-              {status === "interpreter" && (
+            {status === "interpreter" && (
+              <Grid item md={6} xs={12}>
                 <Button
                   variant={"contained"}
                   color={"success"}
@@ -497,23 +492,24 @@ const TranslationList = () => {
                   </Box>
                   Mark verified
                 </Button>
-              )}
+              </Grid>
+            )}
 
-              {/* actions for admin  */}
+            {/* actions for admin  */}
 
-              {status === "admin" &&
-                (isMobile ? (
-                  <AdminActionsMenu pname={filterVals.pname} />
-                ) : (
-                  <AdminActions pname={filterVals.pname} />
-                ))}
-            </Box>
+            {status === "admin" &&
+              (isMobile ? (
+                <AdminActionsMenu pname={filterVals.pname} />
+              ) : (
+                <AdminActions pname={filterVals.pname} />
+              ))}
+
             {/* filters  */}
             <TranslationFilters
               setPage={setPage}
               setTranslationsRows={setTranslationsRows}
             />
-          </Box>
+          </Grid>
         </Widget>
       </Grid>
       <Grid item xs={12}>
