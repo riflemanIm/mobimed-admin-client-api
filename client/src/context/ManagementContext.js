@@ -297,11 +297,11 @@ const actions = {
       })
       .catch((error) => {
         console.log("error", error);
-        notify(error.response.data?.err);
+        notify(error.response?.data?.err);
 
         dispatch({
           type: "USERS_FORM_UPDATE_ERROR",
-          payload: error.response.data?.err,
+          payload: error.response?.data?.err,
         });
       });
 

@@ -119,7 +119,8 @@ const EditUser = () => {
   function sendNotification(errorMessage) {
     const componentProps = {
       type: "feedback",
-      message: errorMessage != null ? errorMessage : "User edited!",
+      message:
+        errorMessage != null ? errorMessage : "Пользователь отредактирован!",
       variant: "contained",
       color: errorMessage != null ? "warning" : "success",
     };
@@ -161,7 +162,7 @@ const EditUser = () => {
   }, [currentUser, id]);
 
   const saveData = () => {
-    actions.doUpdate(id, values, history)(managementDispatch, sendNotification);
+    actions.doUpdate(id, values, sendNotification)(managementDispatch, history);
   };
 
   function handleUpdatePassword() {
@@ -214,11 +215,13 @@ const EditUser = () => {
                 label="CHANGE PASSWORD"
                 icon={<LockIcon />}
                 classes={{ wrapper: classes.icon }}
+                disabled
               />
               <Tab
                 label="SETTINGS"
                 icon={<SettingsIcon />}
                 classes={{ wrapper: classes.icon }}
+                disabled
               />
             </Tabs>
           </Box>

@@ -41,7 +41,7 @@ import useStyles from "./styles";
 // Icons
 import {
   Add as AddIcon,
-  GetApp as DownloadIcon,
+  //GetApp as DownloadIcon,
   Search as SearchIcon,
   CreateOutlined as CreateIcon,
   HelpOutline as HelpIcon,
@@ -210,7 +210,7 @@ const UserList = () => {
   };
 
   React.useEffect(() => {
-    sendNotification("GETTING ALL USERS");
+    //sendNotification("GETTING ALL USERS");
     async function fetchAPI() {
       try {
         await actions.doFetch({}, false)(managementDispatch);
@@ -327,7 +327,7 @@ const UserList = () => {
                   <Box mr={1} display={"flex"}>
                     <AddIcon />
                   </Box>
-                  Add
+                  Добавить
                 </Button>
               </Link>
             </Box>
@@ -336,15 +336,15 @@ const UserList = () => {
               flexDirection={"column"}
               alignItems={"flex-end"}
             >
-              <Button variant={"outlined"} color={"secondary"}>
+              {/* <Button variant={"outlined"} color={"secondary"}>
                 <Box display={"flex"} mr={1}>
                   <DownloadIcon />
                 </Box>
                 Download
-              </Button>
+              </Button> */}
               <Input
                 id="search-field"
-                label="Search"
+                label="Поиск по ФИО"
                 margin="dense"
                 variant="outlined"
                 onChange={(e) => handleSearch(e)}

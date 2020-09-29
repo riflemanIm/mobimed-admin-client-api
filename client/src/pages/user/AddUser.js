@@ -128,7 +128,7 @@ const AddUser = () => {
   function sendNotification(errorMessage = null) {
     const componentProps = {
       type: "feedback",
-      message: errorMessage != null ? errorMessage : "User added!",
+      message: errorMessage != null ? errorMessage : "Пользовотель добавлен!",
       variant: "contained",
       color: errorMessage != null ? "warning" : "success",
     };
