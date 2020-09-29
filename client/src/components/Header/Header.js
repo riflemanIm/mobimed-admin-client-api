@@ -229,7 +229,7 @@ export default function Header(props) {
           color="inherit"
           className={classes.headerMenuButton}
           aria-controls="profile-menu"
-          onClick={(e) => setProfileMenu(e.currentTarget)}
+          //onClick={(e) => setProfileMenu(e.currentTarget)}
         >
           <Avatar
             alt={`${currentUser.fname} ${currentUser.lname}`}
@@ -247,7 +247,15 @@ export default function Header(props) {
             {currentUser.fname} {currentUser.lname}
           </Typography>
         </Typography>
-        ({currentUser.status})
+
+        <Typography
+          className={classes.profileMenuLink}
+          variant="body2"
+          onClick={() => signOut(userDispatch, props.history)}
+        >
+          {" "}
+          Выход
+        </Typography>
         <Menu
           id="mail-menu"
           open={Boolean(mailMenu)}

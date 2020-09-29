@@ -14,7 +14,7 @@ import classnames from "classnames";
 import useStyles from "./styles";
 
 // logo
-import logo from "./logo.svg";
+import logo from "./logo_only.svg";
 import google from "../../images/google.svg";
 
 // context
@@ -95,7 +95,7 @@ function Login(props) {
     <Grid container className={classes.container}>
       <div className={classes.logotypeContainer}>
         <img src={logo} alt="logo" className={classes.logotypeImage} />
-        <Typography className={classes.logotypeText}>Material Admin</Typography>
+        <Typography className={classes.logotypeText}>Mobimed Admin</Typography>
       </div>
       <div
         className={
@@ -159,7 +159,11 @@ function Login(props) {
                 centered
               >
                 <Tab label="Login" classes={{ root: classes.tab }} />
-                <Tab label="New User" classes={{ root: classes.tab }} />
+                <Tab
+                  label="New User"
+                  classes={{ root: classes.tab }}
+                  disabled
+                />
               </Tabs>
               {activeTabId === 0 && (
                 <React.Fragment>
@@ -272,6 +276,7 @@ function Login(props) {
                       size="large"
                       onClick={() => setIsForgot(!isForgot)}
                       className={classes.forgetButton}
+                      disabled
                     >
                       Forgot Password?
                     </Button>

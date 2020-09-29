@@ -22,29 +22,29 @@ import { Link } from "../../components/Wrappers";
 import ColorChangeThemePopper from "./components/ColorChangeThemePopper";
 
 // pages
-import Dashboard from "../../pages/dashboard";
-import TypographyPage from "../../pages/typography";
-import Notifications from "../../pages/notifications";
-import Tables from "../../pages/tables";
-import Icons from "../../pages/icons";
+// import Dashboard from "../../pages/dashboard";
+// import TypographyPage from "../../pages/typography";
+// import Notifications from "../../pages/notifications";
+// import Tables from "../../pages/tables";
+// import Icons from "../../pages/icons";
 // import Charts from "../../pages/charts";
 // import LineCharts from "../../pages/charts/LineCharts";
 // import BarCharts from "../../pages/charts/BarCharts";
 // import PieCharts from "../../pages/charts/PieCharts";
-import Colors from "../../pages/colors";
-import GridPage from "../../pages/grid";
-import Badge from "../../pages/badge";
-import Carousel from "../../pages/сarousel";
-import Modal from "../../pages/modal";
-import Navbar from "../../pages/nav/Navbar";
-import Tooltips from "../../pages/tooltips";
-import TabsPage from "../../pages/tabs";
-import FormsElements from "../../pages/forms/elements";
-import FormValidation from "../../pages/forms/validation";
-import Cards from "../../pages/cards";
-import DynamicTables from "../../pages/tables/dynamic";
-import WidgetPage from "../../pages/widget";
-import Progress from "../../pages/progress";
+// import Colors from "../../pages/colors";
+// import GridPage from "../../pages/grid";
+// import Badge from "../../pages/badge";
+// import Carousel from "../../pages/сarousel";
+// import Modal from "../../pages/modal";
+// import Navbar from "../../pages/nav/Navbar";
+// import Tooltips from "../../pages/tooltips";
+// import TabsPage from "../../pages/tabs";
+// import FormsElements from "../../pages/forms/elements";
+// import FormValidation from "../../pages/forms/validation";
+// import Cards from "../../pages/cards";
+// import DynamicTables from "../../pages/tables/dynamic";
+//import WidgetPage from "../../pages/widget";
+//import Progress from "../../pages/progress";
 //import Ecommerce from "../../pages/ecommerce";
 //import Product from "../../pages/ecommerce/Products";
 //import ProductsGrid from "../../pages/ecommerce/ProductsGrid";
@@ -126,7 +126,7 @@ function Layout(props) {
         <div className={classes.fakeToolbar} />
         <BreadCrumbs />
         <Switch>
-          <Route path="/app/dashboard" component={Dashboard} />
+          {/*<Route path="/app/dashboard" component={Dashboard} />
           <Route path="/app/core/typography" component={TypographyPage} />
           <Route path="/app/core/grid" component={GridPage} />
           <Route path="/app/ui/notifications" component={Notifications} />
@@ -143,7 +143,7 @@ function Layout(props) {
           <Route path="/app/ui/progress" component={Progress} />
           <Route path="/app/tables/static" component={Tables} />
           <Route path="/app/tables/dynamic" component={DynamicTables} />
-          {/* <Route path="/app/charts/overview" component={Charts} />
+           <Route path="/app/charts/overview" component={Charts} />
           <Route path="/app/charts/line" component={LineCharts} />
           <Route path="/app/charts/bar" component={BarCharts} />
           <Route path="/app/charts/pie" component={PieCharts} /> */}
@@ -164,7 +164,7 @@ function Layout(props) {
           </Route>
           <Route path="/app/ecommerce/product/:id" component={Product} />
           <Route path="/app/ecommerce/product" component={Product} />
-          <Route path="/app/ecommerce/gridproducts" component={ProductsGrid} /> */}
+          <Route path="/app/ecommerce/gridproducts" component={ProductsGrid} /> 
           <Route
             exact
             path="/app/tables"
@@ -199,21 +199,21 @@ function Layout(props) {
             exact
             path="/app/extra"
             render={() => <Redirect to="/app/extra/timeline" />}
-          /> */}
+          /> 
           <Route
             exact
             path="/app/maps"
             render={() => <Redirect to="/app/maps/google" />}
           />
           <Route path="/app/ui/icons" component={Icons} />
-          {/* <Route path="/app/extra/timeline" component={Timeline} /> */}
-          {/* <Route path="/app/extra/search" component={Search} />
+          <Route path="/app/extra/timeline" component={Timeline} />
+          <Route path="/app/extra/search" component={Search} />
           <Route path="/app/extra/gallery" component={Gallery} />
-          <Route path="/app/extra/invoice" component={Invoice} /> */}
-          {/* <Route path="/app/extra/calendar" component={Calendar} /> */}
+          <Route path="/app/extra/invoice" component={Invoice} />
+          <Route path="/app/extra/calendar" component={Calendar} />
           <Route path="/app/core/colors" component={Colors} />
-          {/* <Route path="/app/maps/google" component={MapsGoogle} />
-                    <Route path="/app/maps/vector" component={VectorMaps} /> */}
+          <Route path="/app/maps/google" component={MapsGoogle} />
+          <Route path="/app/maps/vector" component={VectorMaps} /> */}
 
           {/* ----------------- user ----------------- */}
 
@@ -436,26 +436,26 @@ function Layout(props) {
               Blog
             </Link>
           </div>
-          <div>
-            {/* <Link href={"https://www.facebook.com/mobimed"} target={"_blank"}>
+          {/* <div>
+            <Link href={"https://www.facebook.com/mobimed"} target={"_blank"}>
               <IconButton aria-label="facebook">
                 <Icon path={FacebookIcon} size={1} color="#6E6E6E99" />
               </IconButton>
-            </Link> */}
-            {/* <Link href={"https://twitter.com/mobimed"} target={"_blank"}>
+            </Link>
+            <Link href={"https://twitter.com/mobimed"} target={"_blank"}>
               <IconButton aria-label="twitter">
                 <Icon path={TwitterIcon} size={1} color="#6E6E6E99" />
               </IconButton>
-            </Link> */}
-            {/* <Link href={"https://github.com/mobimed"} target={"_blank"}>
+            </Link>
+            <Link href={"https://github.com/mobimed"} target={"_blank"}>
               <IconButton
                 aria-label="github"
                 style={{ padding: "12px 0 12px 12px" }}
               >
                 <Icon path={GithubIcon} size={1} color="#6E6E6E99" />
               </IconButton>
-            </Link> */}
-          </div>
+            </Link>
+          </div> */}
         </Footer>
       </div>
     </div>
