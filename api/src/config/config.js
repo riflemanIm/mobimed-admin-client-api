@@ -8,13 +8,10 @@ const config = {
   admin_pass: "password",
   admin_email: "oleg@la.com",
   secret_key: "HUEyqESqgQ1yTwzVlO6wprC9Kf1J1xuA",
-  remote: "https://site-node-backend.herokuapp.com",
-  port: process.env.NODE_ENV === "production" ? 8080 : 8000,
-  hostUI:
-    process.env.NODE_ENV === "production"
-      ? "http://10.1.0.182"
-      : "http://localhost",
-  portUI: process.env.NODE_ENV === "production" ? "1337" : "3000",
+  //remote: "https://site-node-backend.herokuapp.com",
+  port: process.env.PORT,
+  hostUI: process.env.HOST_UI,
+  portUI: process.env.PORT_UI,
   google: {
     clientId:
       "592707349093-3ab6a0seutt1qpiiq8u0k3in5k7f226d.apps.googleusercontent.com",

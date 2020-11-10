@@ -40,12 +40,12 @@ export default function App() {
           <Route
             exact
             path="/"
-            render={() => <Redirect to="/app/promo/list" />}
+            render={() => <Redirect to="/app/translation/list" />}
           />
           <Route
             exact
             path="/app"
-            render={() => <Redirect to="/app/promo/list" />}
+            render={() => <Redirect to="/app/translation/list" />}
           />
           {/* <Route path="/documentation" component={Documentation} /> */}
           <PrivateRoute path="/app" component={Layout} />

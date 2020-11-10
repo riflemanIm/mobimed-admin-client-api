@@ -16,8 +16,7 @@ import {
   // Description as DocumentationIcon,
   // Add as AddSectionIcon,
   // Chat as ChatIcon,
-  // Translate as TranslateIcon,
-
+  Translate as TranslateIcon,
   Explore as ExploreIcon,
   Person as PersonIcon,
   CardGiftcard as CardGiftcardIcon,
@@ -61,15 +60,15 @@ const structure = [
   //         },
   //     ],
   // },
-  // {
-  //   id: "translation",
-  //   role: ["admin", "interpreter"],
-  //   label: "Translations",
-  //   badgeColor: "success",
+  {
+    id: "translation",
+    role: ["admin", "interpreter"],
+    label: "Translations",
+    badgeColor: "success",
 
-  //   icon: <TranslateIcon />,
-  //   link: "/app/translation/list",
-  // },
+    icon: <TranslateIcon />,
+    link: "/app/translation/list",
+  },
 
   {
     id: "region",

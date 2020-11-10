@@ -1,15 +1,15 @@
 require("dotenv").config();
 
-console.log("process.env.MYSQL_DEV_HOST", process.env.MYSQL_DEV_HOST);
+console.log("process.env.MYSQL_HOST", process.env.MYSQL_HOST);
 
 module.exports = {
   development: {
     client: "mysql",
     connection: {
-      host: process.env.MYSQL_DEV_HOST,
-      user: process.env.MYSQL_DEV_USER,
-      password: process.env.MYSQL_DEV_PASSWORD,
-      database: process.env.MYSQL_DEV_DATABASE,
+      host: process.env.MYSQL_HOST,
+      user: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DATABASE,
     },
     migrations: {
       directory: "./src/database/migrations",

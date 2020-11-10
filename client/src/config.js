@@ -5,7 +5,7 @@ const hostApi =
 const portApi = process.env.NODE_ENV === "development" ? 8000 : 8080;
 const baseURLApi = `${hostApi}${portApi ? `:${portApi}` : ``}/api`;
 const baseURLimages = `${hostApi}${portApi ? `:${portApi}` : ``}/images`;
-
+console.log("portApi", portApi);
 const redirectUrl = baseURLApi;
 const pNames = ["mobimed_site", "mobi_app", "telemedialog", "telemed", "test"];
 
