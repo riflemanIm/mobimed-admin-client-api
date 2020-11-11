@@ -16,10 +16,15 @@ export default function TranslationFilters({ setPage, setTranslationsRows }) {
   const { rows, filterVals } = useTranslationState();
 
   React.useEffect(() => {
-    //setTranslationsRows(rows);
-    if (!isEmpty(rows)) doFilter(filterVals);
+    setTimeout(() => {
+      if (!isEmpty(rows)) {
+        doFilter(filterVals);
+        setPage(0);
+      }
+    }, 300);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rows]);
+  }, [filterVals, rows]);
+
   //const pNames = [...new Set(rows.map((item) => item.pname))];
   const pNames = config.pNames;
   const gKeys = [
@@ -47,9 +52,6 @@ export default function TranslationFilters({ setPage, setTranslationsRows }) {
       type: "TRANSLATIONS_SET_FILTERS",
       payload: { ...newFilterVals },
     });
-
-    doFilter(newFilterVals);
-    setPage(0);
   };
 
   const doFilter = (params) => {
@@ -84,7 +86,6 @@ export default function TranslationFilters({ setPage, setTranslationsRows }) {
           .includes(params.lang_value.toLowerCase());
       });
 
-    //    console.log("params", params, "newArr", newArr);
     setTranslationsRows(newArr);
   };
   return (
