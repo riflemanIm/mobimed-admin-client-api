@@ -7,9 +7,9 @@ import Grid from "@material-ui/core/Grid";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import DownloadIcon from "@material-ui/icons/GetApp";
-import MenuIcon from "@material-ui/icons/Menu";
-import RestoreIcon from "@material-ui/icons/Restore";
 import LabelImportantIcon from "@material-ui/icons/LabelImportant";
+
+import MenuIcon from "@material-ui/icons/Menu";
 import { Link } from "../../components/Wrappers/Wrappers";
 import config from "../../config";
 
@@ -48,9 +48,7 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-export default function TranslationAdminActions({ pname }) {
-  const langs = ["ru", "en", "fr"];
-
+export default function TranslationInterActions({ pname }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -79,38 +77,27 @@ export default function TranslationAdminActions({ pname }) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <Link href="#/app/translation/import" underline="none" color="#fff">
+        <Link
+          href={`${config.baseURLApi}/translations/getcsv/${pname}`}
+          underline="none"
+          color="#fff"
+        >
+          <StyledMenuItem>
+            <ListItemIcon>
+              <DownloadIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary=".CSV" />
+          </StyledMenuItem>
+        </Link>
+
+        <Link href="#/app/translation/import-csv" underline="none" color="#fff">
           <StyledMenuItem>
             <ListItemIcon>
               <LabelImportantIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText primary="Import" />
+            <ListItemText primary="Import CSV" />
           </StyledMenuItem>
         </Link>
-        <Link href="#/app/translation/backups" underline="none" color="#fff">
-          <StyledMenuItem>
-            <ListItemIcon>
-              <RestoreIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary="Restore" />
-          </StyledMenuItem>
-        </Link>
-
-        {langs.map((lang) => (
-          <Link
-            href={`${config.baseURLApi}/translations/download/${lang}/${pname}`}
-            underline="none"
-            color="#fff"
-            key={lang}
-          >
-            <StyledMenuItem>
-              <ListItemIcon>
-                <DownloadIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText primary={lang} />
-            </StyledMenuItem>
-          </Link>
-        ))}
       </StyledMenu>
     </Grid>
   );

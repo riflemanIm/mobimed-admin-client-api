@@ -43,7 +43,7 @@ const TranslationAdminActions = ({ pname }) => {
       {langs.map((lang) => (
         <Grid item key={lang}>
           <Link
-            href={`${config.baseURLApi}/translations/download/ru/${pname}`}
+            href={`${config.baseURLApi}/translations/download/${lang}/${pname}`}
             underline="none"
             color="#fff"
           >

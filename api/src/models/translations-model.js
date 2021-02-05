@@ -60,8 +60,8 @@ const addTranslation = (translation) => {
   return db("translations").insert(translation);
 };
 
-// UPDATE TRANSLATION
-const updateTranslationByJSON = (id, data, lang) => {
+// UPDATE TRANSLATION BY LANG
+const updateTranslatioLang = (id, data, lang) => {
   const updated_at = localDateTime;
 
   return db("translations")
@@ -90,6 +90,18 @@ const updateTranslationByJSON = (id, data, lang) => {
     });
 
   //return db("translations").where("id", id).update(data);
+};
+
+// UPDATE TRANSLATION BY gkey,tkey,pname
+const updateTranslationRow = (pname, gkey, tkey, data) => {
+  const updated_at = localDateTime;
+
+  return db("translations")
+    .first()
+    .where({ pname, gkey, tkey })
+    .update({ ...data, updated_at })
+    .then((r) => r)
+    .catch((e) => e);
 };
 
 // UPDATE CHECKEDS
@@ -149,7 +161,7 @@ const saveTranslation = (gkey, tkey, pname, lang_conent, account_id, lang) => {
   return findByKeys(pname, gkey, tkey)
     .then((r) => {
       if (r) {
-        const translation = updateTranslationByJSON(
+        const translation = updateTranslatioLang(
           r.id,
           defLangObj(lang, lang_conent, false),
           lang
@@ -302,7 +314,8 @@ module.exports = {
   addTranslation,
   updateTranslation,
   updateChecked,
-  updateTranslationByJSON,
+  updateTranslatioLang,
+  updateTranslationRow,
   removeTranslation,
   removeTranslationsByPName,
   saveTranslation,

@@ -146,7 +146,7 @@ const ClinicList = () => {
   };
 
   React.useEffect(() => {
-    // sendNotification("Все промо");
+    //    sendNotification("Все ");
     async function fetchAPI() {
       try {
         await actions.doFetch({}, false)(clinicDispatch);

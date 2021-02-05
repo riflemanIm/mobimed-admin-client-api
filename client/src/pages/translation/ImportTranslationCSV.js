@@ -12,9 +12,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import Switch from "@material-ui/core/Switch";
 
 //import { Typography } from "../../components/Wrappers/Wrappers";
 import Widget from "../../components/Widget/Widget";
@@ -25,15 +23,13 @@ import { useUserState } from "../../context/UserContext";
 import { useTranslationDispatch } from "../../context/TranslationContext";
 import isEmpty from "../../helpers/isEmpty";
 
-const ImportTranslation = () => {
+const ImportTranslationCSV = () => {
   const classes = useStyles();
   const [isLoadingFile, setIsLoadingFile] = React.useState(false);
   const filterVals = JSON.parse(localStorage.getItem("translationFilterVals"));
   const [pname, setPName] = React.useState(
     !isEmpty(filterVals) ? filterVals.pname : "mobimed_site"
   );
-  const [deleteOldKeys, setDeleteOldKeys] = React.useState(false);
-  const [doBackup, setDoBackup] = React.useState(true);
 
   const fileInput = React.useRef(null);
   const {
@@ -65,8 +61,7 @@ const ImportTranslation = () => {
   }
 
   React.useEffect(() => {
-    sendNotification(" Обязательно выберете СВОЙ проект! ", true);
-
+    sendNotification(" Make sure the correct project is selected! ", true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const history = useHistory();
@@ -87,17 +82,15 @@ const ImportTranslation = () => {
     const filename = filedata.name;
     if (
       filename != null &&
-      ["en.json", "ru.json", "fr.json"].includes(filename.toLowerCase())
+      ["translation.csv"].includes(filename.toLowerCase())
     ) {
       setIsLoadingFile(true);
 
-      await uploadToServer(`${config.baseURLApi}/translations/import-json`, {
+      await uploadToServer(`${config.baseURLApi}/translations/import-csv`, {
         filedata,
         filename,
         account_id,
         pname,
-        deleteOldKeys,
-        doBackup,
       })
         .then((res) => {
           setIsLoadingFile(false);
@@ -109,13 +102,11 @@ const ImportTranslation = () => {
         })
         .catch((e) => {
           setIsLoadingFile(false);
-          console.log("ee", e.response.data);
-          sendNotification(e.response.data.message);
+          console.log("ee", e.response);
+          sendNotification(e.response);
         });
     } else {
-      sendNotification(
-        "Название файла должно быть en.json или ru.json или fr.json"
-      );
+      sendNotification("The file name should be translation.csv");
     }
     return null;
   };
@@ -130,12 +121,12 @@ const ImportTranslation = () => {
                 <>
                   <FormControl variant="outlined" margin="dense" fullWidth>
                     <InputLabel id="id-pname-label">
-                      Выберите название проекта:
+                      Select project name:
                     </InputLabel>
                     <Select
                       labelId="id-pname-label"
                       id="id-pname-select"
-                      label="Выберите название проекта:"
+                      label="Select project name:"
                       onChange={handlePName}
                       value={pname}
                     >
@@ -150,45 +141,16 @@ const ImportTranslation = () => {
                     </Select>
                   </FormControl>
 
-                  <FormControlLabel
-                    style={{ marginTop: 18 }}
-                    control={
-                      <Switch
-                        checked={deleteOldKeys}
-                        onChange={() => setDeleteOldKeys(!deleteOldKeys)}
-                        name="deleteOldKeys"
-                        color="primary"
-                      />
-                    }
-                    label="Удалить все переводы"
-                  />
                   <FormHelperText color="warning">
-                    Будут удалены все переводы для выбранного проекта для всех
-                    языков. Будьте внимательны
-                  </FormHelperText>
-
-                  <FormControlLabel
-                    style={{ marginTop: 18 }}
-                    control={
-                      <Switch
-                        checked={doBackup}
-                        onChange={() => setDoBackup(!doBackup)}
-                        name="doBackup"
-                        color="primary"
-                      />
-                    }
-                    label="Сдеать Backup"
-                  />
-                  <FormHelperText color="warning">
-                    Будет создана копия всех строк, для данного проекта на
-                    определенное время чтобы была возможность отката
+                    All translations for the selected project for all languages
+                    will be deleted. be careful
                   </FormHelperText>
 
                   <label
                     className={classes.uploadLabel}
                     style={{ cursor: "pointer" }}
                   >
-                    Выберите файл с переводом
+                    Select file <strong>translation.csv</strong>
                     <input
                       style={{ display: "none" }}
                       accept="application/js"
@@ -198,10 +160,7 @@ const ImportTranslation = () => {
                     />
                   </label>
                   <FormHelperText>
-                    Название файла должно быть <strong>en.json</strong> или{" "}
-                    <strong>ru.json</strong> или <strong>fr.json</strong>
-                    <br />
-                    <strong>Нельзя использовать точку в названии ключа</strong>
+                    The file name should be <strong>translation.csv</strong>
                   </FormHelperText>
                 </>
               ) : (
@@ -215,4 +174,4 @@ const ImportTranslation = () => {
   );
 };
 
-export default ImportTranslation;
+export default ImportTranslationCSV;

@@ -31,6 +31,7 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
+    "csv-string": "^4.0.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
@@ -45,7 +46,8 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "passport-microsoft": "^0.1.0",
-    "request-promise": "^4.2.6"
+    "request-promise": "^4.2.6",
+    "windows-1251": "^1.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.3",

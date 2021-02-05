@@ -69,7 +69,7 @@ export default function Notification({ variant, ...props }) {
           variant === "contained" &&
           theme.palette[props.color] &&
           theme.palette[props.color].main,
-        zoom: props.isBig != null ? "400%" : "",
+        zoom: props.isBig != null && props.isBig ? "200%" : "150%",
       }}
     >
       <div

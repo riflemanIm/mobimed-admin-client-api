@@ -7,7 +7,7 @@ import userSignInUpRouter from "./routes/user-sing-in-up";
 import usersRouter from "./routes/users-crud";
 import clinicRouter from "./routes/clinic-crud";
 import regionRouter from "./routes/region-crud";
-import translationRouter from "./routes/translations-crud";
+import translationRouter from "./routes/translations";
 import PromoRouter from "./routes/promo-crud";
 import ServiseRouter from "./routes/service-crud";
 import MedicalNetRouter from "./routes/medical_net-crud";

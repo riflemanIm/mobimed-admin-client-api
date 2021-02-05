@@ -45,6 +45,8 @@ import moment from "moment/moment";
 import isEmpty from "../../helpers/isEmpty";
 import AdminActions from "./TranslationAdminActions";
 import AdminActionsMenu from "./TranslationAdminActionsMenu";
+import InterActions from "./TranslationInterActions";
+import InterActionsMenu from "./TranslationInterActionsMenu";
 import TranslationFilters from "./TranslationFilters";
 
 function descendingComparator(a, b, orderBy) {
@@ -235,6 +237,7 @@ const TranslationList = () => {
       message: text,
       variant: "contained",
       color: isWarning ? "warning" : "success",
+      isBig: false,
     };
     const options = {
       type: isWarning ? "warning" : "info",
@@ -355,7 +358,7 @@ const TranslationList = () => {
   };
 
   const saveChecked = () => {
-    if (isEmpty(selected)) sendNotification("Строки не выбраны");
+    if (isEmpty(selected)) sendNotification("No rows selected", true);
     else
       actions.doUpdateChecked({
         selected,
@@ -474,18 +477,18 @@ const TranslationList = () => {
             {/* actions for interpreter  */}
 
             {status === "interpreter" && (
-              <Grid item md={6} xs={12}>
+              <Grid item>
                 <Button
                   variant={"contained"}
                   color={"success"}
                   onClick={() => {
                     if (isEmpty(selected)) {
-                      console.log("selected", selected);
                       sendNotification("No rows selected", true);
                     } else {
                       openModalCheched();
                     }
                   }}
+                  style={{ marginTop: 8 }}
                 >
                   <Box mr={1} display={"flex"}>
                     <DoneAllIcon />
@@ -497,14 +500,18 @@ const TranslationList = () => {
 
             {/* actions for admin  */}
 
-            {status === "admin" &&
-              (isMobile ? (
+            {status === "admin" ? (
+              isMobile ? (
                 <AdminActionsMenu pname={filterVals.pname} />
               ) : (
                 <AdminActions pname={filterVals.pname} />
-              ))}
+              )
+            ) : isMobile ? (
+              <InterActionsMenu pname={filterVals.pname} />
+            ) : (
+              <InterActions pname={filterVals.pname} />
+            )}
 
-            {/* filters  */}
             <TranslationFilters
               setPage={setPage}
               setTranslationsRows={setTranslationsRows}

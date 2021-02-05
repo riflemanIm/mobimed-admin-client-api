@@ -24,7 +24,7 @@ import ColorChangeThemePopper from "./components/ColorChangeThemePopper";
 // pages
 // import Dashboard from "../../pages/dashboard";
 // import TypographyPage from "../../pages/typography";
-// import Notifications from "../../pages/notifications";
+import Notifications from "../../pages/notifications";
 // import Tables from "../../pages/tables";
 // import Icons from "../../pages/icons";
 // import Charts from "../../pages/charts";
@@ -82,6 +82,7 @@ import MedicalNetEdit from "../../pages/medical_net/EditMedicalNet";
 
 import TranslationList from "../../pages/translation";
 import ImportTranslation from "../../pages/translation/ImportTranslation";
+import ImportTranslationCSV from "../../pages/translation/ImportTranslationCSV";
 import TranslationEdit from "../../pages/translation/EditTranslation";
 import BackupTranslation from "../../pages/translation/BackupTranslation";
 
@@ -126,10 +127,11 @@ function Layout(props) {
         <div className={classes.fakeToolbar} />
         <BreadCrumbs />
         <Switch>
+          <Route path="/app/ui/notifications" component={Notifications} />
           {/*<Route path="/app/dashboard" component={Dashboard} />
           <Route path="/app/core/typography" component={TypographyPage} />
           <Route path="/app/core/grid" component={GridPage} />
-          <Route path="/app/ui/notifications" component={Notifications} />
+          
           <Route path="/app/forms/elements" component={FormsElements} />
           <Route path="/app/forms/validation" component={FormValidation} />
           <Route path="/app/ui/badge" component={Badge} />
@@ -391,6 +393,10 @@ function Layout(props) {
             <Route exact path="/app/translation/import">
               <ImportTranslation />
             </Route>
+            <Route exact path="/app/translation/import-csv">
+              <ImportTranslationCSV />
+            </Route>
+
             <Route exact path="/app/translation/backups">
               <BackupTranslation />
             </Route>

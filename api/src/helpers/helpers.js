@@ -45,3 +45,12 @@ export function tranformNoda(noda) {
   }
   return res;
 }
+
+export function trimChar(string, character) {
+  const arr = Array.from(string);
+  const first = arr.findIndex((char) => char !== character);
+  const last = arr.reverse().findIndex((char) => char !== character);
+  return first === -1 && last === -1
+    ? ""
+    : string.substring(first, string.length - last);
+}
