@@ -381,29 +381,38 @@ function Layout(props) {
           </Route>
 
           {/* ----------------- translation ----------------- */}
-          <TranslationProvider>
-            <Route
-              exact
-              path="/app/translation"
-              render={() => <Redirect to="/app/translation/list" />}
-            />
-            <Route exact path="/app/translation/list">
-              <TranslationList />
-            </Route>
-            <Route exact path="/app/translation/import">
-              <ImportTranslation />
-            </Route>
-            <Route exact path="/app/translation/import-csv">
-              <ImportTranslationCSV />
-            </Route>
+          <Route
+            exact
+            path="/app/translation"
+            render={() => <Redirect to="/app/translation/list" />}
+          />
 
-            <Route exact path="/app/translation/backups">
+          <Route exact path="/app/translation/list">
+            <TranslationProvider>
+              <TranslationList />
+            </TranslationProvider>
+          </Route>
+          <Route exact path="/app/translation/import">
+            <TranslationProvider>
+              <ImportTranslation />
+            </TranslationProvider>
+          </Route>
+          <Route exact path="/app/translation/import-csv">
+            <TranslationProvider>
+              <ImportTranslationCSV />
+            </TranslationProvider>
+          </Route>
+
+          <Route exact path="/app/translation/backups">
+            <TranslationProvider>
               <BackupTranslation />
-            </Route>
-            <Route exact path="/app/translation/:id/edit">
+            </TranslationProvider>
+          </Route>
+          <Route exact path="/app/translation/:id/edit">
+            <TranslationProvider>
               <TranslationEdit />
-            </Route>
-          </TranslationProvider>
+            </TranslationProvider>
+          </Route>
         </Switch>
         <Fab
           color="primary"

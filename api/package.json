@@ -4,7 +4,7 @@
   "description": "REST API code for quick setup for CRUD applications using express/knex/mysql",
   "main": "index.js",
   "engines": {
-    "node": "12.x"
+    "node": "14.x"
   },
   "scripts": {
     "babel-node": "babel-node",

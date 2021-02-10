@@ -14,11 +14,10 @@ import config from "../../config";
 
 export default function TranslationFilters({ setPage, setTranslationsRows }) {
   const { rows, filterVals } = useTranslationState();
-
   React.useEffect(() => {
     setTimeout(() => {
       if (!isEmpty(rows)) {
-        doFilter(filterVals);
+        doFilter();
         setPage(0);
       }
     }, 300);
@@ -47,43 +46,44 @@ export default function TranslationFilters({ setPage, setTranslationsRows }) {
     } else {
       newFilterVals.lang_value = e.target.value;
     }
-
     translationDispatch({
       type: "TRANSLATIONS_SET_FILTERS",
       payload: { ...newFilterVals },
     });
   };
 
-  const doFilter = (params) => {
+  const doFilter = () => {
+    console.log(" filterVals", filterVals);
+
     let newArr = [...rows];
-    Object.keys(params)
+    Object.keys(filterVals)
       .filter((item) => item === "pname" || item === "gkey")
       .forEach((fkey) => {
-        if (params[fkey] !== "") {
-          newArr = newArr.filter((c) => c[fkey] === params[fkey]);
+        if (filterVals[fkey] !== "") {
+          newArr = newArr.filter((c) => c[fkey] === filterVals[fkey]);
         }
       });
 
-    if (params.checked === "checked_all") {
+    if (filterVals.checked === "checked_all") {
       newArr = newArr.filter(
         (row) => row.checked_en && row.checked_ru && row.checked_fr
       );
     }
-    if (params.checked === "not_checked_all") {
+    if (filterVals.checked === "not_checked_all") {
       newArr = newArr.filter(
         (row) => !row.checked_en || !row.checked_ru || !row.checked_fr
       );
     }
-    if (["ru", "en", "fr"].includes(params.checked)) {
-      const lang = params.checked;
+    if (["ru", "en", "fr"].includes(filterVals.checked)) {
+      const lang = filterVals.checked;
       newArr = newArr.filter((row) => !row[`checked_${lang}`]);
     }
 
-    if (params.lang_value !== "")
+    if (filterVals.lang_value !== "")
       newArr = newArr.filter((c) => {
         return `${c.tkey}${c.lang_ru}${c.lang_en}${c.lang_fr}`
           .toLowerCase()
-          .includes(params.lang_value.toLowerCase());
+          .includes(filterVals.lang_value.toLowerCase());
       });
 
     setTranslationsRows(newArr);

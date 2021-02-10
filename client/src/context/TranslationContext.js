@@ -13,6 +13,7 @@ async function list() {
 const TranslationStateContext = React.createContext();
 const TranslationDispatchContext = React.createContext();
 const filterVals = JSON.parse(localStorage.getItem("translationFilterVals"));
+
 const initialData = {
   findLoading: false,
   saveLoading: false,
@@ -224,10 +225,11 @@ function translationReducer(state = initialData, { type, payload }) {
   }
 
   if (type === "TRANSLATIONS_SET_FILTERS") {
+    console.log("TRANSLATIONS_SET_FILTERS", payload);
     localStorage.setItem("translationFilterVals", JSON.stringify(payload));
     return {
       ...state,
-      filterVals: payload,
+      filterVals: { ...state.filterVals, ...payload },
     };
   }
 

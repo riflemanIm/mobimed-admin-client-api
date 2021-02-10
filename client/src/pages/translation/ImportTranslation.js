@@ -22,13 +22,17 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { uploadToServer } from "../../helpers/file";
 import config from "../../config";
 import { useUserState } from "../../context/UserContext";
-import { useTranslationDispatch } from "../../context/TranslationContext";
+import {
+  useTranslationState,
+  useTranslationDispatch,
+} from "../../context/TranslationContext";
 import isEmpty from "../../helpers/isEmpty";
 
 const ImportTranslation = () => {
   const classes = useStyles();
   const [isLoadingFile, setIsLoadingFile] = React.useState(false);
-  const filterVals = JSON.parse(localStorage.getItem("translationFilterVals"));
+  const { filterVals } = useTranslationState();
+  console.log("ImportTranslation filterVals", filterVals);
   const [pname, setPName] = React.useState(
     !isEmpty(filterVals) ? filterVals.pname : "mobimed_site"
   );
@@ -78,7 +82,7 @@ const ImportTranslation = () => {
     if (!isEmpty(filterVals))
       translationDispatch({
         type: "TRANSLATIONS_SET_FILTERS",
-        payload: { ...filterVals, pname: e.target.value },
+        payload: { pname: e.target.value },
       });
   };
 

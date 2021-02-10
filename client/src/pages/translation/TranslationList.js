@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  CircularProgress,
 } from "@material-ui/core";
 
 import Widget from "../../components/Widget/Widget";
@@ -191,6 +192,7 @@ const TranslationList = () => {
     modalOpenCheched,
     checked,
     filterVals,
+    loading,
   } = useTranslationState();
   React.useEffect(() => {
     setTranslationsRows(rows);
@@ -221,9 +223,8 @@ const TranslationList = () => {
     sendNotification("Translation deleted");
   };
   function fetchAll() {
-    actions.doFetch({}, false)(translationDispatch);
+    actions.doFetch(filterVals, false)(translationDispatch);
   }
-
   React.useEffect(() => {
     fetchAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -519,175 +520,188 @@ const TranslationList = () => {
           </Grid>
         </Widget>
       </Grid>
-      <Grid item xs={12}>
-        <Widget inheritHeight noBodyPadding>
-          <TableContainer>
-            <Table
-              aria-labelledby="tableTitle"
-              size="medium"
-              aria-label="enhanced table"
-            >
-              <EnhancedTableHead
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
-                onRequestSort={handleRequestSort}
-                rowCount={translationsRows.length}
-              />
-              <TableBody>
-                {stableSort(translationsRows, getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const isItemSelected = isSelected(row.id);
-                    const labelId = `enhanced-table-checkbox-${index}`;
-                    return (
-                      <TableRow
-                        hover
-                        onClick={(event) => handleClickRow(event, row.id)}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.id}
-                        selected={isItemSelected}
-                      >
-                        {status === "interpreter" && (
-                          <TableCell padding="checkbox" style={{ width: "5%" }}>
-                            <Checkbox
-                              checked={isItemSelected}
-                              inputProps={{
-                                "aria-labelledby": labelId,
-                              }}
-                            />
-                          </TableCell>
-                        )}
-                        {status === "admin" && (
-                          <TableCell
-                            component="th"
-                            id={labelId}
-                            scope="row"
-                            style={{ width: "5%" }}
-                          >
-                            <Typography variant={"body2"}>{row.id}</Typography>
-                          </TableCell>
-                        )}
-                        <TableCell align="left" style={{ width: "5%" }}>
-                          <Box
-                            display={"flex"}
-                            style={{
-                              marginLeft: -12,
-                              width: 100,
-                            }}
-                          >
-                            <IconButton color={"primary"}>
-                              <Link
-                                href={`#app/Translation/${row.id}/edit`}
-                                color="#fff"
-                              >
-                                <CreateIcon />
-                              </Link>
-                            </IconButton>
-                            {status === "admin" && (
-                              <IconButton
-                                onClick={() => openModalConfirm(row.id)}
-                                color={"primary"}
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            )}
-                          </Box>
-                        </TableCell>
-
-                        {headCells
-                          .filter(
-                            (item) =>
-                              item?.status == null ||
-                              (item?.status != null &&
-                                item?.status.includes(status))
-                          )
-                          .map(
-                            (item, inx) =>
-                              (status === "admin" ? inx > 1 : inx >= 1) && (
-                                <TableCell
-                                  align="left"
-                                  key={item.id}
-                                  size={
-                                    ["lang_ru", "lang_en", "lang_fr"].includes(
-                                      item.id
-                                    )
-                                      ? "medium"
-                                      : "small"
-                                  }
-                                  style={
-                                    ["lang_ru", "lang_en", "lang_fr"].includes(
-                                      item.id
-                                    )
-                                      ? { width: "30%" }
-                                      : { width: "10%" }
-                                  }
-                                >
-                                  {["created_at", "updated_at"].includes(
-                                    item.id
-                                  ) ? (
-                                    <Typography
-                                      variant={"body2"}
-                                      block={true}
-                                      size="small"
-                                    >
-                                      {moment(row[item.id]).format(
-                                        "DD.MM.YYYY HH:mm"
-                                      )}{" "}
-                                    </Typography>
-                                  ) : item.id === "lang_ru" ? (
-                                    needCheck(row, "ru")
-                                  ) : item.id === "lang_en" ? (
-                                    needCheck(row, "en")
-                                  ) : item.id === "lang_fr" ? (
-                                    needCheck(row, "fr")
-                                  ) : item.id === "tkey" ? (
-                                    <Typography
-                                      variant={"body2"}
-                                      color="secondary"
-                                      weight="medium"
-                                      block={true}
-                                      size="small"
-                                    >
-                                      {row[item.id]}
-                                    </Typography>
-                                  ) : (
-                                    <Typography
-                                      size="small"
-                                      variant={"body2"}
-                                      block={true}
-                                    >
-                                      {row[item.id]}
-                                    </Typography>
-                                  )}
-                                </TableCell>
-                              )
+      {!loading ? (
+        <Grid item xs={12}>
+          <Widget inheritHeight noBodyPadding>
+            <TableContainer>
+              <Table
+                aria-labelledby="tableTitle"
+                size="medium"
+                aria-label="enhanced table"
+              >
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={translationsRows.length}
+                />
+                <TableBody>
+                  {stableSort(translationsRows, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      const isItemSelected = isSelected(row.id);
+                      const labelId = `enhanced-table-checkbox-${index}`;
+                      return (
+                        <TableRow
+                          hover
+                          onClick={(event) => handleClickRow(event, row.id)}
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={row.id}
+                          selected={isItemSelected}
+                        >
+                          {status === "interpreter" && (
+                            <TableCell
+                              padding="checkbox"
+                              style={{ width: "5%" }}
+                            >
+                              <Checkbox
+                                checked={isItemSelected}
+                                inputProps={{
+                                  "aria-labelledby": labelId,
+                                }}
+                              />
+                            </TableCell>
                           )}
-                      </TableRow>
-                    );
-                  })}
-                {emptyRows > 0 && (
-                  <TableRow>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25, 50, 100, 1000]}
-            component="div"
-            count={translationsRows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-          />
-        </Widget>
-      </Grid>
+                          {status === "admin" && (
+                            <TableCell
+                              component="th"
+                              id={labelId}
+                              scope="row"
+                              style={{ width: "5%" }}
+                            >
+                              <Typography variant={"body2"}>
+                                {row.id}
+                              </Typography>
+                            </TableCell>
+                          )}
+                          <TableCell align="left" style={{ width: "5%" }}>
+                            <Box
+                              display={"flex"}
+                              style={{
+                                marginLeft: -12,
+                                width: 100,
+                              }}
+                            >
+                              <IconButton color={"primary"}>
+                                <Link
+                                  href={`#app/Translation/${row.id}/edit`}
+                                  color="#fff"
+                                >
+                                  <CreateIcon />
+                                </Link>
+                              </IconButton>
+                              {status === "admin" && (
+                                <IconButton
+                                  onClick={() => openModalConfirm(row.id)}
+                                  color={"primary"}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              )}
+                            </Box>
+                          </TableCell>
+
+                          {headCells
+                            .filter(
+                              (item) =>
+                                item?.status == null ||
+                                (item?.status != null &&
+                                  item?.status.includes(status))
+                            )
+                            .map(
+                              (item, inx) =>
+                                (status === "admin" ? inx > 1 : inx >= 1) && (
+                                  <TableCell
+                                    align="left"
+                                    key={item.id}
+                                    size={
+                                      [
+                                        "lang_ru",
+                                        "lang_en",
+                                        "lang_fr",
+                                      ].includes(item.id)
+                                        ? "medium"
+                                        : "small"
+                                    }
+                                    style={
+                                      [
+                                        "lang_ru",
+                                        "lang_en",
+                                        "lang_fr",
+                                      ].includes(item.id)
+                                        ? { width: "30%" }
+                                        : { width: "10%" }
+                                    }
+                                  >
+                                    {["created_at", "updated_at"].includes(
+                                      item.id
+                                    ) ? (
+                                      <Typography
+                                        variant={"body2"}
+                                        block={true}
+                                        size="small"
+                                      >
+                                        {moment(row[item.id]).format(
+                                          "DD.MM.YYYY HH:mm"
+                                        )}{" "}
+                                      </Typography>
+                                    ) : item.id === "lang_ru" ? (
+                                      needCheck(row, "ru")
+                                    ) : item.id === "lang_en" ? (
+                                      needCheck(row, "en")
+                                    ) : item.id === "lang_fr" ? (
+                                      needCheck(row, "fr")
+                                    ) : item.id === "tkey" ? (
+                                      <Typography
+                                        variant={"body2"}
+                                        color="secondary"
+                                        weight="medium"
+                                        block={true}
+                                        size="small"
+                                      >
+                                        {row[item.id]}
+                                      </Typography>
+                                    ) : (
+                                      <Typography
+                                        size="small"
+                                        variant={"body2"}
+                                        block={true}
+                                      >
+                                        {row[item.id]}
+                                      </Typography>
+                                    )}
+                                  </TableCell>
+                                )
+                            )}
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, 50, 100, 1000]}
+              component="div"
+              count={translationsRows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+          </Widget>
+        </Grid>
+      ) : (
+        <CircularProgress />
+      )}
     </Grid>
   );
 };
