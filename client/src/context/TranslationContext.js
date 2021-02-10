@@ -13,7 +13,6 @@ async function list() {
 const TranslationStateContext = React.createContext();
 const TranslationDispatchContext = React.createContext();
 const filterVals = JSON.parse(localStorage.getItem("translationFilterVals"));
-
 const initialData = {
   findLoading: false,
   saveLoading: false,
@@ -36,9 +35,15 @@ const initialData = {
       }
     : filterVals,
 };
-
+console.log(
+  " filterVals",
+  filterVals,
+  localStorage.getItem("translationFilterVals")
+);
 function translationReducer(state = initialData, { type, payload }) {
+  //console.log(type);
   if (type === "TRANSLATIONS_FORM_RESET") {
+    console.log("TRANSLATIONS_FORM_RESET", initialData);
     return {
       ...initialData,
     };
@@ -226,7 +231,6 @@ function translationReducer(state = initialData, { type, payload }) {
 
   if (type === "TRANSLATIONS_SET_FILTERS") {
     console.log("TRANSLATIONS_SET_FILTERS", payload);
-    localStorage.setItem("translationFilterVals", JSON.stringify(payload));
     return {
       ...state,
       filterVals: { ...state.filterVals, ...payload },
@@ -271,19 +275,27 @@ function useTranslationDispatch() {
 // ###########################################################
 
 const actions = {
-  doNew: () => {
-    return {
+  doNew: async (dispatch) => {
+    await dispatch({
       type: "TRANSLATIONS_FORM_RESET",
-    };
+    });
+  },
+  setFilter: (params) => async (dispatch) => {
+    localStorage.setItem("translationFilterVals", JSON.stringify(params));
+
+    await dispatch({
+      type: "TRANSLATIONS_SET_FILTERS",
+      payload: { ...params },
+    });
   },
 
   doFind: (id) => async (dispatch) => {
     try {
-      dispatch({
+      await dispatch({
         type: "TRANSLATIONS_FORM_FIND_STARTED",
       });
 
-      axios.get(`/translations/${id}`).then((res) => {
+      await axios.get(`/translations/${id}`).then((res) => {
         const payload = res.data;
         console.log("=== res.data", res.data);
         dispatch({
@@ -301,10 +313,10 @@ const actions = {
   },
   doCreate: (values, history) => async (dispatch, notify) => {
     try {
-      dispatch({
+      await dispatch({
         type: "TRANSLATIONS_FORM_CREATE_STARTED",
       });
-      axios
+      await axios
         .post("/translations", { data: values })
         .then((res) => {
           console.log("------- doCreate -----------", res.data);
@@ -337,7 +349,7 @@ const actions = {
     }
   },
   doUpdate: (id, values, history) => async (dispatch, notify) => {
-    dispatch({
+    await dispatch({
       type: "TRANSLATIONS_FORM_UPDATE_STARTED",
     });
 
@@ -362,7 +374,7 @@ const actions = {
       });
   },
   doUpdateChecked: (values) => async (dispatch, notify, fetchAll) => {
-    dispatch({
+    await dispatch({
       type: "TRANSLATIONS_FORM_UPDATE_STARTED",
     });
 
@@ -388,12 +400,12 @@ const actions = {
   },
   doFetch: (filter, keepPagination = false) => async (dispatch) => {
     try {
-      dispatch({
+      await dispatch({
         type: "TRANSLATIONS_LIST_FETCH_STARTED",
-        payload: { filter, keepPagination },
+        //payload: { filter, keepPagination },
       });
       const response = await list();
-      dispatch({
+      await dispatch({
         type: "TRANSLATIONS_LIST_FETCH_SUCCESS",
         payload: {
           rows: response,
@@ -411,18 +423,18 @@ const actions = {
   },
   doDelete: (id) => async (dispatch) => {
     if (!config.isBackend) {
-      dispatch({
+      await dispatch({
         type: "TRANSLATIONS_LIST_DELETE_ERROR",
       });
     } else {
       try {
-        dispatch({
+        await dispatch({
           type: "TRANSLATIONS_LIST_DELETE_STARTED",
         });
 
         await axios.delete(`/translations/${id}`);
 
-        dispatch({
+        await dispatch({
           type: "TRANSLATIONS_LIST_DELETE_SUCCESS",
         });
         const response = await list();
@@ -459,11 +471,11 @@ const actions = {
 
   doFetchBackups: () => async (dispatch) => {
     try {
-      dispatch({
+      await dispatch({
         type: "TRANSLATIONS_FIND_BACKUPS_STARTED",
       });
 
-      axios.get(`/translations/backups`).then((res) => {
+      await axios.get(`/translations/backups`).then((res) => {
         const payload = res.data;
         dispatch({
           type: "TRANSLATIONS_FIND_BACKUPS_SUCCESS",
@@ -473,7 +485,7 @@ const actions = {
     } catch (error) {
       toast("Error");
       console.log(error);
-      dispatch({
+      await dispatch({
         type: "TRANSLATIONS_FIND_BACKUPS_SUCCESS",
       });
     }

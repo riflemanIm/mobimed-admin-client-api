@@ -25,6 +25,7 @@ import { useUserState } from "../../context/UserContext";
 import {
   useTranslationState,
   useTranslationDispatch,
+  actions,
 } from "../../context/TranslationContext";
 import isEmpty from "../../helpers/isEmpty";
 
@@ -32,6 +33,8 @@ const ImportTranslation = () => {
   const classes = useStyles();
   const [isLoadingFile, setIsLoadingFile] = React.useState(false);
   const { filterVals } = useTranslationState();
+  //const filterVals = JSON.parse(localStorage.getItem("translationFilterVals"));
+
   console.log("ImportTranslation filterVals", filterVals);
   const [pname, setPName] = React.useState(
     !isEmpty(filterVals) ? filterVals.pname : "mobimed_site"
@@ -79,11 +82,7 @@ const ImportTranslation = () => {
 
   const handlePName = (e) => {
     setPName(e.target.value);
-    if (!isEmpty(filterVals))
-      translationDispatch({
-        type: "TRANSLATIONS_SET_FILTERS",
-        payload: { pname: e.target.value },
-      });
+    actions.setFilter({ pname: e.target.value })(translationDispatch);
   };
 
   const handleFile = async (event) => {

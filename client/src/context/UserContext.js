@@ -161,6 +161,8 @@ export function sendPasswordResetEmail(email) {
     }
   };
 }
+// localStorage.removeItem("token");
+// localStorage.removeItem("user");
 
 function signOut(dispatch, history) {
   localStorage.removeItem("token");

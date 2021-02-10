@@ -232,7 +232,7 @@ export default function Header(props) {
           //onClick={(e) => setProfileMenu(e.currentTarget)}
         >
           <Avatar
-            alt={`${currentUser.fname} ${currentUser.lname}`}
+            alt={`${currentUser?.fname} ${currentUser?.lname}`}
             src={""}
             classes={{ root: classes.headerIcon }}
           />
@@ -244,7 +244,7 @@ export default function Header(props) {
         >
           Привет,<span>&nbsp;</span>
           <Typography variant="body2" weight={"bold"}>
-            {currentUser.fname} {currentUser.lname}
+            {currentUser?.fname} {currentUser?.lname}
           </Typography>
         </Typography>
 

@@ -184,6 +184,15 @@ const TranslationList = () => {
   );
   const [translationsRows, setTranslationsRows] = React.useState([]);
   const translationDispatch = useTranslationDispatch();
+  function fetchAll() {
+    //actions.doNew(translationDispatch);
+    actions.doFetch({}, false)(translationDispatch);
+  }
+  React.useEffect(() => {
+    fetchAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const {
     rows,
     idToDelete,
@@ -194,6 +203,9 @@ const TranslationList = () => {
     filterVals,
     loading,
   } = useTranslationState();
+
+  const classes = useStyles();
+
   React.useEffect(() => {
     setTranslationsRows(rows);
   }, [rows]);
@@ -222,15 +234,6 @@ const TranslationList = () => {
     actions.doDelete(idToDelete)(translationDispatch);
     sendNotification("Translation deleted");
   };
-  function fetchAll() {
-    actions.doFetch(filterVals, false)(translationDispatch);
-  }
-  React.useEffect(() => {
-    fetchAll();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const classes = useStyles();
 
   function sendNotification(text, isWarning = false) {
     const componentProps = {

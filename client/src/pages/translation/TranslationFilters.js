@@ -8,6 +8,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import {
   useTranslationDispatch,
   useTranslationState,
+  actions,
 } from "../../context/TranslationContext";
 import isEmpty from "../../helpers/isEmpty";
 import config from "../../config";
@@ -46,15 +47,10 @@ export default function TranslationFilters({ setPage, setTranslationsRows }) {
     } else {
       newFilterVals.lang_value = e.target.value;
     }
-    translationDispatch({
-      type: "TRANSLATIONS_SET_FILTERS",
-      payload: { ...newFilterVals },
-    });
+    actions.setFilter(newFilterVals)(translationDispatch);
   };
 
   const doFilter = () => {
-    console.log(" filterVals", filterVals);
-
     let newArr = [...rows];
     Object.keys(filterVals)
       .filter((item) => item === "pname" || item === "gkey")

@@ -23,6 +23,7 @@ import { useUserState } from "../../context/UserContext";
 import {
   useTranslationState,
   useTranslationDispatch,
+  actions,
 } from "../../context/TranslationContext";
 import isEmpty from "../../helpers/isEmpty";
 
@@ -73,11 +74,7 @@ const ImportTranslationCSV = () => {
 
   const handlePName = (e) => {
     setPName(e.target.value);
-    if (!isEmpty(filterVals))
-      translationDispatch({
-        type: "TRANSLATIONS_SET_FILTERS",
-        payload: { pname: e.target.value },
-      });
+    actions.setFilter({ pname: e.target.value })(translationDispatch);
   };
 
   const handleFile = async (event) => {
