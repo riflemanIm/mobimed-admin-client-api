@@ -1,8 +1,8 @@
 import express from "express";
-import bcrypt from "bcrypt";
-import passport from "passport";
+//import bcrypt from "bcrypt";
+//import passport from "passport";
 import { findByEmail } from "../models/account-model";
-import config from "../config/config";
+//import config from "../config/config";
 import { jwtSign, md5Compare } from "../helpers/helpers";
 
 const router = express.Router();
@@ -116,54 +116,54 @@ router.post("/signin/local", async (req, res) => {
   //     });
 });
 
-router.get("/signin/google", (req, res, next) => {
-  passport.authenticate("google", {
-    scope: ["profile", "email"],
-    state: req.query.app,
-  })(req, res, next);
-});
+// router.get("/signin/google", (req, res, next) => {
+//   passport.authenticate("google", {
+//     scope: ["profile", "email"],
+//     state: req.query.app,
+//   })(req, res, next);
+// });
 
-router.get(
-  "/signin/google/callback",
-  passport.authenticate("google", {
-    failureRedirect: "/login",
-    session: false,
-  }),
-  function (req, res) {
-    socialRedirect(res, req.query.state, req.user.token, config);
-  }
-);
+// router.get(
+//   "/signin/google/callback",
+//   passport.authenticate("google", {
+//     failureRedirect: "/login",
+//     session: false,
+//   }),
+//   function (req, res) {
+//     socialRedirect(res, req.query.state, req.user.token, config);
+//   }
+// );
 
-router.get("/signin/microsoft", (req, res, next) => {
-  passport.authenticate("microsoft", {
-    scope: ["https://graph.microsoft.com/user.read openid"],
-    state: req.query.app,
-  })(req, res, next);
-});
+// router.get("/signin/microsoft", (req, res, next) => {
+//   passport.authenticate("microsoft", {
+//     scope: ["https://graph.microsoft.com/user.read openid"],
+//     state: req.query.app,
+//   })(req, res, next);
+// });
 
-router.get(
-  "/signin/microsoft/callback",
-  passport.authenticate("microsoft", {
-    failureRedirect: "/login",
-    session: false,
-  }),
-  function (req, res) {
-    socialRedirect(res, req.query.state, req.user.token, config);
-  }
-);
+// router.get(
+//   "/signin/microsoft/callback",
+//   passport.authenticate("microsoft", {
+//     failureRedirect: "/login",
+//     session: false,
+//   }),
+//   function (req, res) {
+//     socialRedirect(res, req.query.state, req.user.token, config);
+//   }
+// );
 
-function socialRedirect(res, state, token, config) {
-  let url;
-  let fullPath = /^http(s?):\/\//.test(state);
-  if (fullPath) {
-    url = state;
-  } else {
-    url =
-      config.hostUI +
-      `${config.portUI ? `:${config.portUI}` : ``}` +
-      `${state ? `/${state}` : ``}`;
-  }
-  res.redirect(url + "/#/login?token=" + token);
-}
+// function socialRedirect(res, state, token, config) {
+//   let url;
+//   let fullPath = /^http(s?):\/\//.test(state);
+//   if (fullPath) {
+//     url = state;
+//   } else {
+//     url =
+//       config.hostUI +
+//       `${config.portUI ? `:${config.portUI}` : ``}` +
+//       `${state ? `/${state}` : ``}`;
+//   }
+//   res.redirect(url + "/#/login?token=" + token);
+// }
 
 module.exports = router;

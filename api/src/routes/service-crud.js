@@ -1,8 +1,8 @@
 import express from "express";
 import db from "../models/service-model.js";
-import { use } from "passport";
-import multer from "multer";
-const upload = multer();
+//import { use } from "passport";
+// import multer from "multer";
+// const upload = multer();
 const router = express.Router();
 
 // GET ALL SERVICE

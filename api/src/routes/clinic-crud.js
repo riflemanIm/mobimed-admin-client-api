@@ -1,6 +1,6 @@
 import express from "express";
 import db from "../models/clinic-model.js";
-import { use } from "passport";
+//import { use } from "passport";
 import multer from "multer";
 const router = express.Router();
 const path = require("path");
