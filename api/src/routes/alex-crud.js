@@ -33,7 +33,7 @@ function getJSON(users) {
     if (user[0] !== "")
       json.push({
         username: user[0],
-        homepath: user[5],
+        homedir: user[5],
         folders,
       });
   });
@@ -44,7 +44,7 @@ function getJSON(users) {
 router.get("/", async (req, res) => {
   try {
     //    const filter = req.params.filter;
-    const filter = "/home/testuser";
+    const filter = "/home";
     const commmand =
       filter !== "" ? `cat /etc/passwd | grep ${filter}` : "cat /etc/passwd";
     const { stdout, stderr } = await exec(commmand);
@@ -56,25 +56,46 @@ router.get("/", async (req, res) => {
       for (const item of users) {
         const user = item.split(":");
         const username = user[0];
-        const homepath = user[5];
+        const homedir = user[5];
 
-        if (username !== "" && homepath != null && homepath !== "") {
-          const resExec = await exec(`sudo du -c ${homepath} -h --max-depth=1`);
-          //console.log(res.stdout);
+        if (username !== "" && homedir !== "") {
+          const resExecDir = await exec(
+            `sudo du -c ${homedir} -h --max-depth=1`
+          );
 
-          json.push({
-            username,
-            homepath,
-            folders: resExec.stdout,
-          });
-          if (resExec.stderr !== "") {
-            res.status(500).json({ stderr: resExec.stderr });
+          const resExecPass = await exec(`sudo chage -l ${username}`);
+
+          if (resExecDir.stdout !== "" && resExecPass.stdout !== "") {
+            const folders = resExecDir.stdout;
+
+            const t = resExecDir.stdout.split("\n");
+
+            const total =
+              t[t.length - 1] !== "" ? t[t.length - 1] : t[t.length - 2];
+
+            const passData = resExecPass.stdout.split("\n");
+            const lastChangeDate = Date.parse(passData[0].split(":")[1].trim());
+            const expireDate = Date.parse(passData[3].split(":")[1].trim());
+
+            //console.log(res.stdout);
+
+            json.push({
+              username,
+              homedir,
+              folders,
+              total,
+              lastChangeDate,
+              expireDate,
+            });
+          }
+          if (resExecDir.stderr !== "") {
+            res.status(500).json({ stderr: resExecDir.stderr });
           }
         }
       }
 
       //const json = await getJSON(users);
-      //console.log("users:", json);
+      console.log("users:", json);
       res.status(200).json(json);
     }
     if (stderr !== "") {

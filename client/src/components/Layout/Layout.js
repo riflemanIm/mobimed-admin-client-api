@@ -86,6 +86,10 @@ import ImportTranslationCSV from "../../pages/translation/ImportTranslationCSV";
 import TranslationEdit from "../../pages/translation/EditTranslation";
 import BackupTranslation from "../../pages/translation/BackupTranslation";
 
+import AlexList from "../../pages/alex";
+import AlexAdd from "../../pages/alex/AddAlex";
+import AlexEdit from "../../pages/alex/EditAlex";
+
 import BreadCrumbs from "../../components/BreadCrumbs";
 
 // context
@@ -98,7 +102,7 @@ import { PromoProvider } from "../../context/PromoContext";
 import { ServiceProvider } from "../../context/ServiceContext";
 import { MedicalNetProvider } from "../../context/MedicalNetContext";
 import { TranslationProvider } from "../../context/TranslationContext";
-
+import { AlexProvider } from "../../context/AlexContext";
 //Sidebar structure
 import structure from "../Sidebar/SidebarStructure";
 
@@ -412,6 +416,34 @@ function Layout(props) {
             <TranslationProvider>
               <TranslationEdit />
             </TranslationProvider>
+          </Route>
+
+          {/* ----------------- alex ----------------- */}
+
+          <Route
+            exact
+            path="/app/alex"
+            render={() => <Redirect to="/app/alex/list" />}
+          />
+          <Route path="/app/alex/list">
+            <AlexProvider>
+              <AlexList />
+            </AlexProvider>
+          </Route>
+          <Route path="/app/alex/add/:returnToClinic">
+            <AlexProvider>
+              <AlexAdd />
+            </AlexProvider>
+          </Route>
+          <Route path="/app/alex/add">
+            <AlexProvider>
+              <AlexAdd />
+            </AlexProvider>
+          </Route>
+          <Route path="/app/alex/:id/edit">
+            <AlexProvider>
+              <AlexEdit />
+            </AlexProvider>
           </Route>
         </Switch>
         <Fab

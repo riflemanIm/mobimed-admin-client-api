@@ -19,6 +19,7 @@ import {
   Translate as TranslateIcon,
   Explore as ExploreIcon,
   Person as PersonIcon,
+  PersonOutline as PersonOutlineIcon,
   CardGiftcard as CardGiftcardIcon,
   Dns as DnsIcon,
   LibraryAdd as LibraryAddIcon,
@@ -123,6 +124,16 @@ const structure = [
     badgeColor: "success",
     link: "/app/user/list",
     icon: <PersonIcon />,
+  },
+
+  {
+    id: "alex",
+    label: "Пользователи Alex",
+    role: ["admin"],
+    badge: "New",
+    badgeColor: "success",
+    link: "/app/alex/list",
+    icon: <PersonOutlineIcon />,
   },
 
   // {
