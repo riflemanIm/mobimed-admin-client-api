@@ -1,5 +1,5 @@
 import server from "./server.js";
-import dotenv from "dotenv";
+//import dotenv from "dotenv";
 import config from "./config/config";
 
 const port = config.port;

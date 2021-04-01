@@ -54,3 +54,11 @@ export function trimChar(string, character) {
     ? ""
     : string.substring(first, string.length - last);
 }
+export function getAllExcept(post, arrExcept) {
+  return Object.keys(post)
+    .filter((key) => !arrExcept.includes(key))
+    .reduce((obj, key) => {
+      obj[key] = post[key];
+      return obj;
+    }, {});
+}

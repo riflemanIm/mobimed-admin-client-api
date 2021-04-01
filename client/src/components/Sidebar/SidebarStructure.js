@@ -23,6 +23,7 @@ import {
   Dns as DnsIcon,
   LibraryAdd as LibraryAddIcon,
   LocalHospital as LocalHospitalIcon,
+  GroupWork as GroupWorkIcon,
   //ExitToApp,
 } from "@material-ui/icons";
 //import { makeStyles } from "@material-ui/styles";
@@ -68,6 +69,15 @@ const structure = [
 
     icon: <TranslateIcon />,
     link: "/app/translation/list",
+  },
+  {
+    id: "specialization",
+    label: "Специализации",
+    role: ["admin"],
+    badge: "NodeJS",
+    badgeColor: "success",
+    icon: <GroupWorkIcon />,
+    link: "/app/specialization/list",
   },
 
   {

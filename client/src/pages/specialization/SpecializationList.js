@@ -10,8 +10,8 @@ import {
   DialogTitle,
   TextField as Input,
 } from "@material-ui/core";
-import Widget from "../../components/Widget/Widget";
-import { Button } from "../../components/Wrappers/Wrappers";
+import Widget from "../../components/Widget";
+import { Button } from "../../components/Wrappers";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -25,8 +25,11 @@ import DeleteIcon from "@material-ui/icons/DeleteOutlined";
 import Notification from "../../components/Notification/Notification";
 import { toast } from "react-toastify";
 
-import { Typography, Link } from "../../components/Wrappers/Wrappers";
-import { usePromoDispatch, usePromoState } from "../../context/PromoContext";
+import { Typography, Link } from "../../components/Wrappers";
+import {
+  useSpecializationDispatch,
+  useSpecializationState,
+} from "../../context/SpecializationContext";
 
 import useStyles from "./styles";
 // Icons
@@ -36,8 +39,7 @@ import {
   CreateOutlined as CreateIcon,
 } from "@material-ui/icons";
 
-import { actions } from "../../context/PromoContext";
-import moment from "moment/moment";
+import { actions } from "../../context/SpecializationContext";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -67,33 +69,19 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "medicalnet_actions_id",
+    id: "specialization_id",
     numeric: false,
     disablePadding: false,
     label: "ID",
   },
   { id: "actions", numeric: false, disablePadding: false, label: "Дествия" },
+  { id: "name", numeric: false, disablePadding: false, label: "Название" },
+  { id: "lang_code", numeric: false, disablePadding: false, label: "Язык" },
   {
     id: "description",
     numeric: false,
     disablePadding: false,
-    label: "Промо",
-  },
-  {
-    id: "action_text",
-    numeric: false,
-    disablePadding: false,
-    label: "Детали",
-  },
-
-  { id: "url", numeric: false, disablePadding: false, label: "URL" },
-  { id: "date_from", numeric: false, disablePadding: false, label: "С" },
-  { id: "date_to", numeric: false, disablePadding: false, label: "По" },
-  {
-    id: "sort_order",
-    numeric: false,
-    disablePadding: false,
-    label: "Сортировка",
+    label: "Описание",
   },
   { id: "image", numeric: false, disablePadding: false, label: "Картинка" },
 ];
@@ -130,34 +118,42 @@ function EnhancedTableHead(props) {
   );
 }
 
-const PromoList = () => {
+const SpecializationList = () => {
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
+  const specializationRowsPerPage = localStorage.getItem(
+    "specializationRowsPerPage"
+  );
 
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [promosRows, setPromosRows] = React.useState([]);
+  const [rowsPerPage, setRowsPerPage] = React.useState(
+    specializationRowsPerPage != null
+      ? parseInt(specializationRowsPerPage, 10)
+      : 5
+  );
+  const [specializationsRows, setSpecializationsRows] = React.useState([]);
 
-  const promoDispatch = usePromoDispatch();
-  const promoValue = usePromoState();
+  const specializationDispatch = useSpecializationDispatch();
+  const specializationValue = useSpecializationState();
   const openModal = (cell) => {
-    actions.doOpenConfirm(cell)(promoDispatch);
+    actions.doOpenConfirm(cell)(specializationDispatch);
   };
 
   const closeModal = () => {
-    actions.doCloseConfirm()(promoDispatch);
+    actions.doCloseConfirm()(specializationDispatch);
   };
 
   const handleDelete = () => {
-    actions.doDelete(promoValue.idToDelete)(promoDispatch);
-    sendNotification("Промо удалена");
+    actions.doDelete(specializationValue.idToDelete)(specializationDispatch);
+    sendNotification("Запись удалена");
   };
 
   React.useEffect(() => {
     async function fetchAPI() {
       try {
-        await actions.doFetch({}, false)(promoDispatch);
+        await actions.doFetch({}, false)(specializationDispatch);
+        //setSpecializationsRows(specializationValue.rows);
       } catch (e) {
         console.log(e);
       }
@@ -192,8 +188,8 @@ const PromoList = () => {
   }
 
   React.useEffect(() => {
-    setPromosRows(promoValue.rows);
-  }, [promoValue.rows]);
+    setSpecializationsRows(specializationValue.rows);
+  }, [specializationValue.rows]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -203,7 +199,7 @@ const PromoList = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = promoValue.rows.map((n) => n.id);
+      const newSelecteds = specializationValue.rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -235,29 +231,30 @@ const PromoList = () => {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    const rowsPerPage = parseInt(event.target.value, 10);
+    setRowsPerPage(rowsPerPage);
+    localStorage.setItem("specializationRowsPerPage", rowsPerPage);
     setPage(0);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, promosRows.length - page * rowsPerPage);
+    rowsPerPage -
+    Math.min(rowsPerPage, specializationsRows.length - page * rowsPerPage);
 
   const handleSearch = (e) => {
-    const newArr = promoValue.rows.filter((c) => {
-      return `${c.action_text}${c.description}`
-        .toLowerCase()
-        .includes(e.currentTarget.value.toLowerCase());
+    const newArr = specializationValue.rows.filter((c) => {
+      return c.name.toLowerCase().includes(e.currentTarget.value.toLowerCase());
     });
 
-    setPromosRows(newArr);
+    setSpecializationsRows(newArr);
   };
 
   return (
     <Grid container spacing={3}>
       <Dialog
-        open={promoValue.modalOpen}
+        open={specializationValue.modalOpen}
         onClose={closeModal}
         scroll={"body"}
         aria-labelledby="scroll-dialog-title"
@@ -281,13 +278,13 @@ const PromoList = () => {
       </Dialog>
       <Grid item xs={12}>
         <Widget inheritHeight>
-          <Box
-            justifyContent={"space-between"}
-            display={"flex"}
-            alignItems={"flex-start"}
-          >
-            <Box>
-              <Link href="#/app/promo/add" underline="none" color="#fff">
+          <Grid container spacing={2}>
+            <Grid item md={6} xs={12}>
+              <Link
+                href="#/app/specialization/add"
+                underline="none"
+                color="#fff"
+              >
                 <Button variant={"contained"} color={"success"}>
                   <Box mr={1} display={"flex"}>
                     <AddIcon />
@@ -295,16 +292,13 @@ const PromoList = () => {
                   Добавить
                 </Button>
               </Link>
-            </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              alignItems={"flex-end"}
-            >
+            </Grid>
+            <Grid item md={6} xs={12}>
               <Input
                 id="search-field"
                 label="Поиск"
                 margin="dense"
+                fullWidth
                 variant="outlined"
                 onChange={(e) => handleSearch(e)}
                 InputProps={{
@@ -315,8 +309,8 @@ const PromoList = () => {
                   ),
                 }}
               />
-            </Box>
-          </Box>
+            </Grid>
+          </Grid>
         </Widget>
       </Grid>
       <Grid item xs={12}>
@@ -329,31 +323,29 @@ const PromoList = () => {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={promosRows.length}
+                rowCount={specializationsRows.length}
               />
               <TableBody>
-                {stableSort(promosRows, getComparator(order, orderBy))
+                {stableSort(specializationsRows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(
-                      row.medicalnet_actions_id
-                    );
+                    const isItemSelected = isSelected(row.specialization_id);
                     const labelId = `enhanced-table-checkbox-${index}`;
                     return (
                       <TableRow
                         hover
                         onClick={(event) =>
-                          handleClick(event, row.medicalnet_actions_id)
+                          handleClick(event, row.specialization_id)
                         }
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.medicalnet_actions_id}
+                        key={row.specialization_id}
                         selected={isItemSelected}
                       >
                         <TableCell component="th" id={labelId} scope="row">
                           <Typography variant={"body2"}>
-                            {row.medicalnet_actions_id}
+                            {row.specialization_id}
                           </Typography>
                         </TableCell>
                         <TableCell align="left">
@@ -365,7 +357,7 @@ const PromoList = () => {
                           >
                             <IconButton color={"primary"}>
                               <Link
-                                href={`#app/promo/${row.medicalnet_actions_id}/edit`}
+                                href={`#app/specialization/${row.specialization_id}/edit`}
                                 color="#fff"
                               >
                                 <CreateIcon />
@@ -373,9 +365,7 @@ const PromoList = () => {
                             </IconButton>
 
                             <IconButton
-                              onClick={() =>
-                                openModal(row.medicalnet_actions_id)
-                              }
+                              onClick={() => openModal(row.specialization_id)}
                               color={"primary"}
                             >
                               <DeleteIcon />
@@ -387,24 +377,13 @@ const PromoList = () => {
                           (item, inx) =>
                             inx > 1 && (
                               <TableCell align="left" key={item.id}>
-                                {["date_from", "date_to"].includes(item.id) ? (
-                                  moment(row[item.id]).format("DD.MM.YYYY")
-                                ) : item.id === "image" ? (
+                                {item.id === "image" && row[item.id] != null ? (
                                   <img
                                     src={`data:image/jpeg;base64, ${
                                       row[item.id]
                                     }`}
                                     alt="Alt"
-                                    style={{ maxWidth: "260px" }}
                                   />
-                                ) : ["description", "action_text"].includes(
-                                    item.id
-                                  ) ? (
-                                  row[item.id].length > 100 ? (
-                                    `${row[item.id].slice(0, 100)}...`
-                                  ) : (
-                                    row[item.id]
-                                  )
                                 ) : (
                                   <Typography variant={"body2"} block={true}>
                                     {row[item.id]}
@@ -427,7 +406,7 @@ const PromoList = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={promosRows.length}
+            count={specializationsRows.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onChangePage={handleChangePage}
@@ -439,4 +418,4 @@ const PromoList = () => {
   );
 };
 
-export default PromoList;
+export default SpecializationList;

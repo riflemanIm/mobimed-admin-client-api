@@ -76,6 +76,10 @@ import ServiceList from "../../pages/service";
 import ServiceAdd from "../../pages/service/AddService";
 import ServiceEdit from "../../pages/service/EditService";
 
+import SpecializationList from "../../pages/specialization";
+import SpecializationAdd from "../../pages/specialization/AddSpecialization";
+import SpecializationEdit from "../../pages/specialization/EditSpecialization";
+
 import MedicalNetList from "../../pages/medical_net";
 import MedicalNetAdd from "../../pages/medical_net/AddMedicalNet";
 import MedicalNetEdit from "../../pages/medical_net/EditMedicalNet";
@@ -96,6 +100,9 @@ import { ClinicProvider } from "../../context/ClinicContext";
 import { RegionProvider } from "../../context/RegionContext";
 import { PromoProvider } from "../../context/PromoContext";
 import { ServiceProvider } from "../../context/ServiceContext";
+
+import { SpecializationProvider } from "../../context/SpecializationContext";
+
 import { MedicalNetProvider } from "../../context/MedicalNetContext";
 import { TranslationProvider } from "../../context/TranslationContext";
 
@@ -350,6 +357,34 @@ function Layout(props) {
             <ServiceProvider>
               <ServiceEdit />
             </ServiceProvider>
+          </Route>
+
+          {/* ----------------- specialization ----------------- */}
+
+          <Route
+            exact
+            path="/app/specialization"
+            render={() => <Redirect to="/app/specialization/list" />}
+          />
+          <Route path="/app/specialization/list">
+            <SpecializationProvider>
+              <SpecializationList />
+            </SpecializationProvider>
+          </Route>
+          <Route path="/app/specialization/add/:returnToClinic">
+            <SpecializationProvider>
+              <SpecializationAdd />
+            </SpecializationProvider>
+          </Route>
+          <Route path="/app/specialization/add">
+            <SpecializationProvider>
+              <SpecializationAdd />
+            </SpecializationProvider>
+          </Route>
+          <Route path="/app/specialization/:id/edit">
+            <SpecializationProvider>
+              <SpecializationEdit />
+            </SpecializationProvider>
           </Route>
 
           {/* ----------------- medical_net ----------------- */}
