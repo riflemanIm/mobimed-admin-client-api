@@ -11,7 +11,6 @@ import translationRouter from "./routes/translations";
 import PromoRouter from "./routes/promo-crud";
 import ServiseRouter from "./routes/service-crud";
 import MedicalNetRouter from "./routes/medical_net-crud";
-import AlexRouter from "./routes/alex-crud";
 
 import config from "./config/config";
 const server = express();
@@ -39,7 +38,6 @@ server.use("/api/translations", translationRouter);
 server.use("/api/promos", PromoRouter);
 server.use("/api/services", ServiseRouter);
 server.use("/api/medical_net", MedicalNetRouter);
-server.use("/api/alex", AlexRouter);
 
 //Serves all the request which includes /images in the url from Images folder
 server.use("/images", express.static(__dirname + "/../images"));
