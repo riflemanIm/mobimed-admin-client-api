@@ -126,16 +126,6 @@ const structure = [
     icon: <PersonIcon />,
   },
 
-  {
-    id: "alex",
-    label: "Пользователи Alex",
-    role: ["admin"],
-    badge: "New",
-    badgeColor: "success",
-    link: "/app/alex/list",
-    icon: <PersonOutlineIcon />,
-  },
-
   // {
   //   id: "exit",
   //   label: "Выход",
