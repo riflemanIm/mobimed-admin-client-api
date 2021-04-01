@@ -19,7 +19,6 @@ import {
   Translate as TranslateIcon,
   Explore as ExploreIcon,
   Person as PersonIcon,
-  PersonOutline as PersonOutlineIcon,
   CardGiftcard as CardGiftcardIcon,
   Dns as DnsIcon,
   LibraryAdd as LibraryAddIcon,

@@ -98,7 +98,7 @@ import { PromoProvider } from "../../context/PromoContext";
 import { ServiceProvider } from "../../context/ServiceContext";
 import { MedicalNetProvider } from "../../context/MedicalNetContext";
 import { TranslationProvider } from "../../context/TranslationContext";
-import { AlexProvider } from "../../context/AlexContext";
+
 //Sidebar structure
 import structure from "../Sidebar/SidebarStructure";
 
