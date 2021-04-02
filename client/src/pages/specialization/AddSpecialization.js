@@ -27,7 +27,7 @@ const AddSpecialization = () => {
   function sendNotification(errorMessage = null) {
     const componentProps = {
       type: "feedback",
-      message: errorMessage != null ? errorMessage : "Промо добавлен!",
+      message: errorMessage != null ? errorMessage : "Специальность добавлена!",
       variant: "contained",
       color: errorMessage != null ? "warning" : "success",
     };

@@ -35,7 +35,8 @@ const EditSpecialization = () => {
   function sendNotification(errorMessage) {
     const componentProps = {
       type: "feedback",
-      message: errorMessage != null ? errorMessage : "Промо отредактированна!",
+      message:
+        errorMessage != null ? errorMessage : "Специальность отредактированна!",
       variant: "contained",
       color: errorMessage != null ? "warning" : "success",
     };
@@ -89,8 +90,8 @@ const EditSpecialization = () => {
   const handleFile = async (event) => {
     event.preventDefault();
     const filedata = event.target.files[0];
-    const base64result = await resizeImageBase64(filedata, 610, 610);
-    const image = base64result.split(",")[1];
+    const base64result = await resizeImageBase64(filedata, 278, 148);
+    const image = base64result.split(",")[1].trim();
     console.log("image", image);
     setValues({
       ...values,
