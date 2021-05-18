@@ -19,11 +19,15 @@ const findById = (id) => {
       "c.is_anonym_visit",
       "c.is_home_request",
 
-      "c.medical_net_id",
+      "c.medical_brand_id",
       "c.client_service_id"
     )
     .from("clinic as c")
-    .leftJoin("medical_net as mn", "c.medical_net_id", "mn.medical_net_id")
+    .leftJoin(
+      "medical_brand_id as mb",
+      "c.medical_brand_id",
+      "mb.medical_brand_id"
+    )
     .leftJoin("client_service as cs", "c.client_service_id", "cs.id")
     .first()
     .where("c.clinic_id", id);
