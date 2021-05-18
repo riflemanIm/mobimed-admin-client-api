@@ -24,7 +24,7 @@ const findById = (id) => {
     )
     .from("clinic as c")
     .leftJoin(
-      "medical_brand_id as mb",
+      "medical_brand as mb",
       "c.medical_brand_id",
       "mb.medical_brand_id"
     )
@@ -64,7 +64,7 @@ const find = () => {
     )
     .from("clinic as c")
     .leftJoin(
-      "medical_brand_id as mb",
+      "medical_brand as mb",
       "c.medical_brand_id",
       "mb.medical_brand_id"
     )
