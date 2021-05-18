@@ -24,6 +24,8 @@ import {
   LibraryAdd as LibraryAddIcon,
   LocalHospital as LocalHospitalIcon,
   GroupWork as GroupWorkIcon,
+  AcUnit as AcUnitIcon,
+
   //ExitToApp,
 } from "@material-ui/icons";
 //import { makeStyles } from "@material-ui/styles";
@@ -123,6 +125,15 @@ const structure = [
     badgeColor: "success",
     icon: <LibraryAddIcon />,
     link: "/app/medical_net/list",
+  },
+  {
+    id: "medical_brand",
+    label: "Бренды",
+    role: ["admin"],
+    badge: "NodeJS",
+    badgeColor: "success",
+    icon: <AcUnitIcon />,
+    link: "/app/medical_brand/list",
   },
 
   {

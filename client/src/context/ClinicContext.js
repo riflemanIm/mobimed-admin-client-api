@@ -32,7 +32,7 @@ function clinicReducer(state = initialData, { type, payload }) {
       ...state,
       currentClinic: null,
       services: [],
-      medical_net: [],
+      medical_brand: [],
       findLoading: true,
     };
   }
@@ -50,7 +50,7 @@ function clinicReducer(state = initialData, { type, payload }) {
       ...state,
       currentClinic: null,
       services: [],
-      medical_net: [],
+      medical_brand: [],
 
       findLoading: false,
     };
@@ -62,7 +62,7 @@ function clinicReducer(state = initialData, { type, payload }) {
       saveLoading: true,
       currentClinic: { clinic_id: null },
       services: [],
-      medical_net: [],
+      medical_brand: [],
     };
   }
 
@@ -182,7 +182,7 @@ function ClinicProvider({ children }) {
     saveLoading: false,
     currentClinic: { clinic_id: null },
     services: [],
-    medical_net: [],
+    medical_brand: [],
     rows: [],
     loading: false,
     idToDelete: null,
@@ -232,16 +232,16 @@ const actions = {
       const req = [
         axios.get(`/clinics/${id}`),
         axios.get("/services"),
-        axios.get("/medical_net"),
+        axios.get("/medical_brand"),
       ];
 
       await axios.all(req).then((res) => {
         const currentClinic = res[0].data;
         const services = res[1].data;
-        const medical_net = res[2].data;
+        const medical_brand = res[2].data;
         dispatch({
           type: "CLINICS_FORM_FIND_SUCCESS",
-          payload: { currentClinic, services, medical_net },
+          payload: { currentClinic, services, medical_brand },
         });
       });
     } catch (error) {
@@ -257,14 +257,14 @@ const actions = {
       dispatch({
         type: "CLINICS_FORM_FIND_STARTED",
       });
-      const req = [axios.get("/services"), axios.get("/medical_net")];
+      const req = [axios.get("/services"), axios.get("/medical_brand")];
 
       await axios.all(req).then((res) => {
         const services = res[0].data;
-        const medical_net = res[1].data;
+        const medical_brand = res[1].data;
         dispatch({
           type: "CLINICS_FORM_FIND_SUCCESS",
-          payload: { services, medical_net },
+          payload: { services, medical_brand },
         });
       });
     } catch (error) {
@@ -337,30 +337,32 @@ const actions = {
       });
   },
 
-  doFetch: (filter, keepPagination = false) => async (dispatch) => {
-    try {
-      dispatch({
-        type: "CLINICS_LIST_FETCH_STARTED",
-        payload: { filter, keepPagination },
-      });
+  doFetch:
+    (filter, keepPagination = false) =>
+    async (dispatch) => {
+      try {
+        dispatch({
+          type: "CLINICS_LIST_FETCH_STARTED",
+          payload: { filter, keepPagination },
+        });
 
-      const response = await list();
+        const response = await list();
 
-      dispatch({
-        type: "CLINICS_LIST_FETCH_SUCCESS",
-        payload: {
-          rows: response,
-          count: response.length,
-        },
-      });
-    } catch (error) {
-      console.log(error);
+        dispatch({
+          type: "CLINICS_LIST_FETCH_SUCCESS",
+          payload: {
+            rows: response,
+            count: response.length,
+          },
+        });
+      } catch (error) {
+        console.log(error);
 
-      dispatch({
-        type: "CLINICS_LIST_FETCH_ERROR",
-      });
-    }
-  },
+        dispatch({
+          type: "CLINICS_LIST_FETCH_ERROR",
+        });
+      }
+    },
 
   doDelete: (id) => async (dispatch) => {
     if (!config.isBackend) {

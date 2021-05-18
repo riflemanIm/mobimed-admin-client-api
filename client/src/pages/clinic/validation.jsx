@@ -12,12 +12,12 @@ export default function validate(values) {
   if (!values.phone) {
     errors.phone = "Заполните Телефон";
   }
-  if (!values.latitude) {
-    errors.latitude = "Заполните Latitude";
-  }
-  if (!values.longitude) {
-    errors.longitude = "Заполните Longitude";
-  }
+  // if (!values.latitude) {
+  //   errors.latitude = "Заполните Latitude";
+  // }
+  // if (!values.longitude) {
+  //   errors.longitude = "Заполните Longitude";
+  // }
 
   console.log("errors", errors);
   // if (!values?.password) {

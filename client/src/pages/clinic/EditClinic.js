@@ -36,7 +36,7 @@ const EditClinic = () => {
   const { id } = useParams();
 
   const dispatch = useClinicDispatch();
-  const { currentClinic, services, medical_net } = useClinicState();
+  const { currentClinic, services, medical_brand } = useClinicState();
   const [isLoadingImg, setIsLoadingImg] = React.useState(false);
 
   function sendNotification(errorMessage) {
@@ -301,24 +301,25 @@ const EditClinic = () => {
                     style={{ marginBottom: 35, marginRight: 8 }}
                     fullWidth
                     required
-                    error={errors?.medical_net_id != null}
+                    error={errors?.medical_brand_id != null}
                     helperText={
-                      errors?.medical_net_id != null && errors?.medical_net_id
+                      errors?.medical_brand_id != null &&
+                      errors?.medical_brand_id
                     }
                   >
-                    <InputLabel id="id-medical_net-label">Сеть</InputLabel>
+                    <InputLabel id="id-medical_brand-label">Бранд</InputLabel>
                     <Select
-                      name="medical_net_id"
-                      labelId="id-medical_net-label"
-                      id="id-medical_net-select"
-                      label="Сеть"
+                      name="medical_brand_id"
+                      labelId="id-medical_brand-label"
+                      id="id-medical_brand-select"
+                      label="Бранд"
                       onChange={handleChange}
-                      value={values?.medical_net_id}
+                      value={values?.medical_brand_id}
                     >
-                      {medical_net.map((item) => (
+                      {medical_brand.map((item) => (
                         <MenuItem
-                          value={item.medical_net_id}
-                          key={item.medical_net_id}
+                          value={item.medical_brand_id}
+                          key={item.medical_brand_id}
                         >
                           {item.title}
                         </MenuItem>
@@ -326,7 +327,7 @@ const EditClinic = () => {
                     </Select>
                   </FormControl>
                   <Link
-                    href={`#/app/medical_net/add/${id}`}
+                    href={`#/app/medical_brand/add/${id}`}
                     underline="none"
                     color="#fff"
                   >

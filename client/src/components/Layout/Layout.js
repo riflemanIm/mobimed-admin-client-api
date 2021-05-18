@@ -84,6 +84,10 @@ import MedicalNetList from "../../pages/medical_net";
 import MedicalNetAdd from "../../pages/medical_net/AddMedicalNet";
 import MedicalNetEdit from "../../pages/medical_net/EditMedicalNet";
 
+import MedicalBrandList from "../../pages/medical_brand";
+import MedicalBrandAdd from "../../pages/medical_brand/AddMedicalBrand";
+import MedicalBrandEdit from "../../pages/medical_brand/EditMedicalBrand";
+
 import TranslationList from "../../pages/translation";
 import ImportTranslation from "../../pages/translation/ImportTranslation";
 import ImportTranslationCSV from "../../pages/translation/ImportTranslationCSV";
@@ -105,6 +109,7 @@ import { SpecializationProvider } from "../../context/SpecializationContext";
 
 import { MedicalNetProvider } from "../../context/MedicalNetContext";
 import { TranslationProvider } from "../../context/TranslationContext";
+import { MedicalBrandProvider } from "../../context/MedicalBrandContext";
 
 //Sidebar structure
 import structure from "../Sidebar/SidebarStructure";
@@ -413,6 +418,34 @@ function Layout(props) {
             <MedicalNetProvider>
               <MedicalNetEdit />
             </MedicalNetProvider>
+          </Route>
+
+          {/* ----------------- medical_brand ----------------- */}
+
+          <Route
+            exact
+            path="/app/medical_brand"
+            render={() => <Redirect to="/app/medical_brand/list" />}
+          />
+          <Route path="/app/medical_brand/list">
+            <MedicalBrandProvider>
+              <MedicalBrandList />
+            </MedicalBrandProvider>
+          </Route>
+          <Route path="/app/medical_brand/add/:returnToClinic">
+            <MedicalBrandProvider>
+              <MedicalBrandAdd />
+            </MedicalBrandProvider>
+          </Route>
+          <Route path="/app/medical_brand/add">
+            <MedicalBrandProvider>
+              <MedicalBrandAdd />
+            </MedicalBrandProvider>
+          </Route>
+          <Route path="/app/medical_brand/:id/edit">
+            <MedicalBrandProvider>
+              <MedicalBrandEdit />
+            </MedicalBrandProvider>
           </Route>
 
           {/* ----------------- translation ----------------- */}
