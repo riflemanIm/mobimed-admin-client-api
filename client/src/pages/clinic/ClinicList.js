@@ -79,7 +79,7 @@ const headCells = [
     disablePadding: false,
     label: "Адрес",
   },
-  { id: "net_name", toRight: false, disablePadding: false, label: "Сеть" },
+  { id: "brand_name", toRight: false, disablePadding: false, label: "Бренд" },
   { id: "service", toRight: false, disablePadding: false, label: "Сервис" },
   {
     id: "cdate",
@@ -397,7 +397,7 @@ const ClinicList = () => {
                         </TableCell>
                         <TableCell align="left">
                           <Typography variant={"body2"}>
-                            {row.net_name}
+                            {row.brand_name}
                           </Typography>
                         </TableCell>
                         <TableCell align="left">

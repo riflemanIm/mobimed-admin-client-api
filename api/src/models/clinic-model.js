@@ -58,12 +58,16 @@ const find = () => {
       "c.is_phone_required",
       "c.is_anonym_visit",
       "c.is_home_request",
-      "mn.title as net_name",
+      "mb.title as brand_name",
       "cs.label as service",
       "c.cdate"
     )
     .from("clinic as c")
-    .leftJoin("medical_net as mn", "c.medical_net_id", "mn.medical_net_id")
+    .leftJoin(
+      "medical_brand_id as mb",
+      "c.medical_brand_id",
+      "mb.medical_brand_id"
+    )
     .leftJoin("client_service as cs", "c.client_service_id", "cs.id")
     .orderBy("c.cdate", "desc");
 
